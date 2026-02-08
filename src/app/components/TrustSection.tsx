@@ -1,33 +1,7 @@
 import { Award, Users, CheckCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
-
-const stats = [
-  {
-    icon: Award,
-    value: 15,
-    suffix: "+",
-    label: "Années d'expérience",
-    description: "Dans le traitement de l'eau",
-    color: "from-yellow-500 to-orange-500",
-  },
-  {
-    icon: Users,
-    value: 500,
-    suffix: "+",
-    label: "Clients satisfaits",
-    description: "À travers le Cameroun",
-    color: "from-blue-500 to-cyan-500",
-  },
-  {
-    icon: CheckCircle,
-    value: 1000,
-    suffix: "+",
-    label: "Projets réalisés",
-    description: "Avec succès",
-    color: "from-green-500 to-emerald-500",
-  },
-];
+import { useI18n } from "../../i18n/I18nContext";
 
 function Counter({ value, suffix }: { value: number; suffix: string }) {
   const [count, setCount] = useState(0);
@@ -62,6 +36,35 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 }
 
 export function TrustSection() {
+  const { t } = useI18n();
+
+  const stats = [
+    {
+      icon: Award,
+      valueKey: "trust.experience.value",
+      suffixKey: "trust.experience.suffix",
+      labelKey: "trust.experience.label",
+      descriptionKey: "trust.experience.description",
+      color: "from-yellow-500 to-orange-500",
+    },
+    {
+      icon: Users,
+      valueKey: "trust.clients.value",
+      suffixKey: "trust.clients.suffix",
+      labelKey: "trust.clients.label",
+      descriptionKey: "trust.clients.description",
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      icon: CheckCircle,
+      valueKey: "trust.projects.value",
+      suffixKey: "trust.projects.suffix",
+      labelKey: "trust.projects.label",
+      descriptionKey: "trust.projects.description",
+      color: "from-green-500 to-emerald-500",
+    },
+  ];
+
   return (
     <section className="py-24 bg-white relative overflow-hidden">
       {/* Background Pattern */}
@@ -98,17 +101,17 @@ export function TrustSection() {
             className="inline-block mb-4"
           >
             <span className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
-              Notre impact
+              {t("trust.sectionSubtitle")}
             </span>
           </motion.div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-            Pourquoi nous faire{" "}
+            {t("trust.sectionTitle")}{" "}
             <span className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] bg-clip-text text-transparent">
-              confiance ?
+              {t("trust.sectionTitleHighlight")}
             </span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Des années d'expertise au service de votre eau. Des chiffres qui parlent d'eux-mêmes.
+            {t("trust.sectionDescription")}
           </p>
         </motion.div>
 
@@ -116,6 +119,9 @@ export function TrustSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
+            const value = parseInt(t(stat.valueKey));
+            const suffix = t(stat.suffixKey);
+            
             return (
               <motion.div
                 key={index}
@@ -149,13 +155,13 @@ export function TrustSection() {
                   </motion.div>
 
                   {/* Counter */}
-                  <Counter value={stat.value} suffix={stat.suffix} />
+                  <Counter value={value} suffix={suffix} />
 
                   {/* Label */}
                   <div className="text-2xl font-bold text-gray-900 mb-3 mt-4">
-                    {stat.label}
+                    {t(stat.labelKey)}
                   </div>
-                  <div className="text-gray-600">{stat.description}</div>
+                  <div className="text-gray-600">{t(stat.descriptionKey)}</div>
 
                   {/* Decorative Line */}
                   <motion.div

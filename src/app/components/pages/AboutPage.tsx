@@ -1,50 +1,53 @@
 import { motion } from "motion/react";
 import { Droplet, Zap, Award, Users, Target, Globe } from "lucide-react";
-
-const stats = [
-  { label: "Années d'expérience", value: "15+", icon: Award },
-  { label: "Projets réalisés", value: "1000+", icon: Target },
-  { label: "Clients satisfaits", value: "500+", icon: Users },
-  { label: "Zones couvertes", value: "20+", icon: Globe },
-];
-
-const values = [
-  {
-    icon: Droplet,
-    title: "Qualité supérieure",
-    description: "Nous utilisons uniquement des équipements et produits de qualité certifiée pour garantir l'excellence de nos services.",
-    gradient: "from-blue-500 to-cyan-500",
-  },
-  {
-    icon: Zap,
-    title: "Innovation",
-    description: "Nous adoptons les technologies les plus récentes pour offrir des solutions modernes et efficaces.",
-    gradient: "from-yellow-500 to-orange-500",
-  },
-  {
-    icon: Award,
-    title: "Expertise",
-    description: "Notre équipe de professionnels certifiés possède plus de 15 ans d'expérience dans le domaine.",
-    gradient: "from-purple-500 to-pink-500",
-  },
-  {
-    icon: Users,
-    title: "Service client",
-    description: "Nous sommes disponibles 24/7 pour répondre à vos besoins et assurer votre satisfaction.",
-    gradient: "from-green-500 to-emerald-500",
-  },
-];
-
-const timeline = [
-  { year: "2008", event: "Création de RT-Water Solution à Yaoundé" },
-  { year: "2012", event: "Expansion des services de forage" },
-  { year: "2015", event: "Lancement des services de piscines" },
-  { year: "2018", event: "500+ clients satisfaits" },
-  { year: "2020", event: "Certification ISO obtenue" },
-  { year: "2024", event: "Leader du marché camerounais" },
-];
+import { useI18n } from "../../../i18n/I18nContext";
 
 export function AboutPage() {
+  const { t } = useI18n();
+
+  const stats = [
+    { labelKey: "about.stats.experience.label", valueKey: "about.stats.experience.value", icon: Award },
+    { labelKey: "about.stats.projects.label", valueKey: "about.stats.projects.value", icon: Target },
+    { labelKey: "about.stats.clients.label", valueKey: "about.stats.clients.value", icon: Users },
+    { labelKey: "about.stats.zones.label", valueKey: "about.stats.zones.value", icon: Globe },
+  ];
+
+  const values = [
+    {
+      icon: Droplet,
+      titleKey: "about.values.quality.title",
+      descriptionKey: "about.values.quality.description",
+      gradient: "from-blue-500 to-cyan-500",
+    },
+    {
+      icon: Zap,
+      titleKey: "about.values.innovation.title",
+      descriptionKey: "about.values.innovation.description",
+      gradient: "from-yellow-500 to-orange-500",
+    },
+    {
+      icon: Award,
+      titleKey: "about.values.expertise.title",
+      descriptionKey: "about.values.expertise.description",
+      gradient: "from-purple-500 to-pink-500",
+    },
+    {
+      icon: Users,
+      titleKey: "about.values.service.title",
+      descriptionKey: "about.values.service.description",
+      gradient: "from-green-500 to-emerald-500",
+    },
+  ];
+
+  const timeline = [
+    { year: "2008", eventKey: "about.timeline.events.2008" },
+    { year: "2012", eventKey: "about.timeline.events.2012" },
+    { year: "2015", eventKey: "about.timeline.events.2015" },
+    { year: "2018", eventKey: "about.timeline.events.2018" },
+    { year: "2020", eventKey: "about.timeline.events.2020" },
+    { year: "2024", eventKey: "about.timeline.events.2024" },
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -79,16 +82,16 @@ export function AboutPage() {
             className="text-center"
           >
             <span className="inline-block bg-white/20 backdrop-blur-sm text-white px-6 py-2 rounded-full text-sm font-semibold mb-6">
-              Notre histoire
+              {t("about.badge")}
             </span>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-              À propos de{" "}
+              {t("about.title")}{" "}
               <span className="bg-gradient-to-r from-yellow-300 to-white bg-clip-text text-transparent">
-                RT-Water
+                {t("about.titleHighlight")}
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-white/95 max-w-4xl mx-auto leading-relaxed">
-              Depuis 2008, nous sommes le partenaire de confiance pour toutes vos solutions en eau au Cameroun.
+              {t("about.description")}
             </p>
           </motion.div>
         </div>
@@ -105,16 +108,16 @@ export function AboutPage() {
               transition={{ duration: 0.8 }}
             >
               <span className="inline-block bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-6 py-2 rounded-full text-sm font-semibold mb-6">
-                Notre mission
+                {t("about.mission.badge")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Fournir de l'eau pure pour tous
+                {t("about.mission.title")}
               </h2>
               <p className="text-xl text-gray-600 mb-6 leading-relaxed">
-                Notre mission est de garantir l'accès à une eau propre, saine et fiable pour tous nos clients. Nous croyons que l'eau de qualité est un droit fondamental et nous travaillons chaque jour pour le rendre accessible.
+                {t("about.mission.description1")}
               </p>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Avec une équipe de professionnels hautement qualifiés et des équipements de pointe, nous offrons des solutions complètes adaptées à chaque besoin, qu'il s'agisse de purification, de forage, ou de maintenance.
+                {t("about.mission.description2")}
               </p>
             </motion.div>
 
@@ -138,9 +141,9 @@ export function AboutPage() {
                   >
                     <Icon className="w-10 h-10 text-[#0077BE] mb-4" />
                     <div className="text-4xl font-bold text-[#0077BE] mb-2">
-                      {stat.value}
+                      {t(stat.valueKey)}
                     </div>
-                    <div className="text-gray-600">{stat.label}</div>
+                    <div className="text-gray-600">{t(stat.labelKey)}</div>
                   </motion.div>
                 );
               })}
@@ -159,10 +162,10 @@ export function AboutPage() {
             className="text-center mb-16"
           >
             <span className="inline-block bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-6 py-2 rounded-full text-sm font-semibold mb-6">
-              Nos valeurs
+              {t("about.values.badge")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Ce qui nous définit
+              {t("about.values.title")}
             </h2>
           </motion.div>
 
@@ -183,10 +186,10 @@ export function AboutPage() {
                     <Icon className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    {value.title}
+                    {t(value.titleKey)}
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
-                    {value.description}
+                    {t(value.descriptionKey)}
                   </p>
                 </motion.div>
               );
@@ -205,10 +208,10 @@ export function AboutPage() {
             className="text-center mb-16"
           >
             <span className="inline-block bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-6 py-2 rounded-full text-sm font-semibold mb-6">
-              Notre parcours
+              {t("about.timeline.badge")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              15 ans d'excellence
+              {t("about.timeline.title")}
             </h2>
           </motion.div>
 
@@ -234,7 +237,7 @@ export function AboutPage() {
                         <div className="text-3xl font-bold text-[#0077BE] mb-2">
                           {item.year}
                         </div>
-                        <div className="text-gray-600">{item.event}</div>
+                        <div className="text-gray-600">{t(item.eventKey)}</div>
                       </div>
                     )}
                   </div>
@@ -251,7 +254,7 @@ export function AboutPage() {
                         <div className="text-3xl font-bold text-[#0077BE] mb-2">
                           {item.year}
                         </div>
-                        <div className="text-gray-600">{item.event}</div>
+                        <div className="text-gray-600">{t(item.eventKey)}</div>
                       </div>
                     )}
                   </div>

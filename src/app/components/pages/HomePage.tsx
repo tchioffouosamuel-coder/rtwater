@@ -6,7 +6,7 @@ import { CTASection } from "../CTASection";
 export function HomePage() {
   return (
     <>
-      <HeroSection />
+      <HeroSection /> 
       <ServicesSection />
       <TrustSection />
       <CTASection />

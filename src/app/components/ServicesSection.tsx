@@ -1,51 +1,7 @@
 import { Droplet, Zap, Beaker, Drill, Waves, Wrench } from "lucide-react";
 import { motion } from "motion/react";
 import { useRef } from "react";
-
-const services = [
-  {
-    icon: Droplet,
-    title: "Purification d'eau",
-    description:
-      "Systèmes de purification avancés pour une eau potable de qualité supérieure, adaptés à tous vos besoins.",
-    gradient: "from-blue-500 to-cyan-500",
-  },
-  {
-    icon: Zap,
-    title: "Vente de pompes",
-    description:
-      "Large gamme de pompes à eau performantes et durables pour tous types d'installations résidentielles et industrielles.",
-    gradient: "from-yellow-500 to-orange-500",
-  },
-  {
-    icon: Beaker,
-    title: "Désinfectants",
-    description:
-      "Produits de désinfection professionnels pour garantir la salubrité et la sécurité de votre eau.",
-    gradient: "from-green-500 to-emerald-500",
-  },
-  {
-    icon: Drill,
-    title: "Forage",
-    description:
-      "Services de forage professionnel pour l'accès à des sources d'eau souterraines fiables et durables.",
-    gradient: "from-purple-500 to-pink-500",
-  },
-  {
-    icon: Waves,
-    title: "Piscines",
-    description:
-      "Installation, entretien et traitement complet de piscines pour une eau cristalline toute l'année.",
-    gradient: "from-cyan-500 to-blue-500",
-  },
-  {
-    icon: Wrench,
-    title: "Maintenance",
-    description:
-      "Services de maintenance préventive et corrective pour tous vos équipements de traitement d'eau.",
-    gradient: "from-red-500 to-rose-500",
-  },
-];
+import { useI18n } from "../../i18n/I18nContext";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -71,6 +27,46 @@ const itemVariants = {
 
 export function ServicesSection() {
   const sectionRef = useRef(null);
+  const { t } = useI18n();
+
+  const services = [
+    {
+      icon: Droplet,
+      titleKey: "services.purification.title",
+      descriptionKey: "services.purification.description",
+      gradient: "from-blue-500 to-cyan-500",
+    },
+    {
+      icon: Zap,
+      titleKey: "services.pumps.title",
+      descriptionKey: "services.pumps.description",
+      gradient: "from-yellow-500 to-orange-500",
+    },
+    {
+      icon: Beaker,
+      titleKey: "services.disinfectants.title",
+      descriptionKey: "services.disinfectants.description",
+      gradient: "from-green-500 to-emerald-500",
+    },
+    {
+      icon: Drill,
+      titleKey: "services.drilling.title",
+      descriptionKey: "services.drilling.description",
+      gradient: "from-purple-500 to-pink-500",
+    },
+    {
+      icon: Waves,
+      titleKey: "services.pools.title",
+      descriptionKey: "services.pools.description",
+      gradient: "from-cyan-500 to-blue-500",
+    },
+    {
+      icon: Wrench,
+      titleKey: "services.maintenance.title",
+      descriptionKey: "services.maintenance.description",
+      gradient: "from-red-500 to-rose-500",
+    },
+  ];
 
   return (
     <section id="services" className="py-24 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
@@ -98,15 +94,14 @@ export function ServicesSection() {
             className="inline-block mb-4"
           >
             <span className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
-              Ce que nous offrons
+              {t("services.sectionSubtitle")}
             </span>
           </motion.div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#0077BE] to-[#00A8E8] bg-clip-text text-transparent mb-6">
-            Nos Services
+            {t("services.sectionTitle")}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Des solutions complètes pour tous vos besoins en eau, de la
-            purification à l'installation. Excellence et innovation à chaque étape.
+            {t("services.sectionDescription")}
           </p>
         </motion.div>
 
@@ -140,10 +135,10 @@ export function ServicesSection() {
                 </motion.div>
 
                 <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-[#0077BE] transition-colors duration-300">
-                  {service.title}
+                  {t(service.titleKey)}
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  {service.description}
+                  {t(service.descriptionKey)}
                 </p>
 
                 {/* Decorative Element */}

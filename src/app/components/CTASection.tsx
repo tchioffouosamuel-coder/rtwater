@@ -1,16 +1,20 @@
 import { Phone, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
+import { useI18n } from "../../i18n/I18nContext";
+import { useNavigate } from "react-router-dom";
 
 interface CTASectionProps {
   onNavigateToQuote?: () => void;
 }
 
 export function CTASection({ onNavigateToQuote }: CTASectionProps) {
+  const { t } = useI18n();
+
+  const navigate = useNavigate();
+
   const handleContactClick = () => {
-    const contactSection = document.getElementById("contact");
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: "smooth" });
-    }
+    navigate("/contact");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleServicesClick = () => {
@@ -93,7 +97,7 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
             <Sparkles className="w-6 h-6 text-yellow-300" />
           </motion.div>
           <span className="text-white/90 font-semibold tracking-wide uppercase text-sm">
-            Prêt à commencer ?
+            {t("cta.badge")}
           </span>
         </motion.div>
 
@@ -105,9 +109,9 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight"
         >
-          Besoin d'une solution{" "}
+          {t("cta.title")}{" "}
           <span className="relative inline-block">
-            <span className="relative z-10">en eau ?</span>
+            <span className="relative z-10">{t("cta.titleHighlight")}</span>
             <motion.span
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
@@ -125,8 +129,7 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
           transition={{ delay: 0.4, duration: 0.8 }}
           className="text-xl md:text-2xl text-white/95 mb-12 max-w-3xl mx-auto leading-relaxed"
         >
-          Contactez-nous dès aujourd'hui pour un devis gratuit et personnalisé.
-          Notre équipe d'experts est prête à répondre à tous vos besoins.
+          {t("cta.description")}
         </motion.p>
 
         {/* CTA Buttons */}
@@ -144,7 +147,7 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
             className="group inline-flex items-center justify-center gap-3 bg-white text-[#0077BE] px-10 py-5 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-white/50 transition-all duration-300"
           >
             <Phone className="w-6 h-6" />
-            Contactez-nous
+            {t("cta.contactButton")}
             <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
           </motion.button>
 
@@ -154,7 +157,7 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
             whileTap={{ scale: 0.95 }}
             className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md border-2 border-white/50 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-white/20 transition-all duration-300"
           >
-            Découvrir nos services
+            {t("cta.servicesButton")}
           </motion.button>
         </motion.div>
 
@@ -168,15 +171,15 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
         >
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span>Disponible 24/7</span>
+            <span>{t("cta.trustIndicators.available")}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span>Devis gratuit</span>
+            <span>{t("cta.trustIndicators.freeQuote")}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span>Installation rapide</span>
+            <span>{t("cta.trustIndicators.fastInstallation")}</span>
           </div>
         </motion.div>
       </div>

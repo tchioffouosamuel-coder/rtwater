@@ -1,8 +1,10 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import { User, Mail, Phone, MapPin, Home, Droplet, MessageSquare, Send, CheckCircle } from "lucide-react";
+import { useI18n } from "../../../i18n/I18nContext";
 
 export function QuotePage() {
+  const { t } = useI18n();
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -14,12 +16,12 @@ export function QuotePage() {
   });
 
   const services = [
-    "Purification d'eau",
-    "Vente de pompes",
-    "Désinfectants",
-    "Forage",
-    "Piscines",
-    "Maintenance",
+    t("services.purification.title"),
+    t("services.pumps.title"),
+    t("services.disinfectants.title"),
+    t("services.drilling.title"),
+    t("services.pools.title"),
+    t("services.maintenance.title"),
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -64,10 +66,10 @@ export function QuotePage() {
             <CheckCircle className="w-12 h-12 text-white" />
           </motion.div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Demande envoyée !
+            {t("quote.successTitle")}
           </h2>
           <p className="text-gray-600 text-lg">
-            Nous avons bien reçu votre demande de devis. Notre équipe vous contactera dans les plus brefs délais.
+            {t("quote.successMessage")}
           </p>
         </motion.div>
       </div>
@@ -108,16 +110,16 @@ export function QuotePage() {
             className="text-center"
           >
             <span className="inline-block bg-white/20 backdrop-blur-sm text-white px-6 py-2 rounded-full text-sm font-semibold mb-6">
-              Gratuit et sans engagement
+              {t("quote.freeAndNoCommitment")}
             </span>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-              Demandez votre{" "}
+              {t("quote.requestYourQuote")}{" "}
               <span className="bg-gradient-to-r from-yellow-300 to-white bg-clip-text text-transparent">
-                devis gratuit
+                {t("quote.freeQuoteText")}
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto">
-              Remplissez le formulaire ci-dessous et recevez une estimation personnalisée sous 24h
+              {t("quote.fillFormBelow")}
             </p>
           </motion.div>
         </div>
@@ -137,7 +139,7 @@ export function QuotePage() {
               <div>
                 <label className="flex items-center gap-2 text-gray-700 font-semibold mb-3">
                   <User className="w-5 h-5 text-[#0077BE]" />
-                  Nom complet *
+                  {t("quote.fullNameRequired")}
                 </label>
                 <input
                   type="text"
@@ -146,7 +148,7 @@ export function QuotePage() {
                   onChange={handleChange}
                   required
                   className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE] focus:border-transparent transition-all"
-                  placeholder="Votre nom complet"
+                  placeholder={t("quote.yourFullName")}
                 />
               </div>
 
@@ -155,7 +157,7 @@ export function QuotePage() {
                 <div>
                   <label className="flex items-center gap-2 text-gray-700 font-semibold mb-3">
                     <Mail className="w-5 h-5 text-[#0077BE]" />
-                    Email *
+                    {t("quote.emailRequired")}
                   </label>
                   <input
                     type="email"
@@ -164,13 +166,13 @@ export function QuotePage() {
                     onChange={handleChange}
                     required
                     className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE] focus:border-transparent transition-all"
-                    placeholder="votre@email.com"
+                    placeholder={t("quote.yourEmail")}
                   />
                 </div>
                 <div>
                   <label className="flex items-center gap-2 text-gray-700 font-semibold mb-3">
                     <Phone className="w-5 h-5 text-[#0077BE]" />
-                    Téléphone *
+                    {t("quote.phoneRequired")}
                   </label>
                   <input
                     type="tel"
@@ -179,7 +181,7 @@ export function QuotePage() {
                     onChange={handleChange}
                     required
                     className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE] focus:border-transparent transition-all"
-                    placeholder="+237 XXX XXX XXX"
+                    placeholder={t("quote.phoneNumber")}
                   />
                 </div>
               </div>
@@ -188,7 +190,7 @@ export function QuotePage() {
               <div>
                 <label className="flex items-center gap-2 text-gray-700 font-semibold mb-3">
                   <MapPin className="w-5 h-5 text-[#0077BE]" />
-                  Adresse
+                  {t("quote.address")}
                 </label>
                 <input
                   type="text"
@@ -196,7 +198,7 @@ export function QuotePage() {
                   value={formData.address}
                   onChange={handleChange}
                   className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE] focus:border-transparent transition-all"
-                  placeholder="Votre adresse à Yaoundé"
+                  placeholder={t("quote.yourAddressYaonde")}
                 />
               </div>
 
@@ -204,7 +206,7 @@ export function QuotePage() {
               <div>
                 <label className="flex items-center gap-2 text-gray-700 font-semibold mb-3">
                   <Droplet className="w-5 h-5 text-[#0077BE]" />
-                  Type de service *
+                  {t("quote.serviceTypeRequired")}
                 </label>
                 <select
                   name="serviceType"
@@ -213,7 +215,7 @@ export function QuotePage() {
                   required
                   className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE] focus:border-transparent transition-all"
                 >
-                  <option value="">Sélectionnez un service</option>
+                  <option value="">{t("quote.selectService")}</option>
                   {services.map((service) => (
                     <option key={service} value={service}>
                       {service}
@@ -226,7 +228,7 @@ export function QuotePage() {
               <div>
                 <label className="flex items-center gap-2 text-gray-700 font-semibold mb-3">
                   <MessageSquare className="w-5 h-5 text-[#0077BE]" />
-                  Détails de votre projet
+                  {t("quote.projectDetails")}
                 </label>
                 <textarea
                   name="message"
@@ -234,7 +236,7 @@ export function QuotePage() {
                   onChange={handleChange}
                   rows={6}
                   className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE] focus:border-transparent transition-all resize-none"
-                  placeholder="Décrivez votre besoin en détail..."
+                  placeholder={t("quote.describeYourNeed")}
                 />
               </div>
 
@@ -246,11 +248,11 @@ export function QuotePage() {
                 className="w-full bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-8 py-5 rounded-xl font-bold text-lg shadow-xl shadow-[#0077BE]/30 hover:shadow-2xl hover:shadow-[#0077BE]/40 transition-all flex items-center justify-center gap-3"
               >
                 <Send className="w-6 h-6" />
-                Envoyer ma demande
+                {t("quote.sendRequest")}
               </motion.button>
 
               <p className="text-center text-gray-500 text-sm">
-                En soumettant ce formulaire, vous acceptez d'être contacté par notre équipe.
+                {t("quote.formConsent")}
               </p>
             </form>
           </motion.div>
@@ -258,9 +260,21 @@ export function QuotePage() {
           {/* Info Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
             {[
-              { icon: CheckCircle, title: "Réponse rapide", text: "Sous 24h" },
-              { icon: Home, title: "Déplacement gratuit", text: "À Yaoundé" },
-              { icon: Droplet, title: "Conseil expert", text: "Personnalisé" },
+              { 
+                icon: CheckCircle, 
+                title: t("quote.quickResponse"), 
+                text: t("quote.under24h") 
+              },
+              { 
+                icon: Home, 
+                title: t("quote.freeDisplacement"), 
+                text: t("quote.inYaonde") 
+              },
+              { 
+                icon: Droplet, 
+                title: t("quote.expertAdvice"), 
+                text: t("quote.personalized") 
+              },
             ].map((item, index) => {
               const Icon = item.icon;
               return (

@@ -1,11 +1,14 @@
 import { motion } from "motion/react";
 import { Sparkles, ArrowRight } from "lucide-react";
+import { useI18n } from "../../i18n/I18nContext";
 
 interface HeroSectionProps {
   onNavigate?: (page: "accueil" | "galerie" | "devis" | "apropos") => void;
 }
 
 export function HeroSection({ onNavigate }: HeroSectionProps) {
+  const { t } = useI18n();
+
   const handleServicesClick = () => {
     const servicesSection = document.getElementById("services");
     if (servicesSection) {
@@ -69,7 +72,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           >
             <Sparkles className="w-6 h-6 text-yellow-300" />
             <span className="text-yellow-300 font-semibold tracking-wide uppercase text-sm">
-              Leader en traitement d'eau
+              {t("hero.badge")}
             </span>
           </motion.div>
 
@@ -79,9 +82,9 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             transition={{ delay: 0.5, duration: 0.8 }}
             className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
           >
-            Solutions complètes pour vos{" "}
+            {t("hero.title")}{" "}
             <span className="bg-gradient-to-r from-yellow-300 to-white bg-clip-text text-transparent">
-              besoins en eau
+              {t("hero.titleHighlight")}
             </span>
           </motion.h1>
 
@@ -91,8 +94,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             transition={{ delay: 0.7, duration: 0.8 }}
             className="text-xl md:text-2xl text-white/95 mb-10 leading-relaxed"
           >
-            Purification, forage et services de piscine professionnels à
-            Yaoundé. Votre partenaire de confiance pour une eau pure et saine.
+            {t("hero.description")}
           </motion.p>
 
           <motion.div
@@ -107,7 +109,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               whileTap={{ scale: 0.95 }}
               className="group inline-flex items-center justify-center gap-2 bg-white text-[#0077BE] px-8 py-4 rounded-xl font-semibold shadow-2xl hover:shadow-white/50 transition-all duration-300"
             >
-              Nos services
+              {t("hero.servicesButton")}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </motion.button>
             <motion.button
@@ -116,7 +118,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               whileTap={{ scale: 0.95 }}
               className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-300"
             >
-              Contactez-nous
+              {t("hero.contactButton")}
             </motion.button>
           </motion.div>
         </div>

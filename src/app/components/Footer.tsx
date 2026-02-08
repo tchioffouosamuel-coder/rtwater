@@ -1,28 +1,28 @@
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Droplets, Send } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import type { Page } from "../App";
+import { useTheme } from "../../theme/ThemeContext";
+import { useI18n } from "../../i18n/I18nContext";
 
-interface FooterProps {
-  setCurrentPage: (page: Page) => void;
-}
-
-export function Footer({ setCurrentPage }: FooterProps) {
+export function Footer() {
+  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
+  const { t } = useI18n();
 
   const serviceLinks = [
-    "Purification d'eau",
-    "Vente de pompes",
-    "Désinfectants",
-    "Forage",
-    "Piscines",
-    "Maintenance",
+    t("footer.purification"),
+    t("footer.waterPumps"),
+    t("footer.disinfectants"),
+    t("footer.drilling"),
+    t("footer.pools"),
+    t("footer.maintenance"),
   ];
 
   const quickLinks = [
-    { label: "Accueil", page: "accueil" as Page },
-    { label: "Galerie", page: "galerie" as Page },
-    { label: "À propos", page: "apropos" as Page },
-    { label: "Devis gratuit", page: "devis" as Page },
+    { label: t("common.home"), path: "/" },
+    { label: t("common.gallery"), path: "/gallery" },
+    { label: t("common.about"), path: "/about" },
+    { label: t("common.quote"), path: "/devis" },
   ];
 
   const socialLinks = [
@@ -32,13 +32,13 @@ export function Footer({ setCurrentPage }: FooterProps) {
     { icon: Instagram, href: "#", label: "Instagram", color: "hover:bg-pink-600" },
   ];
 
-  const handleNavigation = (page: Page) => {
-    setCurrentPage(page);
+  const handleNavigation = (path: string) => {
+    navigate(path);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-black text-white relative overflow-hidden">
+    <footer className="bg-gradient-to-b from-gray-900 to-black dark:from-slate-900 dark:to-black text-white relative overflow-hidden transition-colors duration-300">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <svg className="w-full h-full" viewBox="0 0 100 100">
@@ -77,13 +77,12 @@ export function Footer({ setCurrentPage }: FooterProps) {
               </span>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Votre partenaire de confiance pour des solutions complètes en eau
-              à Yaoundé, Cameroun. Excellence et innovation depuis plus de 15 ans.
+              {t("footer.tagline")}
             </p>
             
             {/* Newsletter */}
             <div className="mt-6">
-              <p className="text-sm text-gray-400 mb-3">Restez informé</p>
+              <p className="text-sm text-gray-400 mb-3">{t("footer.stayInformed")}</p>
               <div className="flex gap-2">
                 <input
                   type="email"
@@ -109,7 +108,7 @@ export function Footer({ setCurrentPage }: FooterProps) {
             transition={{ delay: 0.1, duration: 0.6 }}
           >
             <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              Nos Services
+              {t("footer.services")}
             </h3>
             <ul className="space-y-3">
               {serviceLinks.map((service, index) => (
@@ -140,7 +139,7 @@ export function Footer({ setCurrentPage }: FooterProps) {
             transition={{ delay: 0.2, duration: 0.6 }}
           >
             <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              Liens rapides
+              {t("footer.quickLinks")}
             </h3>
             <ul className="space-y-3">
               {quickLinks.map((link, index) => (
@@ -152,7 +151,7 @@ export function Footer({ setCurrentPage }: FooterProps) {
                   transition={{ delay: index * 0.05 }}
                 >
                   <button
-                    onClick={() => handleNavigation(link.page)}
+                    onClick={() => handleNavigation(link.path)}
                     className="text-gray-400 hover:text-[#00A8E8] transition-colors duration-300 flex items-center gap-2 group"
                   >
                     <span className="w-1.5 h-1.5 bg-[#0077BE] rounded-full group-hover:bg-[#00A8E8] transition-colors"></span>
@@ -171,7 +170,7 @@ export function Footer({ setCurrentPage }: FooterProps) {
             transition={{ delay: 0.3, duration: 0.6 }}
           >
             <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              Contact
+              {t("footer.contact")}
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3 group">
@@ -214,7 +213,7 @@ export function Footer({ setCurrentPage }: FooterProps) {
 
             {/* Social Media */}
             <div className="mt-8">
-              <p className="text-sm text-gray-400 mb-4">Suivez-nous</p>
+              <p className="text-sm text-gray-400 mb-4">{t("footer.followUs")}</p>
               <div className="flex gap-3">
                 {socialLinks.map((social) => {
                   const Icon = social.icon;
@@ -242,25 +241,24 @@ export function Footer({ setCurrentPage }: FooterProps) {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5, duration: 0.6 }}
-          className="border-t border-white/10 pt-8"
+          className="border-t border-white/10 dark:border-white/5 pt-8"
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
-              © {currentYear} RT-Water Solution. Tous droits réservés. Conçu avec{" "}
-              <span className="text-red-500">♥</span> à Yaoundé.
+              © {currentYear} RT-Water Solution. {t("footer.allRightsReserved")}
             </p>
             <div className="flex gap-6 text-sm">
               <a
                 href="#"
                 className="text-gray-400 hover:text-[#00A8E8] transition-colors duration-300"
               >
-                Politique de confidentialité
+                {t("footer.privacy")}
               </a>
               <a
                 href="#"
                 className="text-gray-400 hover:text-[#00A8E8] transition-colors duration-300"
               >
-                Conditions d'utilisation
+                {t("footer.terms")}
               </a>
             </div>
           </div>
