@@ -1,0 +1,452 @@
+{
+  "common": {
+    "home": "Home",
+    "gallery": "Gallery",
+    "about": "About",
+    "quote": "Get a Quote",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "language": "Language",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "menu": "Menu",
+    "needHelp": "Need Help?"
+  },
+  "header": {
+    "welcome": "Welcome",
+    "services": "Services"
+  },
+  "footer": {
+    "services": "Our Services",
+    "quickLinks": "Quick Links",
+    "contact": "Contact",
+    "stayInformed": "Stay Informed",
+    "allRightsReserved": "All rights reserved. Made with ♥ in Yaoundé.",
+    "tagline": "Your trusted partner for complete water solutions in Yaoundé, Cameroon. Excellence and innovation for over 15 years.",
+    "purification": "Water Purification",
+    "waterPumps": "Pump Sales",
+    "disinfectants": "Disinfectants",
+    "drilling": "Drilling",
+    "pools": "Pools",
+    "maintenance": "Maintenance",
+    "followUs": "Follow Us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  },
+  "pages": {
+    "home": {
+      "title": "Quality Water Solutions",
+      "subtitle": "Purification, treatment and water pumping",
+      "description": "Your trusted partner for complete water solutions"
+    },
+    "gallery": {
+      "title": "Gallery",
+      "description": "Discover our projects and achievements"
+    },
+    "about": {
+      "title": "About Us",
+      "description": "Who we are and what we do"
+    },
+    "quote": {
+      "title": "Get a Quote",
+      "description": "Get a personalized quote for your needs"
+    }
+  },
+  "services": {
+    "sectionTitle": "Our Services",
+    "sectionSubtitle": "What we offer",
+    "sectionDescription": "Complete solutions for all your water needs, from purification to installation. Excellence and innovation at every step.",
+    "purification": {
+      "title": "Water Purification",
+      "description": "Advanced purification systems for superior quality drinking water, tailored to all your needs."
+    },
+    "pumps": {
+      "title": "Pump Sales",
+      "description": "Wide range of high-performance and durable water pumps for all types of residential and industrial installations."
+    },
+    "disinfectants": {
+      "title": "Disinfectants",
+      "description": "Professional disinfection products to ensure the safety and security of your water."
+    },
+    "drilling": {
+      "title": "Drilling",
+      "description": "Professional drilling services for access to reliable and sustainable underground water sources."
+    },
+    "pools": {
+      "title": "Pools",
+      "description": "Installation, maintenance and complete treatment of swimming pools for crystal clear water all year round."
+    },
+    "maintenance": {
+      "title": "Maintenance",
+      "description": "Preventive and corrective maintenance services for all your water treatment equipment."
+    }
+  },
+  "trust": {
+    "sectionSubtitle": "Our impact",
+    "sectionTitle": "Why trust",
+    "sectionTitleHighlight": "us?",
+    "sectionDescription": "Years of expertise at the service of your water. Numbers that speak for themselves.",
+    "experience": {
+      "value": "15",
+      "suffix": "+",
+      "label": "Years of experience",
+      "description": "In water treatment"
+    },
+    "clients": {
+      "value": "500",
+      "suffix": "+",
+      "label": "Satisfied clients",
+      "description": "Across Cameroon"
+    },
+    "projects": {
+      "value": "1000",
+      "suffix": "+",
+      "label": "Completed projects",
+      "description": "Successfully"
+    }
+  },
+  "cta": {
+    "badge": "Ready to get started?",
+    "title": "Need a water",
+    "titleHighlight": "solution?",
+    "description": "Contact us today for a free and personalized quote. Our team of experts is ready to meet all your needs.",
+    "contactButton": "Contact us",
+    "servicesButton": "Discover our services",
+    "trustIndicators": {
+      "available": "Available 24/7",
+      "freeQuote": "Free quote",
+      "fastInstallation": "Fast installation"
+    }
+  },
+  "hero": {
+    "badge": "Leader in water treatment",
+    "title": "Complete solutions for your",
+    "titleHighlight": "water needs",
+    "description": "Purification, drilling and professional pool services in Yaoundé. Your trusted partner for pure and healthy water.",
+    "servicesButton": "Our services",
+    "contactButton": "Contact us"
+  },
+  "gallery": {
+    "badge": "Our achievements",
+    "title": "Project",
+    "titleHighlight": "gallery",
+    "description": "Discover our achievements and expertise through our projects in Africa",
+    "categories": {
+      "all": "All",
+      "drilling": "Drilling",
+      "purification": "Purification",
+      "pools": "Pools",
+      "pumps": "Pumps",
+      "installation": "Installation",
+      "maintenance": "Maintenance",
+      "projects": "Projects"
+    },
+    "items": {
+      "drilling": {
+        "title": "Professional drilling",
+        "category": "Drilling"
+      },
+      "purificationPlant": {
+        "title": "Purification station",
+        "category": "Purification"
+      },
+      "poolMaintenance": {
+        "title": "Pool maintenance",
+        "category": "Pools"
+      },
+      "pumpInstallation": {
+        "title": "Pump installation",
+        "category": "Pumps"
+      },
+      "cleanWater": {
+        "title": "Clean water for the community",
+        "category": "Projects"
+      },
+      "industrialPipes": {
+        "title": "Industrial piping",
+        "category": "Installation"
+      },
+      "storageTanks": {
+        "title": "Storage tanks",
+        "category": "Installation"
+      },
+      "professionalWork": {
+        "title": "Professional work",
+        "category": "Maintenance"
+      },
+      "advancedTreatment": {
+        "title": "Advanced water treatment",
+        "category": "Purification"
+      }
+    }
+  },
+  "about": {
+    "badge": "Our story",
+    "title": "About",
+    "titleHighlight": "RT-Water",
+    "description": "Since 2008, we have been your trusted partner for all your water solutions in Cameroon.",
+    "mission": {
+      "badge": "Our mission",
+      "title": "Providing pure water for all",
+      "description1": "Our mission is to ensure access to clean, healthy and reliable water for all our customers. We believe that quality water is a fundamental right and we work every day to make it accessible.",
+      "description2": "With a team of highly qualified professionals and state-of-the-art equipment, we offer comprehensive solutions tailored to every need, whether purification, drilling, or maintenance."
+    },
+    "stats": {
+      "experience": {
+        "label": "Years of experience",
+        "value": "15+"
+      },
+      "projects": {
+        "label": "Completed projects",
+        "value": "1000+"
+      },
+      "clients": {
+        "label": "Satisfied clients",
+        "value": "500+"
+      },
+      "zones": {
+        "label": "Areas covered",
+        "value": "20+"
+      }
+    },
+    "values": {
+      "badge": "Our values",
+      "title": "What defines us",
+      "quality": {
+        "title": "Superior quality",
+        "description": "We only use certified quality equipment and products to ensure the excellence of our services."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "We adopt the latest technologies to offer modern and efficient solutions."
+      },
+      "expertise": {
+        "title": "Expertise",
+        "description": "Our team of certified professionals has over 15 years of experience in the field."
+      },
+      "service": {
+        "title": "Customer service",
+        "description": "We are available 24/7 to meet your needs and ensure your satisfaction."
+      }
+    },
+    "timeline": {
+      "badge": "Our journey",
+      "title": "15 years of excellence",
+      "events": {
+        "2008": "Creation of RT-Water Solution in Yaoundé",
+        "2012": "Expansion of drilling services",
+        "2015": "Launch of pool services",
+        "2018": "500+ satisfied customers",
+        "2020": "ISO certification obtained",
+        "2024": "Leader in the Cameroonian market"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Sign in to your RT-Water account",
+      "email": "Email address",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "signingIn": "Signing in..."
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Join the RT-Water community",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email address",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "acceptTerms": "I accept the terms and conditions",
+      "createAccount": "Create Account",
+      "creating": "Creating...",
+      "successTitle": "Sign up successful!",
+      "successMessage": "Your account has been created successfully. Redirecting...",
+      "hasAccount": "Already have an account?",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters long",
+      "passwordRequirements": "Password must contain at least one uppercase letter and one number"
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "emailStep": "Enter your email address to receive a code",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "your@email.com",
+      "codeStep": "Verify your email",
+      "6digitCode": "Enter the 6-digit code sent",
+      "codeInput": "Verification code",
+      "passwordStep": "Create new password",
+      "securePassword": "Enter a secure password",
+      "newPasswordLabel": "New password",
+      "newPasswordPlaceholder": "••••••••",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "••••••••",
+      "sendCode": "Send code",
+      "verifyCode": "Verify code",
+      "resetPassword": "Reset password",
+      "successTitle": "Success!",
+      "successMessage": "Your password has been reset. Sign in with your new password.",
+      "backToLogin": "Back to login",
+      "useOtherEmail": "Use another email address",
+      "codeSentSuccess": "Code sent to your email",
+      "sendCodeError": "Error sending code",
+      "codeVerifiedSuccess": "Code verified successfully",
+      "invalidCodeError": "Invalid code",
+      "passwordResetSuccess": "Password reset successfully",
+      "resetError": "Error during reset"
+    },
+    "errors": {
+      "emailRequired": "Email is required",
+      "invalidEmail": "Please enter a valid email",
+      "passwordRequired": "Password is required",
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "confirmPasswordRequired": "Password confirmation is required",
+      "codeRequired": "Please enter a 6-digit code",
+      "codeInvalid": "Invalid code",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match"
+    },
+    "messages": {
+      "loginSuccess": "Login successful! Welcome",
+      "loginError": "An error occurred during login",
+      "signupSuccess": "Account created successfully!",
+      "signupError": "An error occurred during sign up",
+      "sending": "Sending...",
+      "verifying": "Verifying...",
+      "resetting": "Resetting..."
+    }
+  },
+  "quote": {
+  "title": "Get a Quote",
+  "description": "Get a personalized quote for your needs",
+  "freeAndNoCommitment": "Free and no obligation",
+  "requestYourQuote": "Request your",
+  "freeQuoteText": "free quote",
+  "fillFormBelow": "Fill out the form below and receive a personalized estimate within 24 hours",
+  "fullName": "Full name",
+  "fullNameRequired": "Full name *",
+  "yourFullName": "Your full name",
+  "email": "Email",
+  "emailRequired": "Email *",
+  "yourEmail": "your@email.com",
+  "phone": "Phone",
+  "phoneRequired": "Phone *",
+  "phoneNumber": "+237 XXX XXX XXX",
+  "address": "Address",
+  "yourAddressYaonde": "Your address in Yaoundé",
+  "serviceType": "Service type",
+  "serviceTypeRequired": "Service type *",
+  "selectService": "Select a service",
+  "projectDetails": "Project details",
+  "describeYourNeed": "Describe your need in detail...",
+  "sendRequest": "Send my request",
+  "formConsent": "By submitting this form, you agree to be contacted by our team.",
+  "successTitle": "Request sent!",
+  "successMessage": "We have received your quote request. Our team will contact you as soon as possible.",
+  "quickResponse": "Quick response",
+  "under24h": "Within 24 hours",
+  "freeDisplacement": "Free displacement",
+  "inYaonde": "In Yaoundé",
+  "expertAdvice": "Expert advice",
+  "personalized": "Personalized"
+}
+    ,
+    "shop": {
+      "title": "Shop",
+      "cart": "Shopping Cart",
+      "addToCart": "Add to Cart",
+      "removeFromCart": "Remove from Cart",
+      "emptyCart": "Your cart is empty",
+      "total": "Total",
+      "checkout": "Checkout",
+      "clearCart": "Clear Cart",
+      "quantity": "Quantity",
+      "price": "Price",
+      "product": "Product",
+      "products": "Products",
+      "searchPlaceholder": "Search products...",
+      "noResults": "No products found",
+      "processing": "Processing..."
+    },
+    "checkout": {
+      "title": "Checkout",
+      "orderSummary": "Order Summary",
+      "total": "Total",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone",
+      "phonePlaceholder": "+237 XXX XXX XXX",
+      "address": "Delivery Address",
+      "addressPlaceholder": "Enter your delivery address",
+      "fieldRequired": "Please fill in all required fields",
+      "confirmOrder": "Confirm Order",
+      "processing": "Processing...",
+      "orderSuccess": "Your order has been confirmed!",
+      "orderError": "There was an error processing your order. Please try again.",
+      "orderConfirmed": "Order Confirmed!",
+      "orderId": "Order ID",
+      "confirmOrder": "Confirm Order"
+    }
+    ,
+    "orders": {
+      "title": "My Orders",
+      "subtitle": "View and track all your orders",
+      "goBack": "Go Back",
+      "noOrders": "No orders yet",
+      "noOrdersDescription": "You haven't placed any orders yet. Start shopping to create your first order!",
+      "continueShopping": "Continue Shopping",
+      "totalOrders": "You have",
+      "orderId": "Order #",
+      "items": "Items Ordered",
+      "quantity": "Qty",
+      "deliveryInfo": "Delivery Information",
+      "name": "Name",
+      "phone": "Phone",
+      "address": "Address",
+      "status": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "shipped": "Shipped",
+        "delivered": "Delivered"
+      }
+    }
+    ,
+    "contact": {
+      "title": "Contact Us",
+      "subtitle": "Get in touch",
+      "description": "We're here to help. Send us a message or find our contact details below.",
+      "form": {
+        "nameRequired": "Full name *",
+        "namePlaceholder": "Your full name",
+        "emailRequired": "Email *",
+        "emailPlaceholder": "your@email.com",
+        "phoneRequired": "Phone",
+        "phonePlaceholder": "+237 XXX XXX XXX",
+        "subject": "Subject",
+        "message": "Message",
+        "messagePlaceholder": "Write your message here...",
+        "submit": "Send message",
+        "consent": "By submitting this form, you agree to be contacted by our team.",
+        "successTitle": "Message sent!",
+        "successMessage": "Thank you — we received your message and will get back to you shortly."
+      },
+      "addressTitle": "Address",
+      "address": "Yaoundé, Cameroon",
+      "phoneTitle": "Phone",
+      "phone": "+237 6XX XXX XXX",
+      "emailTitle": "Email",
+      "email": "info@rt-water.cm",
+      "hoursTitle": "Opening hours",
+      "hours": "Mon - Fri: 08:00 - 17:00"
+    }
+}
