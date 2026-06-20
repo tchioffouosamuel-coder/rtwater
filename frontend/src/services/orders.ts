@@ -26,4 +26,22 @@ export async function updateOrderStatus(id: string | number, status: string) {
   return api.request(`/admin/orders/${id}`, { method: "PUT", body: { status } });
 }
 
-export default { createOrder, fetchOrders, fetchOrder, fetchAdminOrders, updateOrderStatus };
+export async function downloadOrderReceipt(orderId: string | number): Promise<void> {
+  const token = localStorage.getItem('adminToken') || localStorage.getItem('userToken');
+  const isAdmin = !!localStorage.getItem('adminToken');
+  const url = `${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/${isAdmin ? 'admin/' : ''}orders/${orderId}/receipt`;
+
+  const response = await fetch(url, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (!response.ok) throw new Error('Erreur téléchargement reçu');
+
+  const blob = await response.blob();
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `recu-commande-${orderId}.pdf`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+export default { createOrder, fetchOrders, fetchOrder, fetchAdminOrders, updateOrderStatus, downloadOrderReceipt };

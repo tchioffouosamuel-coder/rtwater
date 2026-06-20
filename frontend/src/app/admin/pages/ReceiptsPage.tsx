@@ -1,35 +1,110 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { AdminLayout } from "../layout/AdminLayout";
 import { useAdminAuth } from "../../../context/AdminAuthContext";
-import { useReceipt } from "../../../context/ReceiptContext";
-import { usePOS } from "../../../context/POSContext";
+import { fetchAdminOrders, downloadOrderReceipt } from "../../../services/orders";
+import { toast } from "sonner";
 import {
-  Printer,
-  Download,
-  Eye,
-  Search,
-  FileText,
-  CheckCircle,
-  AlertCircle,
+  Printer, Download, Eye, Search, FileText, TrendingUp,
+  X, ChevronLeft, ChevronRight, RefreshCw,
+  ShoppingBag, DollarSign, Users, Clock,
 } from "lucide-react";
+
+type OrderStatus = "pending" | "paid" | "shipped" | "delivered" | "cancelled";
+
+interface OrderItem { id: number; product: { name: string } | null; quantity: number; price: number; }
+interface ApiOrder {
+  id: number;
+  total: number;
+  status: OrderStatus;
+  address: string;
+  created_at: string;
+  user?: { id: number; name: string; email?: string; phone?: string } | null;
+  items?: OrderItem[];
+}
+
+const STATUS_CONFIG: Record<OrderStatus, { label: string; classes: string }> = {
+  pending:   { label: "En attente",  classes: "bg-amber-100 text-amber-800 border border-amber-200" },
+  paid:      { label: "Payée",       classes: "bg-emerald-100 text-emerald-800 border border-emerald-200" },
+  shipped:   { label: "Expédiée",    classes: "bg-blue-100 text-blue-800 border border-blue-200" },
+  delivered: { label: "Livrée",      classes: "bg-green-100 text-green-700 border border-green-200" },
+  cancelled: { label: "Annulée",     classes: "bg-red-100 text-red-700 border border-red-200" },
+};
+
+const getDateRange = (period: string) => {
+  const now = new Date();
+  if (period === "day") {
+    const start = new Date(now); start.setHours(0, 0, 0, 0);
+    return { from: start.toISOString().split("T")[0], to: now.toISOString().split("T")[0] };
+  }
+  if (period === "week") {
+    const start = new Date(now); start.setDate(now.getDate() - 7);
+    return { from: start.toISOString().split("T")[0], to: now.toISOString().split("T")[0] };
+  }
+  if (period === "month") {
+    const start = new Date(now); start.setDate(now.getDate() - 30);
+    return { from: start.toISOString().split("T")[0], to: now.toISOString().split("T")[0] };
+  }
+  return {};
+};
 
 export const ReceiptsPage: React.FC = () => {
   const { hasPermission } = useAdminAuth();
-  const { receipts, printReceipt } = useReceipt();
-  const { getTodayTransactions } = usePOS();
-  const [selectedReceipt, setSelectedReceipt] = useState<string | null>(null);
+  const [orders, setOrders] = useState<ApiOrder[]>([]);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [period, setPeriod] = useState<"all" | "day" | "week" | "month">("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterPeriod, setFilterPeriod] = useState<"day" | "week" | "month">(
-    "day",
-  );
-  const [toast, setToast] = useState({
-    show: false,
-    message: "",
-    type: "success" as "success" | "error",
-  });
+  const [pagination, setPagination] = useState<{ current_page: number; last_page: number; total: number } | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<ApiOrder | null>(null);
+  const [downloadingId, setDownloadingId] = useState<number | null>(null);
 
-  if (!hasPermission("manage_receipts")) {
+  const loadOrders = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params: Record<string, any> = { page: currentPage, per_page: 15 };
+      if (searchTerm) params.search = searchTerm;
+      const dateRange = getDateRange(period);
+      if (dateRange.from) params.from = dateRange.from;
+      if (dateRange.to) params.to = dateRange.to;
+
+      const res = await fetchAdminOrders(params);
+      setOrders(res?.data ?? []);
+      if (res?.pagination) setPagination(res.pagination);
+    } catch {
+      toast.error("Impossible de charger les commandes");
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, searchTerm, period]);
+
+  useEffect(() => { loadOrders(); }, [loadOrders]);
+
+  // Debounce search to avoid too many API calls
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, period]);
+
+  const stats = useMemo(() => {
+    const total = pagination?.total ?? orders.length;
+    const revenue = orders.reduce((s, o) => s + parseFloat(String(o.total)), 0);
+    const pending = orders.filter(o => o.status === "pending").length;
+    const avg = orders.length > 0 ? revenue / orders.length : 0;
+    return { total, revenue, pending, avg };
+  }, [orders, pagination]);
+
+  const handleDownload = async (order: ApiOrder) => {
+    setDownloadingId(order.id);
+    try {
+      await downloadOrderReceipt(order.id);
+      toast.success(`Reçu #${order.id} téléchargé`);
+    } catch {
+      toast.error("Erreur lors du téléchargement");
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
+  if (!hasPermission("manage_receipts") && !hasPermission("manage_orders")) {
     return (
       <AdminLayout>
         <div className="text-center py-12">
@@ -39,610 +114,333 @@ export const ReceiptsPage: React.FC = () => {
     );
   }
 
-  const showToast = (
-    message: string,
-    type: "success" | "error" = "success",
-  ) => {
-    setToast({ show: true, message, type });
-    setTimeout(
-      () => setToast({ show: false, message: "", type: "success" }),
-      3000,
-    );
-  };
-
-  const todayTransactions = getTodayTransactions();
-  const dayTotal = todayTransactions.reduce((sum, t) => sum + t.total, 0);
-
-  // Filter transactions based on search
-  const filteredTransactions = useMemo(() => {
-    return todayTransactions.filter(
-      (t) =>
-        t.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.payments.some((p) =>
-          p.type.toLowerCase().includes(searchTerm.toLowerCase()),
-        ),
-    );
-  }, [todayTransactions, searchTerm]);
-
-  // Pagination
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
-  const paginatedTransactions = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredTransactions.slice(start, start + itemsPerPage);
-  }, [filteredTransactions, currentPage]);
-
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleString("fr-FR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const generateReceiptHTML = (transaction: any) => {
-    const itemsHTML = transaction.items
-      .map(
-        (item: any) =>
-          `<tr>
-            <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${item.name}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: center;">${item.quantity}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: right;">XAF${(item.quantity * item.unitPrice).toFixed(2)}</td>
-          </tr>`,
-      )
-      .join("");
-
-    const paymentsHTML = transaction.payments
-      .map(
-        (p: any) =>
-          `<div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <span style="text-transform: capitalize;">${p.type}</span>
-            <span>XAF${p.amount.toFixed(2)}</span>
-          </div>`,
-      )
-      .join("");
-
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Reçu ${transaction.id}</title>
-      </head>
-      <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #1e293b; margin: 0;">RTWater</h1>
-          <p style="color: #64748b; margin: 5px 0;">Équipement de traitement d'eau</p>
-        </div>
-
-        <div style="border: 1px solid #e2e8f0; padding: 20px; margin-bottom: 30px; border-radius: 8px;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-            <div>
-              <p style="color: #64748b; margin: 0 0 5px 0; font-size: 12px;">ID TRANSACTION</p>
-              <p style="color: #1e293b; margin: 0; font-weight: bold; font-size: 14px;">${transaction.id}</p>
-            </div>
-            <div>
-              <p style="color: #64748b; margin: 0 0 5px 0; font-size: 12px;">DATE & HEURE</p>
-              <p style="color: #1e293b; margin: 0; font-weight: bold; font-size: 14px;">${formatDate(transaction.timestamp)}</p>
-            </div>
-          </div>
-        </div>
-
-        <h3 style="color: #1e293b; margin-bottom: 10px;">Articles</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-          <thead>
-            <tr style="background-color: #f1f5f9;">
-              <th style="padding: 8px; text-align: left; border-bottom: 1px solid #cbd5e1;">Article</th>
-              <th style="padding: 8px; text-align: center; border-bottom: 1px solid #cbd5e1;">Qté</th>
-              <th style="padding: 8px; text-align: right; border-bottom: 1px solid #cbd5e1;">Prix</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${itemsHTML}
-          </tbody>
-        </table>
-
-        <div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <span style="color: #475569;">Sous-total</span>
-            <span style="color: #1e293b; font-weight: bold;">XAF${transaction.subtotal.toFixed(2)}</span>
-          </div>
-          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <span style="color: #475569;">TVA 20%</span>
-            <span style="color: #1e293b; font-weight: bold;">XAF${transaction.tax.toFixed(2)}</span>
-          </div>
-          <div style="border-top: 1px solid #cbd5e1; padding-top: 8px; display: flex; justify-content: space-between;">
-            <span style="color: #1e293b; font-weight: bold; font-size: 16px;">Total</span>
-            <span style="color: #059669; font-weight: bold; font-size: 16px;">XAF${transaction.total.toFixed(2)}</span>
-          </div>
-        </div>
-
-        <h3 style="color: #1e293b; margin-bottom: 10px;">Paiement</h3>
-        <div style="background-color: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-          ${paymentsHTML}
-          ${
-            transaction.change > 0
-              ? `<div style="border-top: 1px solid #cbd5e1; padding-top: 8px; display: flex; justify-content: space-between;">
-            <span style="color: #059669; font-weight: bold;">Monnaie rendue</span>
-            <span style="color: #059669; font-weight: bold;">XAF${transaction.change.toFixed(2)}</span>
-          </div>`
-              : ""
-          }
-        </div>
-
-        <div style="text-align: center; color: #94a3b8; font-size: 12px; margin-top: 30px;">
-          <p>Merci de votre achat!</p>
-          <p>RTWater - ${new Date().getFullYear()}</p>
-        </div>
-      </body>
-      </html>
-    `;
-  };
-
-  const handlePrint = (transactionId: string) => {
-    try {
-      const transaction = todayTransactions.find((t) => t.id === transactionId);
-      if (!transaction) {
-        showToast("Transaction non trouvée", "error");
-        return;
-      }
-
-      const printWindow = window.open("", "", "height=600,width=800");
-      if (printWindow) {
-        printWindow.document.write(generateReceiptHTML(transaction));
-        printWindow.document.close();
-        printWindow.print();
-        showToast("Reçu imprimé avec succès", "success");
-      }
-    } catch (error) {
-      showToast("Erreur lors de l'impression", "error");
-    }
-  };
-
-  const handleDownloadPDF = (transactionId: string) => {
-    try {
-      const transaction = todayTransactions.find((t) => t.id === transactionId);
-      if (!transaction) {
-        showToast("Transaction non trouvée", "error");
-        return;
-      }
-
-      const html = generateReceiptHTML(transaction);
-      const element = document.createElement("a");
-      element.setAttribute(
-        "href",
-        "data:text/html;charset=utf-8," + encodeURIComponent(html),
-      );
-      element.setAttribute("download", `receipt_${transaction.id}.html`);
-      element.style.display = "none";
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-
-      showToast("Reçu téléchargé avec succès", "success");
-    } catch (error) {
-      showToast("Erreur lors du téléchargement", "error");
-    }
-  };
-
   return (
     <AdminLayout
-      title="Reçus & Transactions"
+      title="Reçus & Commandes"
       breadcrumbs={[
         { label: "Dashboard", path: "/admin/dashboard" },
         { label: "Reçus" },
       ]}
     >
-      {/* Toast Notification */}
-      {toast.show && (
-        <div
-          className={`fixed top-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 animate-fade-in ${
-            toast.type === "success"
-              ? "bg-green-500 text-white"
-              : "bg-red-500 text-white"
-          }`}
-        >
-          {toast.message}
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Total commandes */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-2xl p-5 text-white shadow-lg shadow-[#0077BE]/20">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <ShoppingBag size={20} />
+            </div>
+            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">Total</span>
+          </div>
+          <p className="text-3xl font-bold">{stats.total}</p>
+          <p className="text-sm text-white/70 mt-1">Toutes les commandes</p>
         </div>
-      )}
 
-      {/* Day Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <p className="text-sm text-gray-600 mb-1">Transactions du jour</p>
-          <p className="text-3xl font-bold text-gray-900">
-            {todayTransactions.length}
-          </p>
-          <p className="text-xs text-gray-500 mt-2">
-            Total filtrés: {filteredTransactions.length}
-          </p>
+        {/* Chiffre d'affaires */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl p-5 text-white shadow-lg shadow-emerald-500/20">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <DollarSign size={20} />
+            </div>
+            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">CA</span>
+          </div>
+          <p className="text-3xl font-bold">{stats.revenue.toLocaleString("fr-FR")} <span className="text-lg font-medium">XAF</span></p>
+          <p className="text-sm text-white/70 mt-1">Chiffre d'affaires</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <p className="text-sm text-gray-600 mb-1">Montant du jour</p>
-          <p className="text-3xl font-bold text-green-600">
-            {dayTotal.toFixed(2)} XAF
-          </p>
+
+        {/* En attente */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl p-5 text-white shadow-lg shadow-amber-500/20">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <Clock size={20} />
+            </div>
+            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">Attente</span>
+          </div>
+          <p className="text-3xl font-bold">{stats.pending}</p>
+          <p className="text-sm text-white/70 mt-1">En attente</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <p className="text-sm text-gray-600 mb-1">Panier moyen</p>
-          <p className="text-3xl font-bold text-blue-600">
-            {todayTransactions.length > 0
-              ? (dayTotal / todayTransactions.length).toFixed(2)
-              : "0.00"}{" "}
-            XAF
-          </p>
+
+        {/* Panier moyen */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl p-5 text-white shadow-lg shadow-purple-500/20">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <TrendingUp size={20} />
+            </div>
+            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">Avg</span>
+          </div>
+          <p className="text-3xl font-bold">{Math.round(stats.avg).toLocaleString("fr-FR")} <span className="text-lg font-medium">XAF</span></p>
+          <p className="text-sm text-white/70 mt-1">Panier moyen</p>
         </div>
       </div>
 
-      {/* Search & Filter */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
+      {/* Filters */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-3 text-gray-400" size={18} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
             <input
               type="text"
-              placeholder="Rechercher par ID ou type de paiement..."
+              placeholder="Rechercher par client, email ou #ID..."
               value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={e => setSearchTerm(e.target.value)}
+              className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE]/30 focus:border-[#0077BE] text-sm"
             />
           </div>
           <select
-            value={filterPeriod}
-            onChange={(e) => setFilterPeriod(e.target.value as any)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={period}
+            onChange={e => { setPeriod(e.target.value as any); setCurrentPage(1); }}
+            className="px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE]/30 focus:border-[#0077BE] text-sm bg-white font-medium"
           >
+            <option value="all">Tout</option>
             <option value="day">Aujourd'hui</option>
             <option value="week">Cette semaine</option>
             <option value="month">Ce mois</option>
           </select>
+          <button
+            onClick={loadOrders}
+            className="px-4 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 text-sm font-medium flex items-center gap-2 text-slate-600 transition"
+          >
+            <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
+            Actualiser
+          </button>
         </div>
       </div>
 
-      {/* Transactions Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b flex items-center gap-2">
-          <FileText size={20} className="text-blue-600" />
-          <h3 className="text-lg font-semibold">Historique des transactions</h3>
-          <span className="text-sm text-gray-500 ml-auto">
-            {filteredTransactions.length} résultats
-          </span>
+      {/* Table */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-3">
+          <div className="w-8 h-8 bg-[#0077BE]/10 rounded-lg flex items-center justify-center">
+            <FileText size={16} className="text-[#0077BE]" />
+          </div>
+          <h3 className="font-semibold text-slate-900">Historique des reçus</h3>
+          {pagination && (
+            <span className="ml-auto text-xs text-slate-400 bg-slate-50 px-2.5 py-1 rounded-full">
+              {pagination.total} commandes
+            </span>
+          )}
         </div>
 
-        {filteredTransactions.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            <AlertCircle className="mx-auto mb-2 text-gray-400" size={32} />
-            <p>Aucune transaction trouvée</p>
-          </div>
-        ) : (
-          <>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                      ID
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                      Heure
-                    </th>
-                    <th className="px-6 py-3 text-center text-sm font-semibold text-gray-900">
-                      Articles
-                    </th>
-                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">
-                      Montant
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                      Paiement
-                    </th>
-                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">
-                      Actions
-                    </th>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-slate-50 border-b border-slate-100">
+                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">#ID</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Client</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Date</th>
+                <th className="px-5 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide">Montant</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Statut</th>
+                <th className="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-50">
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="px-5 py-12 text-center text-slate-400">
+                    <div className="w-8 h-8 border-2 border-[#0077BE] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                    Chargement...
+                  </td>
+                </tr>
+              ) : orders.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-5 py-12 text-center">
+                    <FileText size={36} className="mx-auto text-slate-200 mb-3" />
+                    <p className="text-slate-400 font-medium">Aucune commande trouvée</p>
+                    <p className="text-slate-300 text-sm mt-1">Essayez de modifier les filtres</p>
+                  </td>
+                </tr>
+              ) : orders.map(order => {
+                const statusCfg = STATUS_CONFIG[order.status] ?? { label: order.status, classes: "bg-slate-100 text-slate-600 border border-slate-200" };
+                return (
+                  <tr key={order.id} className="hover:bg-slate-50/50 transition-colors group">
+                    <td className="px-5 py-3.5 text-sm font-bold text-[#0077BE]">
+                      #{String(order.id).padStart(5, "0")}
+                    </td>
+                    <td className="px-5 py-3.5 text-sm">
+                      <div className="font-medium text-slate-900">{order.user?.name ?? "Client invité"}</div>
+                      {order.user?.email && (
+                        <div className="text-xs text-slate-400 mt-0.5">{order.user.email}</div>
+                      )}
+                    </td>
+                    <td className="px-5 py-3.5 text-sm text-slate-500">
+                      {new Date(order.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
+                    </td>
+                    <td className="px-5 py-3.5 text-sm font-semibold text-slate-900 text-right">
+                      {parseFloat(String(order.total)).toLocaleString("fr-FR")} XAF
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${statusCfg.classes}`}>
+                        {statusCfg.label}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5 text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <button
+                          onClick={() => setSelectedOrder(order)}
+                          className="p-1.5 text-slate-400 hover:text-[#0077BE] hover:bg-[#0077BE]/10 rounded-lg transition"
+                          title="Voir les détails"
+                        >
+                          <Eye size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDownload(order)}
+                          disabled={downloadingId === order.id}
+                          className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition disabled:opacity-50"
+                          title="Télécharger PDF"
+                        >
+                          {downloadingId === order.id ? (
+                            <RefreshCw size={16} className="animate-spin" />
+                          ) : (
+                            <Download size={16} />
+                          )}
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {paginatedTransactions.map((transaction) => (
-                    <tr
-                      key={transaction.id}
-                      className="border-b hover:bg-gray-50 transition"
-                    >
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                        <span className="inline-flex items-center gap-2">
-                          <CheckCircle size={16} className="text-green-600" />
-                          {transaction.id}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {formatDate(transaction.timestamp)}
-                      </td>
-                      <td className="px-6 py-4 text-center text-sm text-gray-600">
-                        {transaction.items.reduce(
-                          (sum, item) => sum + item.quantity,
-                          0,
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                        {transaction.total.toFixed(2)} XAF
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        <div className="flex flex-wrap gap-1">
-                          {transaction.payments.map((p, idx) => (
-                            <span
-                              key={idx}
-                              className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
-                            >
-                              {p.type}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end gap-2">
-                          <button
-                            onClick={() => setSelectedReceipt(transaction.id)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                            title="Voir les détails"
-                          >
-                            <Eye size={18} />
-                          </button>
-                          <button
-                            onClick={() => handlePrint(transaction.id)}
-                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
-                            title="Imprimer"
-                          >
-                            <Printer size={18} />
-                          </button>
-                          <button
-                            onClick={() => handleDownloadPDF(transaction.id)}
-                            className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition"
-                            title="Télécharger"
-                          >
-                            <Download size={18} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="p-4 border-t flex items-center justify-between">
-                <p className="text-sm text-gray-600">
-                  Page {currentPage} sur {totalPages}
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                    disabled={currentPage === 1}
-                    className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                  >
-                    Précédent
-                  </button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (page) => (
-                      <button
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                        className={`px-3 py-1 border rounded-lg transition ${
-                          currentPage === page
-                            ? "bg-blue-600 text-white border-blue-600"
-                            : "border-gray-300 hover:bg-gray-50"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ),
-                  )}
-                  <button
-                    onClick={() =>
-                      setCurrentPage(Math.min(totalPages, currentPage + 1))
-                    }
-                    disabled={currentPage === totalPages}
-                    className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                  >
-                    Suivant
-                  </button>
-                </div>
-              </div>
-            )}
-          </>
+        {/* Pagination */}
+        {pagination && pagination.last_page > 1 && (
+          <div className="px-5 py-3.5 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-sm text-slate-500">
+            <span>Page <strong className="text-slate-700">{pagination.current_page}</strong> / {pagination.last_page} — {pagination.total} commandes</span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40 transition text-xs font-medium"
+              >
+                <ChevronLeft size={14} /> Précédent
+              </button>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(pagination.last_page, p + 1))}
+                disabled={currentPage === pagination.last_page}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40 transition text-xs font-medium"
+              >
+                Suivant <ChevronRight size={14} />
+              </button>
+            </div>
+          </div>
         )}
       </div>
 
-      {/* Transaction Details Modal */}
-      {selectedReceipt && (
-        <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl">
-            {todayTransactions
-              .filter((t) => t.id === selectedReceipt)
-              .map((transaction) => (
-                <div key={transaction.id}>
-                  {/* Modal Header */}
-                  <div className="sticky top-0 bg-white border-b p-6 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <FileText size={24} className="text-blue-600" />
-                      <div>
-                        <h2 className="text-xl font-bold text-gray-900">
-                          Reçu #{transaction.id}
-                        </h2>
-                        <p className="text-sm text-gray-600">
-                          {formatDate(transaction.timestamp)}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setSelectedReceipt(null)}
-                      className="text-gray-400 hover:text-gray-600"
-                    >
-                      ✕
-                    </button>
+      {/* Detail Modal */}
+      {selectedOrder && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-xl flex items-center justify-center">
+                  <FileText size={18} className="text-white" />
+                </div>
+                <div>
+                  <h2 className="font-bold text-slate-900">
+                    Commande #{String(selectedOrder.id).padStart(5, "0")}
+                  </h2>
+                  <p className="text-xs text-slate-400">
+                    {new Date(selectedOrder.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedOrder(null)}
+                className="p-2 hover:bg-slate-100 rounded-xl transition text-slate-400 hover:text-slate-700"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-5">
+              {/* Status */}
+              <div className="flex items-center gap-3">
+                <span className={`px-3 py-1.5 rounded-full text-sm font-semibold ${STATUS_CONFIG[selectedOrder.status]?.classes ?? ""}`}>
+                  {STATUS_CONFIG[selectedOrder.status]?.label ?? selectedOrder.status}
+                </span>
+              </div>
+
+              {/* Client info */}
+              <div className="bg-slate-50 rounded-xl p-4">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Informations client</p>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <p className="text-slate-400 text-xs mb-0.5">Nom</p>
+                    <p className="font-semibold text-slate-900">{selectedOrder.user?.name ?? "Client invité"}</p>
                   </div>
-
-                  {/* Modal Body */}
-                  <div className="p-6 space-y-6">
-                    {/* Transaction Info */}
-                    <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">
-                          ID Transaction
-                        </p>
-                        <p className="font-semibold text-gray-900">
-                          {transaction.id}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">
-                          Date & Heure
-                        </p>
-                        <p className="font-semibold text-gray-900">
-                          {formatDate(transaction.timestamp)}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Items Table */}
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                        <FileText size={18} className="text-blue-600" />
-                        Articles commandés
-                      </h3>
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                          <thead className="bg-gray-50 border-b">
-                            <tr>
-                              <th className="px-4 py-2 text-left font-semibold text-gray-900">
-                                Article
-                              </th>
-                              <th className="px-4 py-2 text-center font-semibold text-gray-900">
-                                Qté
-                              </th>
-                              <th className="px-4 py-2 text-right font-semibold text-gray-900">
-                                Prix unitaire
-                              </th>
-                              <th className="px-4 py-2 text-right font-semibold text-gray-900">
-                                Total
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y">
-                            {transaction.items.map((item, idx) => (
-                              <tr key={idx} className="hover:bg-gray-50">
-                                <td className="px-4 py-2 text-gray-900 font-medium">
-                                  {item.name}
-                                </td>
-                                <td className="px-4 py-2 text-center text-gray-600">
-                                  {item.quantity}
-                                </td>
-                                <td className="px-4 py-2 text-right text-gray-600">
-                                  {item.unitPrice.toFixed(2)} XAF
-                                </td>
-                                <td className="px-4 py-2 text-right text-gray-900 font-semibold">
-                                  XAF
-                                  {(item.quantity * item.unitPrice).toFixed(2)}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-
-                    {/* Summary */}
-                    <div className="p-4 bg-blue-50 rounded-lg space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Sous-total</span>
-                        <span className="font-semibold text-gray-900">
-                          {transaction.subtotal.toFixed(2)} XAF
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">TVA 20%</span>
-                        <span className="font-semibold text-gray-900">
-                          {transaction.tax.toFixed(2)} XAF
-                        </span>
-                      </div>
-                      <div className="border-t pt-2 flex justify-between">
-                        <span className="font-bold text-gray-900">
-                          Total TTC
-                        </span>
-                        <span className="font-bold text-green-600 text-base">
-                          {transaction.total.toFixed(2)} XAF
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Payment Info */}
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-3">
-                        Détails du paiement
-                      </h3>
-                      <div className="space-y-2 p-4 bg-gray-50 rounded-lg text-sm">
-                        {transaction.payments.map((p, idx) => (
-                          <div
-                            key={idx}
-                            className="flex justify-between items-center"
-                          >
-                            <span className="capitalize font-medium text-gray-900">
-                              {p.type}
-                            </span>
-                            <span className="font-semibold text-gray-900">
-                              {p.amount.toFixed(2)} XAF
-                            </span>
-                          </div>
-                        ))}
-                        {transaction.change > 0 && (
-                          <div className="border-t pt-2 flex justify-between items-center">
-                            <span className="font-medium text-green-600">
-                              Monnaie rendue
-                            </span>
-                            <span className="font-bold text-green-600">
-                              {transaction.change.toFixed(2)} XAF
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                  <div>
+                    <p className="text-slate-400 text-xs mb-0.5">Email</p>
+                    <p className="font-medium text-slate-700">{selectedOrder.user?.email ?? "—"}</p>
                   </div>
-
-                  {/* Modal Footer */}
-                  <div className="sticky bottom-0 bg-gray-50 border-t p-4 flex gap-3">
-                    <button
-                      onClick={() => setSelectedReceipt(null)}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition font-medium text-gray-700"
-                    >
-                      Fermer
-                    </button>
-                    <button
-                      onClick={() => {
-                        handlePrint(transaction.id);
-                        setSelectedReceipt(null);
-                      }}
-                      className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium flex items-center justify-center gap-2"
-                    >
-                      <Printer size={18} />
-                      Imprimer
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleDownloadPDF(transaction.id);
-                        setSelectedReceipt(null);
-                      }}
-                      className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition font-medium flex items-center justify-center gap-2"
-                    >
-                      <Download size={18} />
-                      Télécharger
-                    </button>
+                  {selectedOrder.user?.phone && (
+                    <div>
+                      <p className="text-slate-400 text-xs mb-0.5">Téléphone</p>
+                      <p className="font-medium text-slate-700">{selectedOrder.user.phone}</p>
+                    </div>
+                  )}
+                  <div className={selectedOrder.user?.phone ? "" : "col-span-2"}>
+                    <p className="text-slate-400 text-xs mb-0.5">Adresse</p>
+                    <p className="font-medium text-slate-700">{selectedOrder.address || "Non spécifiée"}</p>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Items */}
+              {selectedOrder.items && selectedOrder.items.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Articles commandés</p>
+                  <div className="border border-slate-100 rounded-xl overflow-hidden">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-slate-50 border-b border-slate-100">
+                          <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500">Article</th>
+                          <th className="px-4 py-2.5 text-center text-xs font-semibold text-slate-500">Qté</th>
+                          <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500">Prix unit.</th>
+                          <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {selectedOrder.items.map((item, idx) => (
+                          <tr key={idx} className="hover:bg-slate-50/50">
+                            <td className="px-4 py-2.5 font-medium text-slate-900">{item.product?.name ?? "Produit supprimé"}</td>
+                            <td className="px-4 py-2.5 text-center text-slate-600">{item.quantity}</td>
+                            <td className="px-4 py-2.5 text-right text-slate-600">{parseFloat(String(item.price)).toLocaleString("fr-FR")} XAF</td>
+                            <td className="px-4 py-2.5 text-right font-semibold text-slate-900">{(item.quantity * parseFloat(String(item.price))).toLocaleString("fr-FR")} XAF</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Total */}
+              <div className="bg-gradient-to-r from-[#0077BE]/5 to-[#00A8E8]/5 border border-[#0077BE]/10 rounded-xl p-4 flex items-center justify-between">
+                <span className="font-semibold text-slate-700">Total TTC</span>
+                <span className="text-2xl font-bold text-[#0077BE]">
+                  {parseFloat(String(selectedOrder.total)).toLocaleString("fr-FR")} XAF
+                </span>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="sticky bottom-0 bg-white border-t border-slate-100 px-6 py-4 flex gap-3 rounded-b-2xl">
+              <button
+                onClick={() => setSelectedOrder(null)}
+                className="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition font-medium text-slate-700 text-sm"
+              >
+                Fermer
+              </button>
+              <button
+                onClick={() => { handleDownload(selectedOrder); setSelectedOrder(null); }}
+                disabled={downloadingId === selectedOrder.id}
+                className="flex-1 px-4 py-2.5 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white rounded-xl hover:opacity-90 transition font-medium text-sm flex items-center justify-center gap-2 shadow-md shadow-[#0077BE]/20 disabled:opacity-60"
+              >
+                <Download size={16} />
+                Télécharger PDF
+              </button>
+            </div>
           </div>
         </div>
       )}

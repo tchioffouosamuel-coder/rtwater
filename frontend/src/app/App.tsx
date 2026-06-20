@@ -33,6 +33,7 @@ const ReceiptsPage = lazy(() => import("./admin/pages/ReceiptsPage").then(m => (
 const AnalyticsPage = lazy(() => import("./admin/pages/AnalyticsPage").then(m => ({ default: m.AnalyticsPage })));
 const SettingsPage = lazy(() => import("./admin/pages/SettingsPage").then(m => ({ default: m.SettingsPage })));
 const ReviewsPage  = lazy(() => import("./admin/pages/ReviewsPage").then(m => ({ default: m.ReviewsPage })));
+const QuotesAdminPage = lazy(() => import("./admin/pages/QuotesAdminPage").then(m => ({ default: m.QuotesAdminPage })));
 
 // Composant de chargement pour le Suspense
 const AdminLoadingFallback = () => (
@@ -157,6 +158,16 @@ export default function App() {
             <Suspense fallback={<AdminLoadingFallback />}>
               <ProtectedRoute requiredPermission="manage_reviews">
                 <ReviewsPage />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/quotes"
+          element={
+            <Suspense fallback={<AdminLoadingFallback />}>
+              <ProtectedRoute requiredPermission="manage_orders">
+                <QuotesAdminPage />
               </ProtectedRoute>
             </Suspense>
           }

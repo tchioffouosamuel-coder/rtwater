@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
-import { ChevronDown, LogOut, Menu, X, LayoutDashboard, Package, FileText, ShoppingCart, Warehouse, CreditCard, Receipt, BarChart3, Settings, Star } from 'lucide-react';
+import { ChevronDown, LogOut, Menu, X, LayoutDashboard, Package, FileText, ShoppingCart, Warehouse, CreditCard, Receipt, BarChart3, Settings, Star, FileQuestion } from 'lucide-react';
 
 interface NavItem {
   label: string;
@@ -58,6 +58,12 @@ export const Sidebar: React.FC = () => {
           icon: <Star size={18} />,
           path: '/admin/reviews',
           requiredPermission: 'manage_reviews',
+        },
+        {
+          label: 'Demandes de devis',
+          icon: <FileQuestion size={18} />,
+          path: '/admin/quotes',
+          requiredPermission: 'manage_orders',
         },
       ],
     },

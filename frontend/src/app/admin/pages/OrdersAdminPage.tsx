@@ -3,7 +3,7 @@ import { AdminLayout } from '../layout/AdminLayout';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import * as ordersService from '../../../services/orders';
 import { toast } from 'sonner';
-import { Search, Eye, Printer, TrendingUp, Clock, CheckCircle, AlertCircle, Package, Truck, X } from 'lucide-react';
+import { Search, Eye, Printer, TrendingUp, Clock, CheckCircle, AlertCircle, Package, Truck, X, ShoppingBag, DollarSign, RefreshCw } from 'lucide-react';
 
 type ApiOrderStatus = 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
 
@@ -108,19 +108,66 @@ export const OrdersAdminPage: React.FC = () => {
     <AdminLayout title="Gestion des commandes" breadcrumbs={[{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Commandes' }]}>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Total commandes */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-2xl p-5 text-white shadow-lg shadow-[#0077BE]/20">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <ShoppingBag size={20} />
+            </div>
+            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">Total</span>
+          </div>
+          <p className="text-3xl font-bold">{stats.total}</p>
+          <p className="text-sm text-white/70 mt-1">Toutes commandes</p>
+        </div>
+
+        {/* Revenus */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl p-5 text-white shadow-lg shadow-emerald-500/20">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <DollarSign size={20} />
+            </div>
+            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">CA</span>
+          </div>
+          <p className="text-3xl font-bold">{stats.revenue.toFixed(0)} <span className="text-lg font-medium">XOF</span></p>
+          <p className="text-sm text-white/70 mt-1">Chiffre d'affaires</p>
+        </div>
+
+        {/* En attente */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl p-5 text-white shadow-lg shadow-amber-500/20">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <Clock size={20} />
+            </div>
+            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">Attente</span>
+          </div>
+          <p className="text-3xl font-bold">{stats.pending}</p>
+          <p className="text-sm text-white/70 mt-1">En attente</p>
+        </div>
+
+        {/* Livrées */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl p-5 text-white shadow-lg shadow-purple-500/20">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <CheckCircle size={20} />
+            </div>
+            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">Livrées</span>
+          </div>
+          <p className="text-3xl font-bold">{stats.delivered}</p>
+          <p className="text-sm text-white/70 mt-1">Livrées avec succès</p>
+        </div>
+      </div>
+
+      {/* Secondary stats row */}
+      <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-6">
         {[
-          { label: 'Total', value: stats.total, color: 'bg-blue-50 border-blue-200', text: 'text-blue-900' },
-          { label: 'En attente', value: stats.pending, color: 'bg-amber-50 border-amber-200', text: 'text-amber-900' },
-          { label: 'Payées', value: stats.paid, color: 'bg-indigo-50 border-indigo-200', text: 'text-indigo-900' },
-          { label: 'Expédiées', value: stats.shipped, color: 'bg-sky-50 border-sky-200', text: 'text-sky-900' },
-          { label: 'Livrées', value: stats.delivered, color: 'bg-green-50 border-green-200', text: 'text-green-900' },
-          { label: 'Annulées', value: stats.cancelled, color: 'bg-red-50 border-red-200', text: 'text-red-900' },
-          { label: 'Revenus', value: `${stats.revenue.toFixed(0)} XOF`, color: 'bg-purple-50 border-purple-200', text: 'text-purple-900' },
+          { label: 'Payées', value: stats.paid, color: 'bg-indigo-50 border-indigo-100', text: 'text-indigo-900' },
+          { label: 'Expédiées', value: stats.shipped, color: 'bg-sky-50 border-sky-100', text: 'text-sky-900' },
+          { label: 'Annulées', value: stats.cancelled, color: 'bg-red-50 border-red-100', text: 'text-red-900' },
         ].map(s => (
-          <div key={s.label} className={`${s.color} border rounded-xl p-3`}>
+          <div key={s.label} className={`${s.color} border rounded-2xl p-3`}>
             <p className="text-xs text-slate-500 font-medium">{s.label}</p>
-            <p className={`text-lg font-bold mt-1 ${s.text}`}>{s.value}</p>
+            <p className={`text-xl font-bold mt-1 ${s.text}`}>{s.value}</p>
           </div>
         ))}
       </div>
@@ -153,7 +200,7 @@ export const OrdersAdminPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
