@@ -78,7 +78,7 @@ export function Cart() {
                             {item.name}
                           </h3>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                            ${item.price.toFixed(2)}
+                            {item.price.toLocaleString("fr-FR")} XAF
                           </p>
                         </div>
                         <button
@@ -109,7 +109,7 @@ export function Cart() {
                       </div>
 
                       <p className="text-right text-sm font-semibold text-gray-900 dark:text-white mt-3">
-                        {t("shop.total")}: ${(item.price * item.quantity).toFixed(2)}
+                        {t("shop.total")}: {(item.price * item.quantity).toLocaleString("fr-FR")} XAF
                       </p>
                     </motion.div>
                   ))}
@@ -123,7 +123,7 @@ export function Cart() {
                 <div className="flex justify-between items-center text-lg font-bold text-gray-900 dark:text-white">
                   <span>{t("shop.total")}:</span>
                   <span className="text-[#0077BE] dark:text-blue-400">
-                    ${cartTotal.toFixed(2)}
+                    {cartTotal.toLocaleString("fr-FR")} XAF
                   </span>
                 </div>
 

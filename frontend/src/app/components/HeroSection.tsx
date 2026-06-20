@@ -29,34 +29,41 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
     <section id="accueil" className="relative min-h-[600px] sm:min-h-[700px] flex items-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
+        {/* Primary contextual photo — water treatment infrastructure */}
         <motion.img
-          initial={{ scale: 1.2 }}
+          initial={{ scale: 1.08 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          src="https://images.unsplash.com/photo-1570615541379-e6b7ab6d4eb9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbGVhbiUyMHdhdGVyJTIwdHJlYXRtZW50JTIwcHVyaWZpY2F0aW9ufGVufDF8fHx8MTc3MDQ3NjY5Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-          alt="Clean water"
+          transition={{ duration: 2.2, ease: "easeOut" }}
+          src="https://6a36433705d679a122fa04b3.imgix.net/my-images/beautiful-african-women-having-fun-while-fetching-water.jpg?auto=format&fit=fill&w=384"
+          alt="Station de traitement d'eau"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0077BE]/95 via-[#0077BE]/85 to-[#00A8E8]/75"></div>
-        
-        {/* Animated Particles */}
+        {/* Gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#003f6e]/90 via-[#0077BE]/80 to-[#00A8E8]/60"></div>
+        {/* Vignette edges */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20"></div>
+
+        {/* Animated rising bubbles */}
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(20)].map((_, i) => (
+          {[...Array(22)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-2 h-2 bg-white/20 rounded-full"
-              initial={{
-                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
-                y: Math.random() * 700,
+              className="absolute rounded-full bg-white/20"
+              style={{
+                width: 3 + (i % 5) * 3,
+                height: 3 + (i % 5) * 3,
+                left: `${(i * 4.7) % 100}%`,
+                bottom: 0,
               }}
               animate={{
-                y: [null, -100],
-                opacity: [0, 1, 0],
+                y: [0, -(700 + (i % 3) * 200)],
+                opacity: [0, 0.7, 0],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 5 + (i % 4),
                 repeat: Infinity,
-                delay: Math.random() * 2,
+                delay: (i * 0.5) % 7,
+                ease: "easeOut",
               }}
             />
           ))}

@@ -7,10 +7,11 @@ export interface CartItem {
   quantity: number;
   unitPrice: number;
   discount?: number; // En pourcentage
+  category?: string;
 }
 
 export interface PaymentMethod {
-  type: 'cash' | 'card' | 'check' | 'transfer';
+  type: 'cash' | 'card' | 'check' | 'transfer' | 'orange_money' | 'mtn_money' | 'moov_money' | 'wave';
   amount: number;
 }
 
@@ -105,7 +106,7 @@ export const POSProvider = ({ children }: { children: ReactNode }) => {
       const subtotal = calculateSubtotal();
       const tax = calculateTax(subtotal);
       const total = subtotal + tax;
-      
+
       const totalPayments = payments.reduce((sum, p) => sum + p.amount, 0);
       const change = totalPayments - total;
 
@@ -132,7 +133,7 @@ export const POSProvider = ({ children }: { children: ReactNode }) => {
   const getTodayTransactions = useCallback(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     return transactions.filter(t => {
       const tDate = new Date(t.timestamp);
       tDate.setHours(0, 0, 0, 0);

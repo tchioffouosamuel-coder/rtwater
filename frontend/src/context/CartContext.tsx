@@ -1,4 +1,7 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import * as cartService from '../services/cart';
+import * as ordersService from '../services/orders';
+import { toast } from 'sonner';
 
 export interface CartItem {
   id: string;
@@ -7,14 +10,17 @@ export interface CartItem {
   quantity: number;
   image: string;
   description: string;
+  serverId?: string;
 }
+
+export type OrderStatus = "pending" | "paid" | "shipped" | "delivered" | "cancelled";
 
 export interface Order {
   id: string;
   items: CartItem[];
   total: number;
   date: Date;
-  status: "pending" | "confirmed" | "shipped" | "delivered";
+  status: OrderStatus;
   customerInfo?: {
     name: string;
     email: string;
@@ -30,7 +36,7 @@ interface CartContextType {
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
-  checkout: (customerInfo: Order["customerInfo"]) => Order | null;
+  checkout: (customerInfo: Order["customerInfo"]) => Promise<string | null>;
   cartTotal: number;
   cartCount: number;
 }
@@ -41,79 +47,167 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
 
-  const addToCart = (item: Omit<CartItem, "quantity">) => {
-    setItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
-      if (existingItem) {
-        return prevItems.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
+  useEffect(() => {
+    let mounted = true;
+    const token = localStorage.getItem('userToken');
+    if (!token) return;
+
+    (async () => {
+      try {
+        const res = await cartService.getCart();
+        if (!mounted) return;
+        const apiItems = (res?.data || []).map((ci: any) => ({
+          id: String(ci.product?.id ?? ci.id),
+          serverId: String(ci.id),
+          name: ci.product?.name ?? '',
+          price: ci.product?.price ?? 0,
+          quantity: ci.quantity ?? 1,
+          image: ci.product?.image_url || '',
+          description: ci.product?.description || '',
+        }));
+        setItems(apiItems);
+      } catch (e) {
+        console.warn('Failed to load cart from API', e);
       }
-      return [...prevItems, { ...item, quantity: 1 }];
-    });
+    })();
+
+    return () => { mounted = false; };
+  }, []);
+
+  const addToCart = (item: Omit<CartItem, "quantity">) => {
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      setItems((prev) => {
+        const existing = prev.find((i) => i.id === item.id);
+        if (existing) return prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+        return [...prev, { ...item, quantity: 1 }];
+      });
+      return;
+    }
+
+    (async () => {
+      try {
+        const res = await cartService.addCartItem(item.id, 1);
+        const ci = res?.data;
+        if (!ci) return;
+        setItems((prev) => {
+          const exists = prev.find((p) => p.id === String(ci.product?.id ?? item.id));
+          if (exists) {
+            return prev.map((p) =>
+              p.id === String(ci.product?.id ?? item.id)
+                ? { ...p, quantity: ci.quantity ?? (p.quantity + 1), serverId: String(ci.id) }
+                : p
+            );
+          }
+          return [...prev, {
+            id: String(ci.product?.id ?? item.id),
+            serverId: String(ci.id),
+            name: ci.product?.name ?? item.name,
+            price: ci.product?.price ?? item.price,
+            quantity: ci.quantity ?? 1,
+            image: ci.product?.image_url ?? item.image,
+            description: ci.product?.description ?? item.description,
+          }];
+        });
+      } catch {
+        setItems((prev) => {
+          const existing = prev.find((i) => i.id === item.id);
+          if (existing) return prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+          return [...prev, { ...item, quantity: 1 }];
+        });
+      }
+    })();
   };
 
   const removeFromCart = (id: string) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      setItems((prev) => prev.filter((i) => i.id !== id));
+      return;
+    }
+
+    const item = items.find(i => i.id === id);
+    if (!item?.serverId) {
+      setItems((prev) => prev.filter(p => p.id !== id));
+      return;
+    }
+
+    (async () => {
+      try {
+        await cartService.deleteCartItem(String(item.serverId));
+        setItems((prev) => prev.filter(p => p.id !== id));
+      } catch {
+        console.warn('Failed to remove cart item on server');
+      }
+    })();
   };
 
   const updateQuantity = (id: string, quantity: number) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
+    const token = localStorage.getItem('userToken');
+    const item = items.find(i => i.id === id);
+    if (!token || !item?.serverId) {
+      setItems((prev) => prev.map((i) => i.id === id ? { ...i, quantity } : i));
+      return;
+    }
+
+    (async () => {
+      try {
+        const res = await cartService.updateCartItem(String(item.serverId), quantity);
+        const ci = res?.data;
+        if (!ci) return;
+        setItems((prev) => prev.map(p =>
+          p.id === String(ci.product?.id ?? id) ? { ...p, quantity: ci.quantity ?? quantity } : p
+        ));
+      } catch {
+        console.warn('Failed to update cart item on server');
+      }
+    })();
   };
 
-  const clearCart = () => {
-    setItems([]);
-  };
+  const clearCart = () => setItems([]);
 
-  const checkout = (customerInfo?: Order["customerInfo"]): Order | null => {
+  const checkout = async (customerInfo?: Order["customerInfo"]): Promise<string | null> => {
     if (items.length === 0) return null;
 
     const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const newOrder: Order = {
-      id: `ORDER-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      items: [...items],
-      total,
-      date: new Date(),
-      status: "pending",
-      customerInfo,
-    };
 
-    setOrders((prevOrders) => [...prevOrders, newOrder]);
-    clearCart();
+    try {
+      // Always use the API — the public POST /api/orders endpoint handles both
+      // authenticated users and guests (requires name + phone for guests).
+      const payload: Record<string, any> = {
+        address: customerInfo?.address ?? '',
+        items: items.map(i => ({ product_id: parseInt(i.id, 10), quantity: i.quantity })),
+      };
+      if (customerInfo?.name)  payload.name  = customerInfo.name;
+      if (customerInfo?.phone) payload.phone = customerInfo.phone;
 
-    // Simuler la confirmation de la commande après 2 secondes
-    setTimeout(() => {
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.id === newOrder.id ? { ...order, status: "confirmed" } : order
-        )
-      );
-    }, 2000);
+      const res = await ordersService.createOrder(payload);
+      const orderData = res?.data;
+      if (!orderData) throw new Error('Réponse commande invalide');
 
-    return newOrder;
+      const createdOrder: Order = {
+        id: String(orderData.id),
+        items: [...items],
+        total: orderData.total ?? total,
+        date: new Date(),
+        status: (orderData.status as OrderStatus) ?? 'pending',
+        customerInfo,
+      };
+
+      setOrders((prev) => [...prev, createdOrder]);
+      clearCart();
+      return createdOrder.id;
+    } catch (e: any) {
+      toast(`Erreur commande : ${e?.message || 'inconnu'}`, { icon: '⚠️' });
+      return null;
+    }
   };
 
   const cartTotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        orders,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        checkout,
-        cartTotal,
-        cartCount,
-      }}
-    >
+    <CartContext.Provider value={{ items, orders, addToCart, removeFromCart, updateQuantity, clearCart, checkout, cartTotal, cartCount }}>
       {children}
     </CartContext.Provider>
   );
@@ -121,8 +215,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
 export function useCart() {
   const context = useContext(CartContext);
-  if (!context) {
-    throw new Error("useCart must be used within CarProvider");
-  }
+  if (!context) throw new Error("useCart must be used within CartProvider");
   return context;
 }

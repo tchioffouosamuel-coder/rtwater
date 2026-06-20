@@ -410,6 +410,42 @@ export function ContactPage() {
               <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{t("contact.hours")}</p>
             </motion.div>
           </div>
+
+          {/* Google Maps — localisation RT Water Solution Yaoundé */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.7 }}
+            className="mt-10 sm:mt-16 rounded-3xl overflow-hidden shadow-2xl border border-gray-100 dark:border-slate-700"
+          >
+            {/* Map header */}
+            <div className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] px-6 py-4 flex items-center gap-3">
+              <MapPin className="w-5 h-5 text-white flex-shrink-0" />
+              <div>
+                <p className="text-white font-bold text-sm sm:text-base">RT-Water Solution Sarl</p>
+                <p className="text-white/80 text-xs sm:text-sm">Yaoundé, Cameroun</p>
+              </div>
+              <a
+                href="https://maps.app.goo.gl/qdfrQ59oKVt2eQS18"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-auto text-white/90 hover:text-white text-xs sm:text-sm font-medium underline underline-offset-2 transition-colors"
+              >
+                Ouvrir dans Maps →
+              </a>
+            </div>
+            <div className="relative w-full" style={{ paddingBottom: "42%" }}>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3980.7179297804787!2d11.485430774747213!3d3.8705587961032246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108bcfca3f203107%3A0x47c27e91df3d7381!2sRT-Water%20Solution%20sarl!5e0!3m2!1sfr!2scm!4v1781939886136!5m2!1sfr!2scm"
+                className="absolute inset-0 w-full h-full border-0"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="RT Water Solution — Localisation Yaoundé"
+              />
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

@@ -9,11 +9,15 @@ import { AboutPage } from "./components/pages/AboutPage";
 import { Footer } from "./components/Footer";
 import { ContactPage } from "./components/pages/ContactPage";
 import { ShopPage } from "./components/pages/ShopPage";
+import { LoginPage } from "./components/pages/LoginPage";
+import { ProfilePage } from "./components/pages/ProfilePage";
 import { OrdersPage } from "./components/pages/OrdersPage";
+import { BlogPage, BlogPostPage } from "./components/pages/BlogPage";
 import { Cart } from "./components/Cart";
 import { CheckoutModal } from "./components/CheckoutModal";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { ProtectedRoute } from "./admin/layout/ProtectedRoute";
+import { Toaster } from "./components/ui/sonner";
 
 // Lazy loading des pages admin pour réduire la taille du bundle initial
 const AdminLogin = lazy(() => import("./admin/pages/AdminLogin").then(m => ({ default: m.AdminLogin })));
@@ -26,6 +30,7 @@ const POSPage = lazy(() => import("./admin/pages/POSPage").then(m => ({ default:
 const ReceiptsPage = lazy(() => import("./admin/pages/ReceiptsPage").then(m => ({ default: m.ReceiptsPage })));
 const AnalyticsPage = lazy(() => import("./admin/pages/AnalyticsPage").then(m => ({ default: m.AnalyticsPage })));
 const SettingsPage = lazy(() => import("./admin/pages/SettingsPage").then(m => ({ default: m.SettingsPage })));
+const ReviewsPage  = lazy(() => import("./admin/pages/ReviewsPage").then(m => ({ default: m.ReviewsPage })));
 
 // Composant de chargement pour le Suspense
 const AdminLoadingFallback = () => (
@@ -44,13 +49,13 @@ export default function App() {
     <div className={theme === "dark" ? "dark" : ""}>
       <Routes>
         {/* Admin Login */}
-        <Route 
-          path="/admin/login" 
+        <Route
+          path="/admin/login"
           element={
             <Suspense fallback={<AdminLoadingFallback />}>
               <AdminLogin />
             </Suspense>
-          } 
+          }
         />
 
         {/* Admin Routes */}
@@ -144,10 +149,21 @@ export default function App() {
             </Suspense>
           }
         />
+        <Route
+          path="/admin/reviews"
+          element={
+            <Suspense fallback={<AdminLoadingFallback />}>
+              <ProtectedRoute requiredPermission="manage_reviews">
+                <ReviewsPage />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
 
         {/* Pages publiques avec Header et Footer */}
         <Route element={<Layout />}>
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/gallery" element={<GalleryPage />} />
@@ -155,6 +171,9 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/shop" element={<ShopPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/orders" element={<OrdersPage />} />
         </Route>
 
@@ -164,6 +183,9 @@ export default function App() {
 
       {/* Cart Sidebar - Global */}
       <Cart />
+
+      {/* Toast notifications */}
+      <Toaster />
 
       {/* Checkout Modal - Global */}
       <CheckoutModal />

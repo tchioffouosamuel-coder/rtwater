@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Droplets, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { useTheme } from "../../theme/ThemeContext";
@@ -69,12 +69,11 @@ export function Footer() {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-xl flex items-center justify-center shadow-lg shadow-[#0077BE]/30">
-                <Droplets className="w-7 h-7 text-white" />
+              <img src="/logo.svg" alt="RT Water Solution" className="h-12 w-auto" />
+              <div className="flex flex-col">
+                <span className="text-xl font-extrabold text-white leading-none">RT Water</span>
+                <span className="text-[11px] font-semibold tracking-widest text-[#00A8E8] uppercase leading-none mt-1">Solution</span>
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                RT-Water
-              </span>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
               {t("footer.tagline")}
@@ -202,10 +201,10 @@ export function Footer() {
                 </div>
                 <div>
                   <a
-                    href="mailto:info@rt-water.com"
+                    href="mailto:info@rt-water.cm"
                     className="text-gray-400 hover:text-[#00A8E8] transition-colors"
                   >
-                    info@rt-water.com
+                    info@rt-water.cm
                   </a>
                 </div>
               </li>
@@ -245,7 +244,7 @@ export function Footer() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
-              © {currentYear} RT-Water Solution. {t("footer.allRightsReserved")}
+              © {currentYear} RT Water Solution. {t("footer.allRightsReserved")}
             </p>
             <div className="flex gap-6 text-sm">
               <a

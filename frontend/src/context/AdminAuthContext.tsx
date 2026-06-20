@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import * as authService from '../services/auth';
 
 export type AdminRole = 'admin' | 'manager' | 'cashier';
 
@@ -35,6 +36,7 @@ const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
     'manage_users',
     'manage_settings',
     'view_analytics',
+    'manage_reviews',
   ],
   manager: [
     'view_dashboard',
@@ -43,6 +45,7 @@ const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
     'manage_inventory',
     'manage_pos',
     'view_analytics',
+    'manage_reviews',
   ],
   cashier: [
     'manage_pos',
@@ -53,27 +56,28 @@ const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
 
 export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AdminUser | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // true while we're checking localStorage — prevents ProtectedRoute from
+  // redirecting to /admin/login before hydration completes
+  const [isLoading, setIsLoading] = useState(true);
 
   const login = useCallback(async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // TODO: Appel API au backend pour authentifier
-      // Pour maintenant, simulation avec admin par défaut
-      const mockUser: AdminUser = {
-        id: '1',
-        email: email,
-        name: 'Admin RTWater',
-        role: 'admin',
-        permissions: ROLE_PERMISSIONS.admin,
+      const res = await authService.loginAsAdmin(email, password);
+      const apiUser = res?.user;
+      const roleFromApi = apiUser?.roles?.[0] || 'admin';
+
+      const newUser: AdminUser = {
+        id: String(apiUser?.id ?? ''),
+        email: apiUser?.email ?? email,
+        name: apiUser?.name ?? '',
+        role: (roleFromApi as AdminRole) || 'admin',
+        permissions: ROLE_PERMISSIONS[(roleFromApi as AdminRole) || 'admin'] || [],
       };
-      
-      // Simuler délai réseau
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setUser(mockUser);
-      // Sauvegarder en localStorage pour persistence
-      localStorage.setItem('adminUser', JSON.stringify(mockUser));
+
+      setUser(newUser);
+      localStorage.setItem('adminUser', JSON.stringify(newUser));
+      // adminToken already set by loginAsAdmin via authService
     } catch (error) {
       console.error('Login failed:', error);
       throw error;
@@ -85,6 +89,8 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem('adminUser');
+    localStorage.removeItem('adminToken');
+    try { authService.logout(); } catch { /* ignore */ }
   }, []);
 
   const hasPermission = useCallback((permission: string) => {
@@ -97,16 +103,25 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
     return user.role === role;
   }, [user]);
 
-  // Charger user depuis localStorage au montage
+  // Rehydrate from localStorage — runs once on mount.
+  // Permissions are recomputed from ROLE_PERMISSIONS so any update takes
+  // effect without requiring the user to log out and back in.
   React.useEffect(() => {
-    const savedUser = localStorage.getItem('adminUser');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.error('Failed to parse saved user:', error);
-        localStorage.removeItem('adminUser');
+    try {
+      const savedUser = localStorage.getItem('adminUser');
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser) as AdminUser;
+        const freshUser: AdminUser = {
+          ...parsed,
+          permissions: ROLE_PERMISSIONS[parsed.role] ?? [],
+        };
+        setUser(freshUser);
+        localStorage.setItem('adminUser', JSON.stringify(freshUser));
       }
+    } catch {
+      localStorage.removeItem('adminUser');
+    } finally {
+      setIsLoading(false); // unlock ProtectedRoute regardless of outcome
     }
   }, []);
 

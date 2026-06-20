@@ -6,6 +6,7 @@ import { useI18n } from "../../../i18n/I18nContext";
 import { useTheme } from "../../../theme/ThemeContext";
 import { useCart } from "../../../context/CartContext";
 import { ProductDetails } from "../ProductDetails";
+import { fetchProducts } from "../../../services/products";
 
 interface Product {
   id: string;
@@ -37,271 +38,13 @@ const CATEGORIES = [
   { id: "accessories", name: "Accessoires", icon: "Wrench" },
 ];
 
-const PRODUCTS: Product[] = [
-  // Pompes
-  {
-    id: "pump-1",
-    name: "Pompe Centrifuge Premium 5000L/h",
-    price: 299.99,
-    image: "https://placehold.co/500x500/0077BE/white?text=Pompe+Centrifuge",
-    category: "pumps",
-    description: "Pompe haute performance pour usage résidentiel et petit commercial",
-    rating: 4.8,
-    reviews: 125,
-    discount: 15,
-    stock: 12,
-    warranty: "2 ans",
-    specifications: ["Débit: 5000 L/h", "Puissance: 1.5 kW", "Tension: 220V", "Profondeur max: 9m"],
-    features: ["Moteur silencieux", "Efficacité énergétique", "Corps en acier inox", "Installation facile"],
-    inStock: true,
-    isBestSeller: true,
-    soldCount: 2847,
-  },
-  {
-    id: "pump-2",
-    name: "Pompe Submersible Industrielle 10000L/h",
-    price: 849.99,
-    image: "https://placehold.co/500x500/00A8E8/white?text=Pompe+Submersible",
-    category: "pumps",
-    description: "Pompe professionnelle pour distribution d'eau à grande échelle",
-    rating: 4.9,
-    reviews: 87,
-    discount: 20,
-    stock: 5,
-    warranty: "3 ans",
-    specifications: ["Débit: 10000 L/h", "Puissance: 3 kW", "Tension: 380V tri", "Profondeur max: 20m"],
-    features: ["Robustesse extrême", "Refroidissement intégré", "Contrôle de débit", "Certification CE"],
-    inStock: true,
-    isOnSale: true,
-    soldCount: 1523,
-  },
-  {
-    id: "pump-3",
-    name: "Pompe Doseuse Précision 50-500 L/h",
-    price: 199.99,
-    image: "https://placehold.co/500x500/0095D9/white?text=Pompe+Doseuse",
-    category: "pumps",
-    description: "Pompe doseuse pour traitement chimique précis",
-    rating: 4.7,
-    reviews: 45,
-    discount: 10,
-    stock: 18,
-    warranty: "1 an",
-    specifications: ["Débit: 50-500 L/h", "Pression: 6 bar", "Construction: PVDF"],
-    features: ["Ajustement fin", "Sans fuites", "Faible bruit"],
-    inStock: true,
-    isNew: true,
-    soldCount: 892,
-  },
 
-  // Filtration
-  {
-    id: "filter-1",
-    name: "Système de Filtration 3 Étages Premium",
-    price: 499.99,
-    image: "https://placehold.co/500x500/0077BE/white?text=Filtration+Premium",
-    category: "filtration",
-    description: "Système complet de purification avec triple filtration",
-    rating: 4.9,
-    reviews: 203,
-    discount: 25,
-    stock: 8,
-    warranty: "2 ans",
-    specifications: ["Débit: 20 L/min", "Capacité: 500L/jour", "Taille: S/M/L"],
-    features: ["Sédiments + Charbon + Membranes", "Remplacement facile", "Indicateur de saturation"],
-    inStock: true,
-    isBestSeller: true,
-    isOnSale: true,
-    soldCount: 4521,
-  },
-  {
-    id: "filter-cartridge",
-    name: "Pack 5 Cartouches de Filtration",
-    price: 79.99,
-    image: "https://placehold.co/500x500/00A8E8/white?text=Cartouches",
-    category: "filtration",
-    description: "Lot de 5 cartouches de remplacement haute qualité",
-    rating: 4.8,
-    reviews: 156,
-    discount: 30,
-    stock: 45,
-    warranty: "6 mois",
-    specifications: ["Compatible: Systèmes Standard", "Micron: 5µm", "Longévité: 3-6 mois"],
-    features: ["Efficacité 99.9%", "Sans BPA", "Économique"],
-    inStock: true,
-    isOnSale: true,
-    soldCount: 6234,
-  },
-  {
-    id: "sediment-filter",
-    name: "Filtre à Sédiments Haute Capacité",
-    price: 34.99,
-    image: "https://placehold.co/500x500/0095D9/white?text=Filtre+Sediments",
-    category: "filtration",
-    description: "Filtre préfiltration pour éliminer sédiments et particules",
-    rating: 4.6,
-    reviews: 89,
-    discount: 15,
-    stock: 72,
-    warranty: "6 mois",
-    specifications: ["Micron: 20µm", "Débit: 100 L/min", "Taille: Standard"],
-    features: ["Longue durée", "Remplacement facile", "Haute capacité"],
-    inStock: true,
-    soldCount: 3421,
-  },
-
-  // Traitement
-  {
-    id: "disinfectant",
-    name: "Désinfectant Professionnel 5L",
-    price: 45.99,
-    image: "https://placehold.co/500x500/0077BE/white?text=Desinfectant",
-    category: "treatment",
-    description: "Désinfectant puissant pour traitement complet de l'eau",
-    rating: 4.7,
-    reviews: 156,
-    discount: 0,
-    stock: 25,
-    warranty: "N/A",
-    specifications: ["Contenance: 5L", "Concentration: 10%", "Efficacité: Bactéries/Virus"],
-    features: ["Action rapide", "Biodégradable", "Usage résidentiel & commercial"],
-    inStock: true,
-    soldCount: 1876,
-  },
-  {
-    id: "chlorine",
-    name: "Pastilles Chlore Piscine 1kg",
-    price: 29.99,
-    image: "https://placehold.co/500x500/00A8E8/white?text=Chlore",
-    category: "treatment",
-    description: "Pastilles chlore pour piscines et spas",
-    rating: 4.5,
-    reviews: 178,
-    discount: 12,
-    stock: 60,
-    warranty: "N/A",
-    specifications: ["Poids: 1kg", "Rendement: Chlore 90%", "Pastilles lentes"],
-    features: ["Dissolution progressive", "Efficacité prolongée", "Stockage facile"],
-    inStock: true,
-    soldCount: 5632,
-  },
-  {
-    id: "ph-regulator",
-    name: "Régulateur pH + & - (2kg)",
-    price: 24.99,
-    image: "https://placehold.co/500x500/0095D9/white?text=Regulateur+pH",
-    category: "treatment",
-    description: "Kit pour ajuster le pH de votre eau",
-    rating: 4.6,
-    reviews: 94,
-    discount: 18,
-    stock: 38,
-    warranty: "N/A",
-    specifications: ["Contenance: 2kg (pH+ ou pH-)", "Granulés", "Action rapide"],
-    features: ["Facile à doser", "Résultats immédiats", "Sûr d'usage"],
-    inStock: true,
-    soldCount: 2341,
-  },
-
-  // Tests & Analyses
-  {
-    id: "testing-kit",
-    name: "Kit Complet d'Analyse d'Eau",
-    price: 39.99,
-    image: "https://placehold.co/500x500/0077BE/white?text=Kit+Analyse",
-    category: "testing",
-    description: "Kit complet pour tester la qualité de l'eau",
-    rating: 4.6,
-    reviews: 142,
-    discount: 22,
-    stock: 31,
-    warranty: "1 an",
-    specifications: ["Tests: 7 paramètres", "Précision: ±1%", "Temps: 5 minutes"],
-    features: ["pH, Chlore, Dureté, Alcalinité", "Bandelettes + goutteurs", "Guide d'interprétation"],
-    inStock: true,
-    isNew: true,
-    isBestSeller: true,
-    soldCount: 3892,
-  },
-  {
-    id: "tds-meter",
-    name: "Testeur TDS/EC Digital Premium",
-    price: 49.99,
-    image: "https://placehold.co/500x500/00A8E8/white?text=Testeur+TDS",
-    category: "testing",
-    description: "Mesureur digital pour minéralité de l'eau",
-    rating: 4.8,
-    reviews: 67,
-    discount: 16,
-    stock: 22,
-    warranty: "2 ans",
-    specifications: ["Plage: 0-9990 ppm", "Précision: ±2%", "Affichage LCD"],
-    features: ["Calibrage automatique", "Pochette incluse", "Étalon 342ppm"],
-    inStock: true,
-    soldCount: 1456,
-  },
-
-  // Accessoires
-  {
-    id: "hose-kit",
-    name: "Kit Tuyauterie Premium 20m",
-    price: 59.99,
-    image: "https://placehold.co/500x500/0095D9/white?text=Tuyauterie",
-    category: "accessories",
-    description: "Kit complet de tuyauterie pour installations",
-    rating: 4.7,
-    reviews: 73,
-    discount: 14,
-    stock: 15,
-    warranty: "1 an",
-    specifications: ["Longueur: 20m", "Diamètre: 12mm", "Matière: Polyéthylène HD"],
-    features: ["Anti-UV", "Raccords inclus", "Flexible & résistant"],
-    inStock: true,
-    soldCount: 2156,
-  },
-  {
-    id: "maintenance-kit",
-    name: "Kit Maintenance Complète",
-    price: 129.99,
-    image: "https://placehold.co/500x500/0077BE/white?text=Kit+Maintenance",
-    category: "accessories",
-    description: "Kit complet d'outils pour maintenance des systèmes",
-    rating: 4.7,
-    reviews: 92,
-    discount: 20,
-    stock: 9,
-    warranty: "6 mois",
-    specifications: ["Outils: 15 pièces", "Mallette incluse", "Clés à molette, tournevis..."],
-    features: ["Tout-en-un", "Qualité professionnelle", "Pochette rangement"],
-    inStock: true,
-    soldCount: 987,
-  },
-  {
-    id: "check-valve",
-    name: "Clapet Anti-Retour Premium",
-    price: 19.99,
-    image: "https://placehold.co/500x500/00A8E8/white?text=Clapet",
-    category: "accessories",
-    description: "Clapet haute performance pour protection système",
-    rating: 4.8,
-    reviews: 56,
-    discount: 25,
-    stock: 52,
-    warranty: "1 an",
-    specifications: ["Diamètre: 12-20mm", "Matière: PVC renforcé", "Pression max: 10 bar"],
-    features: ["Installation facile", "Silencieux", "Longue durée"],
-    inStock: true,
-    soldCount: 4521,
-  },
-];
-
-const FLASH_DEALS = PRODUCTS.filter(p => p.discount && p.discount >= 20).slice(0, 4);
 
 export function ShopPage() {
   const { t, language } = useI18n();
   const { theme } = useTheme();
   const { addToCart } = useCart();
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
@@ -310,27 +53,90 @@ export function ShopPage() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [flashDealIndex, setFlashDealIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(12);
+  const [pagination, setPagination] = useState<{ current_page: number; last_page: number; per_page: number; total: number } | null>(null);
+  const [loadingProducts, setLoadingProducts] = useState(false);
+
+  // Derived from products state — must be declared BEFORE the useEffect that references it
+  const FLASH_DEALS = products.filter(p => p.discount && p.discount >= 20).slice(0, 4);
 
   // Détecter la taille de l'écran
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Auto-rotation des flash deals
+  // Auto-rotation des flash deals — dep on length so closure stays fresh
   useEffect(() => {
+    if (FLASH_DEALS.length === 0) return;
     const interval = setInterval(() => {
       setFlashDealIndex((prev) => (prev + 1) % FLASH_DEALS.length);
     }, 5000);
-    
     return () => clearInterval(interval);
-  }, []);
+  }, [FLASH_DEALS.length]);
+
+  // Fetch products from API (server-side pagination & filters)
+  useEffect(() => {
+    let mounted = true;
+    setLoadingProducts(true);
+    (async () => {
+      try {
+        const params: Record<string, any> = { page: currentPage, per_page: perPage };
+        if (searchTerm) params.search = searchTerm;
+        if (selectedCategory && selectedCategory !== 'all') params.category = selectedCategory;
+        if (sortBy) params.sort = sortBy;
+
+        const res = await fetchProducts(params);
+        if (!mounted) return;
+        const apiProducts = res?.data?.map((p: any) => ({
+          id: String(p.id),
+          name: p.name,
+          price: p.price,
+          image: p.image_url || 'https://placehold.co/500x500/0077BE/white?text=Product',
+          category: p.category?.name || 'all',
+          description: p.description || '',
+          rating: p.avg_rating ?? (p.rating ?? 0),
+          reviews: p.review_count ?? (p.reviews ?? 0),
+          discount: p.discount ?? 0,
+          stock: p.stock ?? 0,
+          warranty: p.warranty ?? '',
+          specifications: p.specifications ?? [],
+          features: p.features ?? [],
+          inStock: !!p.is_available,
+          isNew: false,
+          isBestSeller: false,
+          isOnSale: !!p.discount,
+          soldCount: p.sold_count ?? 0,
+        }));
+
+        setProducts(Array.isArray(apiProducts) ? apiProducts : []);
+        if (res?.pagination) {
+          setPagination(res.pagination);
+        } else {
+          setPagination(null);
+        }
+      } catch (e) {
+        console.warn('Failed to fetch products', e);
+      } finally {
+        if (mounted) setLoadingProducts(false);
+      }
+    })();
+
+    return () => { mounted = false; };
+  }, [currentPage, perPage, searchTerm, selectedCategory, sortBy]);
+
+  // Get special products
+  const newProducts = products.filter((p) => p.isNew).slice(0, 6);
+  const bestSellers = products.filter((p) => p.isBestSeller).slice(0, 6);
+  const specialOffers = products.filter((p) => p.isOnSale).slice(0, 6);
 
   const translations: Record<string, Record<string, string>> = {
     en: {
@@ -398,12 +204,18 @@ export function ShopPage() {
   const text = translations[language] || translations.en;
 
   // Filter and sort products
-  let filteredProducts = PRODUCTS.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // If the API provides pagination we assume filtering/search is handled server-side.
+  let filteredProducts: Product[];
+  if (pagination) {
+    filteredProducts = products;
+  } else {
+    filteredProducts = products.filter((product) => {
+      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }
 
   // Sort products
   filteredProducts.sort((a, b) => {
@@ -424,10 +236,7 @@ export function ShopPage() {
     return price - (price * discount) / 100;
   };
 
-  // Get special products
-  const newProducts = PRODUCTS.filter((p) => p.isNew).slice(0, 6);
-  const bestSellers = PRODUCTS.filter((p) => p.isBestSeller).slice(0, 6);
-  const specialOffers = PRODUCTS.filter((p) => p.isOnSale).slice(0, 6);
+  // (newProducts, bestSellers, specialOffers derived earlier from products)
 
   const nextFlashDeal = () => {
     setFlashDealIndex((prev) => (prev + 1) % FLASH_DEALS.length);
@@ -510,10 +319,10 @@ export function ShopPage() {
                         {title === text.new_products
                           ? "Nouveau"
                           : title === text.best_sellers
-                          ? "Top"
-                          : `-${product.discount}%`}
+                            ? "Top"
+                            : product.discount > 0 ? `-${product.discount}%` : "Promo"}
                       </motion.div>
-                      {product.soldCount && (
+                      {product.soldCount > 0 && (
                         <motion.div
                           initial={{ opacity: 0, y: -20 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -564,11 +373,10 @@ export function ShopPage() {
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-3 h-3 sm:w-4 sm:h-4 ${
-                              i < Math.floor(product.rating)
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-gray-300"
-                            }`}
+                            className={`w-3 h-3 sm:w-4 sm:h-4 ${i < Math.floor(product.rating)
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-300"
+                              }`}
                           />
                         ))}
                       </div>
@@ -581,11 +389,11 @@ export function ShopPage() {
                     </h3>
                     <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
                       <span className="text-xl sm:text-2xl font-bold text-[#0077BE] dark:text-[#00A8E8]">
-                        {discountedPrice.toFixed(2)} XAF
+                        {discountedPrice.toLocaleString('fr-FR')} XAF
                       </span>
-                      {product.discount && (
+                      {product.discount > 0 && (
                         <span className="text-xs sm:text-sm line-through text-gray-400">
-                          {product.price.toFixed(2)} XAF
+                          {product.price.toLocaleString('fr-FR')} XAF
                         </span>
                       )}
                     </div>
@@ -654,7 +462,7 @@ export function ShopPage() {
                 <span className="sm:hidden">Livraison Gratuite</span>
               </span>
             </motion.div>
-            
+
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -685,7 +493,7 @@ export function ShopPage() {
                   type="text"
                   placeholder={text.search_placeholder}
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
                   className="w-full pl-12 sm:pl-16 pr-4 sm:pr-6 py-3 sm:py-4 lg:py-5 rounded-xl sm:rounded-2xl border-2 border-gray-300 dark:border-slate-600 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-[#0077BE] dark:focus:border-[#00A8E8] focus:ring-4 focus:ring-[#0077BE]/20 transition-all shadow-xl text-sm sm:text-base lg:text-lg"
                 />
                 <motion.div
@@ -770,7 +578,7 @@ export function ShopPage() {
               </div>
             </div>
           </div>
-          
+
           <AnimatePresence mode="wait">
             <motion.div
               key={flashDealIndex}
@@ -806,10 +614,10 @@ export function ShopPage() {
                     </p>
                     <div className="flex items-baseline gap-2 sm:gap-4 mb-4 sm:mb-6">
                       <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0077BE] dark:text-[#00A8E8]">
-                        {calculateDiscount(FLASH_DEALS[flashDealIndex].price, FLASH_DEALS[flashDealIndex].discount).toFixed(2)} XAF
+                        {calculateDiscount(FLASH_DEALS[flashDealIndex].price, FLASH_DEALS[flashDealIndex].discount).toLocaleString('fr-FR')} XAF
                       </span>
                       <span className="text-lg sm:text-xl lg:text-2xl line-through text-gray-400">
-                        {FLASH_DEALS[flashDealIndex].price.toFixed(2)} XAF
+                        {FLASH_DEALS[flashDealIndex].price.toLocaleString('fr-FR')} XAF
                       </span>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -858,12 +666,11 @@ export function ShopPage() {
                 key={cat.id}
                 whileHover={{ scale: isMobile ? 1 : 1.05, y: isMobile ? 0 : -2 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold whitespace-nowrap transition-all text-xs sm:text-sm lg:text-base ${
-                  selectedCategory === cat.id
-                    ? "bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white shadow-lg"
-                    : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:shadow-md"
-                }`}
+                onClick={() => { setSelectedCategory(cat.id); setCurrentPage(1); }}
+                className={`flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold whitespace-nowrap transition-all text-xs sm:text-sm lg:text-base ${selectedCategory === cat.id
+                  ? "bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white shadow-lg"
+                  : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:shadow-md"
+                  }`}
               >
                 {renderCategoryIcon(cat.icon)}
                 {cat.name}
@@ -918,7 +725,7 @@ export function ShopPage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
+              className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6"
             >
               {filteredProducts.map((product, index) => {
                 const discountedPrice = calculateDiscount(product.price, product.discount);
@@ -930,36 +737,44 @@ export function ShopPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.05 }}
-                    whileHover={{ y: isMobile ? 0 : -10 }}
-                    className="group bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#0077BE]"
+                    whileHover={{ y: isMobile ? 0 : -6 }}
+                    className="group bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-[#0077BE] flex flex-col"
                   >
                     {/* Image Container */}
-                    <div className="relative h-48 sm:h-56 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-700 dark:to-slate-600">
+                    <div className="relative h-36 sm:h-56 overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-700 dark:to-slate-600 flex-shrink-0">
                       <img
                         src={product.image}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => {
+                          const t = e.currentTarget;
+                          t.style.display = 'none';
+                          const parent = t.parentElement;
+                          if (parent && !parent.querySelector('.img-fallback')) {
+                            const fb = document.createElement('div');
+                            fb.className = 'img-fallback absolute inset-0 flex items-center justify-center';
+                            fb.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 3H8l-2 4h12l-2-4z"/></svg>';
+                            parent.appendChild(fb);
+                          }
+                        }}
                       />
-                      {product.discount && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-gradient-to-r from-[#0095D9] to-[#0077BE] text-white px-2 sm:px-3 py-1 rounded-full font-bold text-xs sm:text-sm shadow-lg"
-                        >
+                      {product.discount > 0 && (
+                        <div className="absolute top-1.5 sm:top-3 right-1.5 sm:right-3 bg-gradient-to-r from-[#0095D9] to-[#0077BE] text-white px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full font-bold text-[10px] sm:text-sm shadow-lg">
                           -{product.discount}%
-                        </motion.div>
+                        </div>
                       )}
                       {product.isBestSeller && (
-                        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 bg-gradient-to-r from-[#00A8E8] to-[#0077BE] text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                        <div className="absolute top-1.5 sm:top-3 left-1.5 sm:left-3 bg-gradient-to-r from-[#00A8E8] to-[#0077BE] text-white px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
                           Top
                         </div>
                       )}
                       {product.isNew && (
-                        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 bg-gradient-to-r from-[#00A8E8] to-[#0077BE] text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
-                          New
+                        <div className="absolute top-1.5 sm:top-3 left-1.5 sm:left-3 bg-gradient-to-r from-[#00A8E8] to-[#0077BE] text-white px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse">
+                          Nouveau
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3 sm:p-4 gap-2">
+                      {/* Desktop-only hover overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:flex items-end p-4 gap-2">
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -967,78 +782,130 @@ export function ShopPage() {
                             setSelectedProduct(product);
                             setIsDetailsOpen(true);
                           }}
-                          className="flex-1 bg-white text-[#0077BE] px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm hover:shadow-lg transition-all"
+                          className="flex-1 bg-white text-[#0077BE] px-3 py-2 rounded-lg font-semibold text-sm hover:shadow-lg transition-all flex items-center justify-center gap-1"
                         >
-                          <Eye className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
-                          <span className="hidden sm:inline">Voir</span>
+                          <Eye className="w-4 h-4" /> Voir
                         </motion.button>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => addToCart({ 
-                            id: product.id, 
-                            name: product.name, 
-                            price: discountedPrice, 
-                            image: product.image, 
-                            description: product.description 
+                          onClick={() => addToCart({
+                            id: product.id,
+                            name: product.name,
+                            price: discountedPrice,
+                            image: product.image,
+                            description: product.description
                           })}
-                          className="flex-1 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm hover:shadow-lg transition-all"
+                          disabled={!product.inStock}
+                          className="flex-1 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-3 py-2 rounded-lg font-semibold text-sm hover:shadow-lg transition-all flex items-center justify-center gap-1 disabled:opacity-50"
                         >
-                          <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
-                          <span className="hidden sm:inline">Ajouter</span>
+                          <ShoppingCart className="w-4 h-4" /> Ajouter
                         </motion.button>
                       </div>
                     </div>
 
                     {/* Content */}
-                    <div className="p-3 sm:p-4">
-                      <div className="flex items-center gap-1 mb-1.5 sm:mb-2">
+                    <div className="p-2.5 sm:p-4 flex flex-col flex-1">
+                      <div className="flex items-center gap-0.5 mb-1 sm:mb-2">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-3 h-3 ${
-                              i < Math.floor(product.rating)
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-gray-300"
-                            }`}
+                            className={`w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 ${i < Math.floor(product.rating)
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-300"
+                              }`}
                           />
                         ))}
-                        <span className="text-xs text-gray-600 dark:text-gray-400 ml-1">
-                          ({product.reviews})
-                        </span>
-                      </div>
-
-                      <h3 className="font-bold text-gray-900 dark:text-white mb-1.5 sm:mb-2 line-clamp-2 text-sm group-hover:text-[#0077BE] dark:group-hover:text-[#00A8E8] transition-colors">
-                        {product.name}
-                      </h3>
-
-                      <div className="flex items-baseline gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-                        <span className="text-lg sm:text-xl font-bold text-[#0077BE] dark:text-[#00A8E8]">
-                          {discountedPrice.toFixed(2)} XAF
-                        </span>
-                        {product.discount && (
-                          <span className="text-xs sm:text-sm line-through text-gray-400">
-                            {product.price.toFixed(2)} XAF
+                        {product.reviews > 0 && (
+                          <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 ml-0.5">
+                            ({product.reviews})
                           </span>
                         )}
                       </div>
 
-                      {product.soldCount && (
-                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-600 dark:text-gray-400 mb-1.5 sm:mb-2">
-                          <TrendingUp className="w-3 h-3 text-green-500" />
-                          {product.soldCount > 1000 ? `${(product.soldCount / 1000).toFixed(1)}k` : product.soldCount} {text.sold}
-                        </div>
-                      )}
+                      <h3 className="font-semibold sm:font-bold text-gray-900 dark:text-white mb-1.5 sm:mb-2 line-clamp-2 text-xs sm:text-sm group-hover:text-[#0077BE] dark:group-hover:text-[#00A8E8] transition-colors leading-tight">
+                        {product.name}
+                      </h3>
 
-                      <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-green-600 dark:text-green-400 font-semibold">
-                        <Truck className="w-3 h-3" />
-                        <span>Livraison gratuite</span>
+                      <div className="mt-auto">
+                        <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-2 mb-2">
+                          <span className="text-sm sm:text-xl font-bold text-[#0077BE] dark:text-[#00A8E8] leading-tight">
+                            {discountedPrice.toLocaleString('fr-FR')} <span className="text-xs sm:text-sm font-semibold">XAF</span>
+                          </span>
+                          {product.discount > 0 && (
+                            <span className="text-[10px] sm:text-sm line-through text-gray-400">
+                              {product.price.toLocaleString('fr-FR')} XAF
+                            </span>
+                          )}
+                        </div>
+
+                        {product.soldCount > 0 && (
+                          <div className="hidden sm:flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 mb-2">
+                            <TrendingUp className="w-3 h-3 text-green-500" />
+                            {product.soldCount > 1000 ? `${(product.soldCount / 1000).toFixed(1)}k` : product.soldCount} {text.sold}
+                          </div>
+                        )}
+
+                        <div className="hidden sm:flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 font-semibold mb-0">
+                          <Truck className="w-3 h-3" />
+                          <span>Livraison gratuite</span>
+                        </div>
+
+                        {/* Mobile-only: always-visible action buttons */}
+                        <div className="flex gap-1.5 sm:hidden mt-1.5">
+                          <button
+                            onClick={() => {
+                              setSelectedProduct(product);
+                              setIsDetailsOpen(true);
+                            }}
+                            className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 dark:bg-slate-700 text-[#0077BE] dark:text-[#00A8E8] flex-shrink-0"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => addToCart({
+                              id: product.id,
+                              name: product.name,
+                              price: discountedPrice,
+                              image: product.image,
+                              description: product.description
+                            })}
+                            disabled={!product.inStock}
+                            className="flex-1 flex items-center justify-center gap-1 h-8 rounded-lg bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white text-[10px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <ShoppingCart className="w-3 h-3" />
+                            {product.inStock ? 'Ajouter' : 'Épuisé'}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
                 );
               })}
             </motion.div>
+          )}
+          {pagination && (
+            <div className="mt-6 flex items-center justify-center gap-3 w-full">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={pagination.current_page === 1}
+                className="px-3 py-1 rounded border border-slate-300 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Précédent
+              </button>
+
+              <div className="text-sm text-slate-600">
+                Page {pagination.current_page} / {pagination.last_page} — {pagination.total} produits
+              </div>
+
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(pagination.last_page, p + 1))}
+                disabled={pagination.current_page === pagination.last_page}
+                className="px-3 py-1 rounded border border-slate-300 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Suivant
+              </button>
+            </div>
           )}
         </div>
       </section>

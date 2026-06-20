@@ -1,13 +1,16 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import { User, Mail, Phone, MapPin, Home, Droplet, MessageSquare, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { User, Mail, Phone, MapPin, Home, Droplet, MessageSquare, Send, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { useI18n } from "../../../i18n/I18nContext";
 import { useTheme } from "../../../theme/ThemeContext";
+import { submitQuoteRequest } from "../../../services/quotes";
 
 export function QuotePage() {
   const { t } = useI18n();
   const { theme } = useTheme();
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
@@ -28,33 +31,39 @@ export function QuotePage() {
     t("services.maintenance.title"),
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors: Record<string, string> = {};
-    
+
     if (!formData.name.trim()) errors.name = t("quote.nameRequired");
     if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) errors.email = t("quote.validEmailRequired");
     if (!formData.phone.trim()) errors.phone = t("quote.phoneRequired");
     if (!formData.serviceType) errors.serviceType = t("quote.selectService");
-    
+
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       return;
     }
-    
+
     setFieldErrors({});
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        serviceType: "",
-        message: "",
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      await submitQuoteRequest({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        location: formData.address,
+        solution_type: formData.serviceType,
+        description: formData.message,
       });
-    }, 3000);
+      setSubmitted(true);
+      setFormData({ name: "", email: "", phone: "", address: "", serviceType: "", message: "" });
+    } catch {
+      setSubmitError(t("quote.submitError") || "Une erreur est survenue. Veuillez réessayer.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -399,19 +408,36 @@ export function QuotePage() {
                 />
               </motion.div>
 
+              {/* API error */}
+              {submitError && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-2 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm"
+                >
+                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                  {submitError}
+                </motion.div>
+              )}
+
               {/* Submit Button */}
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.02, y: -2 }}
+                disabled={submitting}
+                whileHover={{ scale: submitting ? 1 : 1.02, y: submitting ? 0 : -2 }}
                 whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
-                className="w-full bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-6 sm:px-8 py-4 sm:py-5 rounded-xl font-bold text-base sm:text-lg shadow-xl shadow-[#0077BE]/30 hover:shadow-2xl hover:shadow-[#0077BE]/40 transition-all flex items-center justify-center gap-3"
+                className="w-full bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-6 sm:px-8 py-4 sm:py-5 rounded-xl font-bold text-base sm:text-lg shadow-xl shadow-[#0077BE]/30 hover:shadow-2xl hover:shadow-[#0077BE]/40 transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <Send className="w-5 h-5 sm:w-6 sm:h-6" />
-                {t("quote.sendRequest")}
+                {submitting ? (
+                  <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+                ) : (
+                  <Send className="w-5 h-5 sm:w-6 sm:h-6" />
+                )}
+                {submitting ? "Envoi en cours..." : t("quote.sendRequest")}
               </motion.button>
 
               <motion.p 

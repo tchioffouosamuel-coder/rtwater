@@ -5,6 +5,7 @@ import { I18nProvider } from "./i18n/I18nContext";
 import { CartProvider } from "./context/CartContext";
 import { CartUIProvider } from "./context/CartUIContext";
 import { AdminAuthProvider } from "./context/AdminAuthContext";
+import { UserAuthProvider } from "./context/UserAuthContext";
 import { InventoryProvider } from "./context/InventoryContext";
 import { POSProvider } from "./context/POSContext";
 import { ReceiptProvider } from "./context/ReceiptContext";
@@ -18,13 +19,15 @@ createRoot(document.getElementById("root")!).render(
         <CartProvider>
           <CartUIProvider>
             <AdminAuthProvider>
-              <InventoryProvider>
-                <POSProvider>
-                  <ReceiptProvider>
-                    <App />
-                  </ReceiptProvider>
-                </POSProvider>
-              </InventoryProvider>
+              <UserAuthProvider>
+                <InventoryProvider>
+                  <POSProvider>
+                    <ReceiptProvider>
+                      <App />
+                    </ReceiptProvider>
+                  </POSProvider>
+                </InventoryProvider>
+              </UserAuthProvider>
             </AdminAuthProvider>
           </CartUIProvider>
         </CartProvider>

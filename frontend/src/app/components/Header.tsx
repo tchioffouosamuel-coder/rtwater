@@ -1,4 +1,4 @@
-import { Menu, X, Droplets, LogIn, UserPlus, Sun, Moon, Globe, ShoppingCart } from "lucide-react";
+import { Menu, X, Sun, Moon, Globe, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
@@ -6,6 +6,7 @@ import { useTheme } from "../../theme/ThemeContext";
 import { useI18n } from "../../i18n/I18nContext";
 import { useCart } from "../../context/CartContext";
 import { useCartUI } from "../../context/CartUIContext";
+import { useUserAuth } from "../../context/UserAuthContext";
 
 export function Header() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export function Header() {
   const { language, setLanguage, t } = useI18n();
   const { cartCount } = useCart();
   const { openCart } = useCartUI();
+  const { user, logout } = useUserAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const menuItems = [
@@ -54,11 +56,10 @@ export function Header() {
               transition={{ type: "spring", stiffness: 400 }}
             >
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-lg flex items-center justify-center shadow-lg shadow-[#0077BE]/20">
-                  <Droplets className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-lg font-bold bg-gradient-to-r from-[#0077BE] to-[#00A8E8] bg-clip-text text-transparent hidden sm:inline">
-                  RT-Water
+                <img src="/logo.svg" alt="RT Water Solution" className="h-10 w-auto" />
+                <span className="text-lg font-bold leading-none hidden sm:flex flex-col">
+                  <span className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] bg-clip-text text-transparent">RT Water</span>
+                  <span className="text-[10px] font-semibold tracking-widest text-gray-400 dark:text-gray-500 uppercase">Solution</span>
                 </span>
               </div>
             </motion.button>
@@ -72,19 +73,17 @@ export function Header() {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.08 + 0.3 }}
-                  className={`transition-all duration-300 font-medium text-sm relative group ${
-                    isActive(item.path)
+                  className={`transition-all duration-300 font-medium text-sm relative group ${isActive(item.path)
                       ? "text-[#0077BE] dark:text-[#00A8E8]"
                       : "text-gray-600 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8]"
-                  }`}
+                    }`}
                 >
                   {item.label}
                   <span
-                    className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] transition-all duration-300 ${
-                      isActive(item.path)
+                    className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] transition-all duration-300 ${isActive(item.path)
                         ? "w-full"
                         : "w-0 group-hover:w-full"
-                    }`}
+                      }`}
                   ></span>
                 </motion.button>
               ))}
@@ -136,8 +135,29 @@ export function Header() {
 
               {/* Separator */}
               <div className="h-6 w-px bg-gray-200 dark:bg-slate-700 mx-1" />
-
-             
+              {/* User / Login */}
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{user.name}</span>
+                  <motion.button
+                    onClick={async () => { await logout(); navigate('/'); }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-3 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-sm"
+                  >
+                    Déconnexion
+                  </motion.button>
+                </div>
+              ) : (
+                <motion.button
+                  onClick={() => navigate('/login')}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-3 py-1 rounded-lg bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white text-sm"
+                >
+                  Connexion
+                </motion.button>
+              )}
             </div>
 
             {/* Mobile menu button */}
@@ -199,10 +219,10 @@ export function Header() {
               <div className="bg-gradient-to-br from-[#0077BE] to-[#00A8E8] p-5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                      <Droplets className="w-5 h-5 text-white" />
+                    <div className="flex flex-col">
+                      <span className="text-white font-extrabold text-base leading-none">RT Water</span>
+                      <span className="text-white/70 font-semibold text-[10px] tracking-widest uppercase leading-none mt-0.5">Solution</span>
                     </div>
-                    <span className="text-white font-bold text-base">{t("common.menu")}</span>
                   </div>
                   <button
                     onClick={() => setMobileMenuOpen(false)}
@@ -229,7 +249,7 @@ export function Header() {
                       </span>
                     )}
                   </motion.button>
-                 
+
                 </div>
               </div>
 
@@ -242,11 +262,10 @@ export function Header() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.08 }}
                     onClick={() => handleNavigation(item.path)}
-                    className={`w-full text-left px-4 py-3 rounded-lg font-medium text-sm transition-all ${
-                      isActive(item.path)
+                    className={`w-full text-left px-4 py-3 rounded-lg font-medium text-sm transition-all ${isActive(item.path)
                         ? "bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white shadow-md relative"
                         : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
-                    }`}
+                      }`}
                   >
                     {item.label}
                   </motion.button>

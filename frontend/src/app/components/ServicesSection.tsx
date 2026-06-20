@@ -71,11 +71,23 @@ export function ServicesSection() {
   ];
 
   return (
-    <section id="services" className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 dark:from-slate-900 via-white dark:via-slate-800 to-gray-50 dark:to-slate-900 transition-colors duration-300 relative overflow-hidden">
-      {/* Background Decoration */}
+    <section id="services" className="py-16 sm:py-24 transition-colors duration-300 relative overflow-hidden">
+      {/* Contextual background photo — water pumps / industrial water */}
+      <div className="absolute inset-0 pointer-events-none">
+        <img
+          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1920&q=80"
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-cover"
+        />
+        {/* Light overlay so cards stay fully readable */}
+        <div className="absolute inset-0 bg-white/92 dark:bg-slate-900/95"></div>
+      </div>
+
+      {/* Coloured blur accents */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#0077BE]/5 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#00A8E8]/5 rounded-full blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#0077BE]/8 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#00A8E8]/8 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
