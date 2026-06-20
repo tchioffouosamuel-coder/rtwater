@@ -179,6 +179,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         items: items.map(i => ({ product_id: parseInt(i.id, 10), quantity: i.quantity })),
       };
       if (customerInfo?.name)  payload.name  = customerInfo.name;
+      if (customerInfo?.email) payload.email = customerInfo.email;
       if (customerInfo?.phone) payload.phone = customerInfo.phone;
 
       const res = await ordersService.createOrder(payload);

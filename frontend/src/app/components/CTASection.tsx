@@ -1,15 +1,16 @@
 import { Phone, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
-import { useI18n } from "../../i18n/I18nContext";
 import { useTheme } from "../../theme/ThemeContext";
 import { useNavigate } from "react-router-dom";
+import { useSiteContent } from "../../context/SiteContentContext";
 
 interface CTASectionProps {
   onNavigateToQuote?: () => void;
 }
 
 export function CTASection({ onNavigateToQuote }: CTASectionProps) {
-  const { t } = useI18n();
+  const { home } = useSiteContent();
+  const { cta } = home;
   const { theme } = useTheme();
 
   const navigate = useNavigate();
@@ -99,7 +100,7 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
             <Sparkles className="w-5 sm:w-6 h-5 sm:h-6 text-yellow-300" />
           </motion.div>
           <span className="text-white/90 font-semibold tracking-wide uppercase text-xs sm:text-sm">
-            {t("cta.badge")}
+            {cta.badge}
           </span>
         </motion.div>
 
@@ -111,9 +112,9 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 sm:mb-8 leading-tight px-2"
         >
-          {t("cta.title")}{" "}
+          {cta.title}{" "}
           <span className="relative inline-block">
-            <span className="relative z-10">{t("cta.titleHighlight")}</span>
+            <span className="relative z-10">{cta.titleHighlight}</span>
             <motion.span
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
@@ -131,7 +132,7 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
           transition={{ delay: 0.4, duration: 0.8 }}
           className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-2"
         >
-          {t("cta.description")}
+          {cta.description}
         </motion.p>
 
         {/* CTA Buttons */}
@@ -149,7 +150,7 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
             className="group inline-flex items-center justify-center gap-2 sm:gap-3 bg-white text-[#0077BE] px-6 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg shadow-2xl hover:shadow-white/50 transition-all duration-300 whitespace-nowrap"
           >
             <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
-            {t("cta.contactButton")}
+            {cta.contactButtonLabel}
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-2 transition-transform" />
           </motion.button>
 
@@ -159,7 +160,7 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
             whileTap={{ scale: 0.95 }}
             className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md border-2 border-white/50 text-white px-6 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg hover:bg-white/20 transition-all duration-300 whitespace-nowrap"
           >
-            {t("cta.servicesButton")}
+            {cta.servicesButtonLabel}
           </motion.button>
         </motion.div>
 
@@ -171,18 +172,12 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
           transition={{ delay: 0.8, duration: 0.8 }}
           className="mt-8 sm:mt-12 lg:mt-16 flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8 text-white/80 text-xs sm:text-sm"
         >
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span>{t("cta.trustIndicators.available")}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span>{t("cta.trustIndicators.freeQuote")}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span>{t("cta.trustIndicators.fastInstallation")}</span>
-          </div>
+          {cta.trustIndicators.map((indicator, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span>{indicator}</span>
+            </div>
+          ))}
         </motion.div>
       </div>
     </section>

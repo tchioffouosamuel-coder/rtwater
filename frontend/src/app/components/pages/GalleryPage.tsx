@@ -3,86 +3,42 @@ import { useState } from "react";
 import { ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useI18n } from "../../../i18n/I18nContext";
 import { useTheme } from "../../../theme/ThemeContext";
+import { useSiteContent } from "../../../context/SiteContentContext";
+
+const CATEGORY_LABELS: Record<string, string> = {
+  all: "Tout",
+  drilling: "Forage",
+  purification: "Purification",
+  pools: "Piscines",
+  pumps: "Pompes",
+  installation: "Installation",
+  maintenance: "Maintenance",
+  projects: "Projets",
+};
 
 export function GalleryPage() {
   const { t } = useI18n();
   const { theme } = useTheme();
+  const { gallery } = useSiteContent();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
-  const galleryImages = [
-    {
-      url: "https://images.unsplash.com/photo-1738956312126-01ba60788071?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXRlciUyMHdlbGwlMjBkcmlsbGluZyUyMGFmcmljYXxlbnwxfHx8fDE3NzA0Nzc1NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      titleKey: "gallery.items.drilling.title",
-      categoryKey: "gallery.categories.drilling",
-      category: "drilling",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1708287523092-0543d6803857?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXRlciUyMHB1cmlmaWNhdGlvbiUyMHBsYW50fGVufDF8fHx8MTc3MDQ3NzU1N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      titleKey: "gallery.items.purificationPlant.title",
-      categoryKey: "gallery.categories.purification",
-      category: "purification",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1758530273222-440d6a8b0eea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzd2ltbWluZyUyMHBvb2wlMjBtYWludGVuYW5jZXxlbnwxfHx8fDE3NzA0Nzc1NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      titleKey: "gallery.items.poolMaintenance.title",
-      categoryKey: "gallery.categories.pools",
-      category: "pools",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1712640379137-6d2532f887a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXRlciUyMHB1bXAlMjBpbnN0YWxsYXRpb258ZW58MXx8fHwxNzcwNDc3NTU3fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      titleKey: "gallery.items.pumpInstallation.title",
-      categoryKey: "gallery.categories.pumps",
-      category: "pumps",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1680200023508-5289ae3de157?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbGVhbiUyMHdhdGVyJTIwYWZyaWNhJTIwY29tbXVuaXR5fGVufDF8fHx8MTc3MDQ3NzU1OHww&ixlib=rb-4.1.0&q=80&w=1080",
-      titleKey: "gallery.items.cleanWater.title",
-      categoryKey: "gallery.categories.projects",
-      category: "projects",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1613929906260-c9377d135547?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmR1c3RyaWFsJTIwd2F0ZXIlMjBwaXBlc3xlbnwxfHx8fDE3NzA0Nzc1NjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      titleKey: "gallery.items.industrialPipes.title",
-      categoryKey: "gallery.categories.installation",
-      category: "installation",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1764344815153-3a356c392561?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXRlciUyMHN0b3JhZ2UlMjB0YW5rfGVufDF8fHx8MTc3MDQ3NzU2MHww&ixlib=rb-4.1.0&q=80&w=1080",
-      titleKey: "gallery.items.storageTanks.title",
-      categoryKey: "gallery.categories.installation",
-      category: "installation",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1635221798248-8a3452ad07cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBwbHVtYmluZyUyMHdvcmt8ZW58MXx8fHwxNzcwNDc3NTYxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      titleKey: "gallery.items.professionalWork.title",
-      categoryKey: "gallery.categories.maintenance",
-      category: "maintenance",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1570615541379-e6b7ab6d4eb9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbGVhbiUyMHdhdGVyJTIwdHJlYXRtZW50JTIwcHVyaWZpY2F0aW9ufGVufDF8fHx8MTc3MDQ3NjY5Nnww&ixlib=rb-4.1.0&q=80&w=1080",
-      titleKey: "gallery.items.advancedTreatment.title",
-      categoryKey: "gallery.categories.purification",
-      category: "purification",
-    },
-  ];
-
   const categories = [
-    { key: "all", labelKey: "gallery.categories.all" },
-    { key: "drilling", labelKey: "gallery.categories.drilling" },
-    { key: "purification", labelKey: "gallery.categories.purification" },
-    { key: "pools", labelKey: "gallery.categories.pools" },
-    { key: "pumps", labelKey: "gallery.categories.pumps" },
-    { key: "installation", labelKey: "gallery.categories.installation" },
-    { key: "maintenance", labelKey: "gallery.categories.maintenance" },
-    { key: "projects", labelKey: "gallery.categories.projects" },
-  ];
+    { key: "all" },
+    { key: "drilling" },
+    { key: "purification" },
+    { key: "pools" },
+    { key: "pumps" },
+    { key: "installation" },
+    { key: "maintenance" },
+    { key: "projects" },
+  ].filter(cat => cat.key === "all" || gallery.images.some(img => img.category === cat.key));
 
   const filteredImages =
     selectedCategory === "all"
-      ? galleryImages
-      : galleryImages.filter((img) => img.category === selectedCategory);
+      ? gallery.images
+      : gallery.images.filter((img) => img.category === selectedCategory);
 
   const handleImageClick = (url: string) => {
     setSelectedImage(url);
@@ -138,22 +94,22 @@ export function GalleryPage() {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <motion.span 
+            <motion.span
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.1 }}
               className="inline-block bg-white/20 backdrop-blur-sm text-white px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 border border-white/30"
             >
-              {t("gallery.badge")}
+              {gallery.badge}
             </motion.span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
-              {t("gallery.title")}{" "}
+              {gallery.title}{" "}
               <span className="bg-gradient-to-r from-[#00A8E8] to-cyan-300 bg-clip-text text-transparent">
-                {t("gallery.titleHighlight")}
+                {gallery.titleHighlight}
               </span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-white/95 max-w-3xl mx-auto leading-relaxed px-2">
-              {t("gallery.description")}
+              {gallery.description}
             </p>
           </motion.div>
         </div>
@@ -178,7 +134,7 @@ export function GalleryPage() {
                     : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
                 }`}
               >
-                {t(category.labelKey)}
+                {CATEGORY_LABELS[category.key] ?? category.key}
               </motion.button>
             ))}
           </div>
@@ -206,23 +162,23 @@ export function GalleryPage() {
               >
                 <img
                   src={image.url}
-                  alt={t(image.titleKey)}
+                  alt={image.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
-                    <motion.span 
+                    <motion.span
                       initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       className="inline-block bg-[#0077BE] text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2"
                     >
-                      {t(image.categoryKey)}
+                      {CATEGORY_LABELS[image.category] ?? image.category}
                     </motion.span>
                     <h3 className="text-white text-lg sm:text-xl font-bold leading-tight">
-                      {t(image.titleKey)}
+                      {image.title}
                     </h3>
                   </div>
-                  <motion.div 
+                  <motion.div
                     initial={{ scale: 0, opacity: 0 }}
                     whileInView={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.1 }}
@@ -316,10 +272,10 @@ export function GalleryPage() {
             className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 sm:p-8"
           >
             <p className="text-white text-base sm:text-lg font-semibold">
-              {t(filteredImages[selectedImageIndex].titleKey)}
+              {filteredImages[selectedImageIndex].title}
             </p>
             <span className="inline-block bg-[#0077BE] text-white px-3 py-1 rounded-full text-sm font-semibold mt-3">
-              {t(filteredImages[selectedImageIndex].categoryKey)}
+              {CATEGORY_LABELS[filteredImages[selectedImageIndex].category] ?? filteredImages[selectedImageIndex].category}
             </span>
           </motion.div>
         </motion.div>

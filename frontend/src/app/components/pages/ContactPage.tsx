@@ -3,10 +3,12 @@ import { useState } from "react";
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle } from "lucide-react";
 import { useI18n } from "../../../i18n/I18nContext";
 import { useTheme } from "../../../theme/ThemeContext";
+import { useSiteContent } from "../../../context/SiteContentContext";
 
 export function ContactPage() {
   const { t } = useI18n();
   const { theme } = useTheme();
+  const { contact } = useSiteContent();
   const [submitted, setSubmitted] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -21,7 +23,7 @@ export function ContactPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
+
     if (fieldErrors[name]) {
       setFieldErrors({
         ...fieldErrors,
@@ -33,17 +35,17 @@ export function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const errors: Record<string, string> = {};
-    
+
     if (!formData.name.trim()) errors.name = t("contact.form.nameRequired");
     if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) errors.email = t("contact.form.emailRequired");
     if (!formData.subject.trim()) errors.subject = t("contact.form.subject");
     if (!formData.message.trim()) errors.message = t("contact.form.message");
-    
+
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       return;
     }
-    
+
     setFieldErrors({});
     setSubmitted(true);
     setTimeout(() => {
@@ -69,7 +71,7 @@ export function ContactPage() {
           >
             <CheckCircle className="w-10 sm:w-12 h-10 sm:h-12 text-white" />
           </motion.div>
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -77,7 +79,7 @@ export function ContactPage() {
           >
             {t("contact.form.successTitle")}
           </motion.h2>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -167,15 +169,15 @@ export function ContactPage() {
                   required
                   placeholder={t("contact.form.namePlaceholder")}
                   className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-slate-700 border-2 rounded-xl transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
-                    fieldErrors.name 
-                      ? "border-red-500 dark:border-red-500" 
+                    fieldErrors.name
+                      ? "border-red-500 dark:border-red-500"
                       : focusedField === "name"
                       ? "border-[#0077BE] dark:border-[#00A8E8]"
                       : "border-gray-200 dark:border-slate-600"
                   } focus:outline-none`}
                 />
                 {fieldErrors.name && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-2 mt-2 text-red-500 text-sm"
@@ -209,15 +211,15 @@ export function ContactPage() {
                     required
                     placeholder={t("contact.form.emailPlaceholder")}
                     className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-slate-700 border-2 rounded-xl transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
-                      fieldErrors.email 
-                        ? "border-red-500 dark:border-red-500" 
+                      fieldErrors.email
+                        ? "border-red-500 dark:border-red-500"
                         : focusedField === "email"
                         ? "border-[#0077BE] dark:border-[#00A8E8]"
                         : "border-gray-200 dark:border-slate-600"
                     } focus:outline-none`}
                   />
                   {fieldErrors.email && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="flex items-center gap-2 mt-2 text-red-500 text-sm"
@@ -274,15 +276,15 @@ export function ContactPage() {
                   onBlur={() => setFocusedField(null)}
                   placeholder={t("contact.form.subject")}
                   className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-slate-700 border-2 rounded-xl transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
-                    fieldErrors.subject 
-                      ? "border-red-500 dark:border-red-500" 
+                    fieldErrors.subject
+                      ? "border-red-500 dark:border-red-500"
                       : focusedField === "subject"
                       ? "border-[#0077BE] dark:border-[#00A8E8]"
                       : "border-gray-200 dark:border-slate-600"
                     } focus:outline-none`}
                 />
                 {fieldErrors.subject && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-2 mt-2 text-red-500 text-sm"
@@ -313,15 +315,15 @@ export function ContactPage() {
                   rows={5}
                   placeholder={t("contact.form.messagePlaceholder")}
                   className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-slate-700 border-2 rounded-xl focus:outline-none transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none ${
-                    fieldErrors.message 
-                      ? "border-red-500 dark:border-red-500" 
+                    fieldErrors.message
+                      ? "border-red-500 dark:border-red-500"
                       : focusedField === "message"
                       ? "border-[#0077BE] dark:border-[#00A8E8]"
                       : "border-gray-200 dark:border-slate-600"
                   }`}
                 />
                 {fieldErrors.message && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-2 mt-2 text-red-500 text-sm"
@@ -371,7 +373,7 @@ export function ContactPage() {
                 <MapPin className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
               </motion.div>
               <h4 className="font-bold text-gray-900 dark:text-white mb-2">{t("contact.addressTitle")}</h4>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{t("contact.address")}</p>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{contact.address}</p>
             </motion.div>
 
             <motion.div
@@ -389,7 +391,7 @@ export function ContactPage() {
                 <Phone className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
               </motion.div>
               <h4 className="font-bold text-gray-900 dark:text-white mb-2">{t("contact.phoneTitle")}</h4>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{t("contact.phone")}</p>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{contact.phone}</p>
             </motion.div>
 
             <motion.div
@@ -407,11 +409,11 @@ export function ContactPage() {
                 <Clock className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
               </motion.div>
               <h4 className="font-bold text-gray-900 dark:text-white mb-2">{t("contact.hoursTitle")}</h4>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{t("contact.hours")}</p>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{contact.hours}</p>
             </motion.div>
           </div>
 
-          {/* Google Maps — localisation RT Water Solution Yaoundé */}
+          {/* Google Maps */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -424,7 +426,7 @@ export function ContactPage() {
               <MapPin className="w-5 h-5 text-white flex-shrink-0" />
               <div>
                 <p className="text-white font-bold text-sm sm:text-base">RT-Water Solution Sarl</p>
-                <p className="text-white/80 text-xs sm:text-sm">Yaoundé, Cameroun</p>
+                <p className="text-white/80 text-xs sm:text-sm">{contact.address}</p>
               </div>
               <a
                 href="https://maps.app.goo.gl/qdfrQ59oKVt2eQS18"
@@ -437,7 +439,7 @@ export function ContactPage() {
             </div>
             <div className="relative w-full" style={{ paddingBottom: "42%" }}>
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3980.7179297804787!2d11.485430774747213!3d3.8705587961032246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108bcfca3f203107%3A0x47c27e91df3d7381!2sRT-Water%20Solution%20sarl!5e0!3m2!1sfr!2scm!4v1781939886136!5m2!1sfr!2scm"
+                src={contact.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3980.7179297804787!2d11.485430774747213!3d3.8705587961032246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108bcfca3f203107%3A0x47c27e91df3d7381!2sRT-Water%20Solution%20sarl!5e0!3m2!1sfr!2scm!4v1781939886136!5m2!1sfr!2scm"}
                 className="absolute inset-0 w-full h-full border-0"
                 allowFullScreen
                 loading="lazy"

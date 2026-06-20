@@ -14,6 +14,7 @@ interface UserAuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
     login: (email: string, password: string) => Promise<void>;
+    register: (name: string, email: string, password: string, passwordConfirmation: string) => Promise<void>;
     logout: () => Promise<void>;
 }
 
@@ -57,6 +58,20 @@ export const UserAuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const register = async (name: string, email: string, password: string, passwordConfirmation: string) => {
+        setIsLoading(true);
+        try {
+            const res = await authService.register({ name, email, password, password_confirmation: passwordConfirmation });
+            const apiUser = res?.user;
+            if (apiUser) {
+                setUser({ id: String(apiUser.id), name: apiUser.name, email: apiUser.email, roles: apiUser.roles });
+                toast('Compte créé avec succès', { icon: '✅' });
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const logout = async () => {
         setUser(null);
         try { await authService.logout(); } catch { };
@@ -64,7 +79,7 @@ export const UserAuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <UserAuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, logout }}>
+        <UserAuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, register, logout }}>
             {children}
         </UserAuthContext.Provider>
     );

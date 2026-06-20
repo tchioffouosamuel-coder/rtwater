@@ -1,15 +1,16 @@
 import { motion } from "motion/react";
 import { Sparkles, ArrowRight } from "lucide-react";
-import { useI18n } from "../../i18n/I18nContext";
 import { useTheme } from "../../theme/ThemeContext";
 import { useNavigate } from "react-router-dom";
+import { useSiteContent } from "../../context/SiteContentContext";
 
 interface HeroSectionProps {
   onNavigate?: (page: "accueil" | "galerie" | "devis" | "apropos") => void;
 }
 
 export function HeroSection({ onNavigate }: HeroSectionProps) {
-  const { t } = useI18n();
+  const { home } = useSiteContent();
+  const { hero } = home;
   const { theme } = useTheme();
   const navigate = useNavigate();
 
@@ -34,7 +35,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           initial={{ scale: 1.08 }}
           animate={{ scale: 1 }}
           transition={{ duration: 2.2, ease: "easeOut" }}
-          src="https://6a36433705d679a122fa04b3.imgix.net/my-images/beautiful-african-women-having-fun-while-fetching-water.jpg?auto=format&fit=fill&w=384"
+          src={hero.backgroundImage}
           alt="Station de traitement d'eau"
           className="w-full h-full object-cover"
         />
@@ -81,7 +82,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           >
             <Sparkles className="w-5 sm:w-6 h-5 sm:h-6 text-yellow-300" />
             <span className="text-yellow-300 font-semibold tracking-wide uppercase text-xs sm:text-sm">
-              {t("hero.badge")}
+              {hero.badge}
             </span>
           </motion.div>
 
@@ -91,9 +92,9 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             transition={{ delay: 0.5, duration: 0.8 }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight"
           >
-            {t("hero.title")}{" "}
+            {hero.title}{" "}
             <span className="bg-gradient-to-r from-[#00A8E8] to-cyan-300 bg-clip-text text-transparent">
-              {t("hero.titleHighlight")}
+              {hero.titleHighlight}
             </span>
           </motion.h1>
 
@@ -103,7 +104,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             transition={{ delay: 0.7, duration: 0.8 }}
             className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 mb-8 sm:mb-10 leading-relaxed"
           >
-            {t("hero.description")}
+            {hero.description}
           </motion.p>
 
           <motion.div
@@ -118,7 +119,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               whileTap={{ scale: 0.95 }}
               className="group inline-flex items-center justify-center gap-2 bg-white text-[#0077BE] px-8 py-4 rounded-xl font-semibold shadow-2xl hover:shadow-white/50 transition-all duration-300"
             >
-              {t("hero.servicesButton")}
+              {hero.servicesButtonLabel}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </motion.button>
             <motion.button
@@ -127,7 +128,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               whileTap={{ scale: 0.95 }}
               className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-300"
             >
-              {t("hero.contactButton")}
+              {hero.contactButtonLabel}
             </motion.button>
           </motion.div>
         </div>

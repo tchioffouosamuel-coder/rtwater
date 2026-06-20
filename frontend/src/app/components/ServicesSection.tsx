@@ -1,8 +1,17 @@
 import { Droplet, Zap, Beaker, Drill, Waves, Wrench } from "lucide-react";
 import { motion } from "motion/react";
 import { useRef } from "react";
-import { useI18n } from "../../i18n/I18nContext";
 import { useTheme } from "../../theme/ThemeContext";
+import { useSiteContent } from "../../context/SiteContentContext";
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  droplet: Droplet,
+  zap: Zap,
+  beaker: Beaker,
+  drill: Drill,
+  waves: Waves,
+  wrench: Wrench,
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -28,54 +37,16 @@ const itemVariants = {
 
 export function ServicesSection() {
   const sectionRef = useRef(null);
-  const { t } = useI18n();
+  const { home } = useSiteContent();
+  const { services } = home;
   const { theme } = useTheme();
-
-  const services = [
-    {
-      icon: Droplet,
-      titleKey: "services.purification.title",
-      descriptionKey: "services.purification.description",
-      gradient: "from-blue-500 to-cyan-500",
-    },
-    {
-      icon: Zap,
-      titleKey: "services.pumps.title",
-      descriptionKey: "services.pumps.description",
-      gradient: "from-[#00A8E8] to-[#0095D9]",
-    },
-    {
-      icon: Beaker,
-      titleKey: "services.disinfectants.title",
-      descriptionKey: "services.disinfectants.description",
-      gradient: "from-green-500 to-emerald-500",
-    },
-    {
-      icon: Drill,
-      titleKey: "services.drilling.title",
-      descriptionKey: "services.drilling.description",
-      gradient: "from-[#0077BE] to-[#00A8E8]",
-    },
-    {
-      icon: Waves,
-      titleKey: "services.pools.title",
-      descriptionKey: "services.pools.description",
-      gradient: "from-cyan-500 to-blue-500",
-    },
-    {
-      icon: Wrench,
-      titleKey: "services.maintenance.title",
-      descriptionKey: "services.maintenance.description",
-      gradient: "from-[#0095D9] to-[#0077BE]",
-    },
-  ];
 
   return (
     <section id="services" className="py-16 sm:py-24 transition-colors duration-300 relative overflow-hidden">
       {/* Contextual background photo — water pumps / industrial water */}
       <div className="absolute inset-0 pointer-events-none">
         <img
-          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1920&q=80"
+          src={services.backgroundImage}
           alt=""
           aria-hidden="true"
           className="w-full h-full object-cover"
@@ -108,14 +79,14 @@ export function ServicesSection() {
             className="inline-block mb-4"
           >
             <span className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg border border-white/20">
-              {t("services.sectionSubtitle")}
+              {services.sectionSubtitle}
             </span>
           </motion.div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-[#0077BE] to-[#00A8E8] bg-clip-text text-transparent mb-4 sm:mb-6 leading-tight">
-            {t("services.sectionTitle")}
+            {services.sectionTitle}
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed px-2">
-            {t("services.sectionDescription")}
+            {services.sectionDescription}
           </p>
         </motion.div>
 
@@ -127,8 +98,8 @@ export function ServicesSection() {
           viewport={{ once: true }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
-          {services.map((service, index) => {
-            const Icon = service.icon;
+          {services.items.map((service, index) => {
+            const Icon = ICON_MAP[service.icon] ?? Droplet;
             return (
               <motion.div
                 key={index}
@@ -138,7 +109,7 @@ export function ServicesSection() {
               >
                 {/* Gradient Background on Hover */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-5 dark:group-hover:opacity-10 transition-opacity duration-500`}></div>
-                
+
                 {/* Icon Container */}
                 <motion.div
                   whileHover={{ rotate: 360, scale: 1.1 }}
@@ -149,10 +120,10 @@ export function ServicesSection() {
                 </motion.div>
 
                 <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 group-hover:text-[#0077BE] dark:group-hover:text-[#00A8E8] transition-colors duration-300">
-                  {t(service.titleKey)}
+                  {service.title}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-                  {t(service.descriptionKey)}
+                  {service.description}
                 </p>
 
                 {/* Decorative Element */}

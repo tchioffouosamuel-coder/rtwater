@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
-import { Droplet, Zap, Award, Users, Target, Globe, ChevronLeft, ChevronRight } from "lucide-react";
-import { useI18n } from "../../../i18n/I18nContext";
+import { Droplet, Zap, Award, Users, Target, Globe } from "lucide-react";
 import { useTheme } from "../../../theme/ThemeContext";
+import { useSiteContent } from "../../../context/SiteContentContext";
 import {
   Carousel,
   CarouselContent,
@@ -9,54 +9,21 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "../ui/carousel";
-import { useRef } from "react";
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  droplet: Droplet,
+  zap: Zap,
+  award: Award,
+  users: Users,
+  target: Target,
+  globe: Globe,
+};
+
+const STAT_ICONS: React.ElementType[] = [Award, Target, Users, Globe];
 
 export function AboutPage() {
-  const { t } = useI18n();
+  const { about } = useSiteContent();
   const { theme } = useTheme();
-
-  const stats = [
-    { labelKey: "about.stats.experience.label", valueKey: "about.stats.experience.value", icon: Award },
-    { labelKey: "about.stats.projects.label", valueKey: "about.stats.projects.value", icon: Target },
-    { labelKey: "about.stats.clients.label", valueKey: "about.stats.clients.value", icon: Users },
-    { labelKey: "about.stats.zones.label", valueKey: "about.stats.zones.value", icon: Globe },
-  ];
-
-  const values = [
-    {
-      icon: Droplet,
-      titleKey: "about.values.quality.title",
-      descriptionKey: "about.values.quality.description",
-      gradient: "from-blue-500 to-cyan-500",
-    },
-    {
-      icon: Zap,
-      titleKey: "about.values.innovation.title",
-      descriptionKey: "about.values.innovation.description",
-      gradient: "from-[#00A8E8] to-[#0095D9]",
-    },
-    {
-      icon: Award,
-      titleKey: "about.values.expertise.title",
-      descriptionKey: "about.values.expertise.description",
-      gradient: "from-[#0077BE] to-[#00A8E8]",
-    },
-    {
-      icon: Users,
-      titleKey: "about.values.service.title",
-      descriptionKey: "about.values.service.description",
-      gradient: "from-green-500 to-emerald-500",
-    },
-  ];
-
-  const timeline = [
-    { year: "2008", eventKey: "about.timeline.events.2008" },
-    { year: "2012", eventKey: "about.timeline.events.2012" },
-    { year: "2015", eventKey: "about.timeline.events.2015" },
-    { year: "2018", eventKey: "about.timeline.events.2018" },
-    { year: "2020", eventKey: "about.timeline.events.2020" },
-    { year: "2024", eventKey: "about.timeline.events.2024" },
-  ];
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
@@ -92,16 +59,16 @@ export function AboutPage() {
             className="text-center"
           >
             <span className="inline-block bg-white/20 backdrop-blur-sm text-white px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6">
-              {t("about.badge")}
+              {about.heroBadge}
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
-              {t("about.title")}{" "}
+              {about.heroTitle}{" "}
               <span className="bg-gradient-to-r from-[#00A8E8] to-cyan-300 bg-clip-text text-transparent">
-                {t("about.titleHighlight")}
+                {about.heroTitleHighlight}
               </span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-white/95 max-w-4xl mx-auto leading-relaxed px-2">
-              {t("about.description")}
+              {about.heroDescription}
             </p>
           </motion.div>
         </div>
@@ -118,16 +85,16 @@ export function AboutPage() {
               transition={{ duration: 0.8 }}
             >
               <span className="inline-block bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6">
-                {t("about.mission.badge")}
+                {about.missionBadge}
               </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 leading-tight">
-                {t("about.mission.title")}
+                {about.missionTitle}
               </h2>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 leading-relaxed">
-                {t("about.mission.description1")}
+                {about.missionDescription1}
               </p>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-                {t("about.mission.description2")}
+                {about.missionDescription2}
               </p>
             </motion.div>
 
@@ -137,8 +104,8 @@ export function AboutPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              {stats.map((stat, index) => {
-                const Icon = stat.icon;
+              {about.stats.map((stat, index) => {
+                const Icon = STAT_ICONS[index % STAT_ICONS.length];
                 return (
                   <motion.div
                     key={index}
@@ -151,9 +118,9 @@ export function AboutPage() {
                   >
                     <Icon className="w-8 sm:w-10 h-8 sm:h-10 text-[#0077BE] dark:text-[#00A8E8] mb-3 sm:mb-4" />
                     <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0077BE] dark:text-[#00A8E8] mb-2">
-                      {t(stat.valueKey)}
+                      {stat.value}
                     </div>
-                    <div className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium">{t(stat.labelKey)}</div>
+                    <div className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium">{stat.label}</div>
                   </motion.div>
                 );
               })}
@@ -172,16 +139,16 @@ export function AboutPage() {
             className="text-center mb-12 sm:mb-16"
           >
             <span className="inline-block bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6">
-              {t("about.values.badge")}
+              {about.valuesBadge}
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 leading-tight">
-              {t("about.values.title")}
+              {about.valuesTitle}
             </h2>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {values.map((value, index) => {
-              const Icon = value.icon;
+            {about.values.map((value, index) => {
+              const Icon = ICON_MAP[value.icon] ?? Droplet;
               return (
                 <motion.div
                   key={index}
@@ -196,10 +163,10 @@ export function AboutPage() {
                     <Icon className="w-7 sm:w-8 h-7 sm:h-8 text-white" />
                   </div>
                   <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
-                    {t(value.titleKey)}
+                    {value.title}
                   </h3>
                   <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-                    {t(value.descriptionKey)}
+                    {value.description}
                   </p>
                 </motion.div>
               );
@@ -218,10 +185,10 @@ export function AboutPage() {
             className="text-center mb-12 sm:mb-16"
           >
             <span className="inline-block bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6">
-              {t("about.timeline.badge")}
+              {about.timelineBadge}
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 leading-tight">
-              {t("about.timeline.title")}
+              {about.timelineTitle}
             </h2>
           </motion.div>
 
@@ -233,7 +200,7 @@ export function AboutPage() {
             className="w-full px-8 sm:px-12 lg:px-16 py-6"
           >
             <CarouselContent className="gap-4 sm:gap-6">
-              {timeline.map((item, index) => (
+              {about.timeline.map((item, index) => (
                 <CarouselItem key={index} className="basis-full sm:basis-1/2 lg:basis-1/3">
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -243,8 +210,7 @@ export function AboutPage() {
                     whileHover={{ y: -12 }}
                     className="h-full perspective"
                   >
-                    <div className="relative overflow-hidden bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 border border-gray-100 dark:border-slate-700 transition-all duration-300 h-full flex flex-col justify-between"
-                    >
+                    <div className="relative overflow-hidden bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 border border-gray-100 dark:border-slate-700 transition-all duration-300 h-full flex flex-col justify-between">
                       {/* Gradient edges effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-[#0077BE]/10 via-transparent to-[#00A8E8]/10 pointer-events-none"></div>
                       <div className="absolute inset-0 bg-gradient-to-b from-[#0077BE]/5 via-transparent to-[#00A8E8]/5 pointer-events-none"></div>
@@ -258,7 +224,7 @@ export function AboutPage() {
                           <div className="h-1 flex-1 max-w-12 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] rounded-full"></div>
                         </div>
                         <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300 font-medium leading-relaxed">
-                          {t(item.eventKey)}
+                          {item.event}
                         </div>
                       </div>
 
@@ -276,11 +242,11 @@ export function AboutPage() {
               ))}
             </CarouselContent>
 
-            {/* Navigation - Hidden on mobile, visible on desktop */}
+            {/* Navigation */}
             <div className="flex justify-center items-center gap-3 sm:gap-4 mt-8 sm:mt-12">
               <CarouselPrevious className="relative static w-12 sm:w-14 h-12 sm:h-14 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 shadow-md hover:shadow-lg transition-all duration-300" />
               <div className="flex gap-2">
-                {timeline.map((_, index) => (
+                {about.timeline.map((_, index) => (
                   <motion.div
                     key={index}
                     className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full transition-all duration-300"

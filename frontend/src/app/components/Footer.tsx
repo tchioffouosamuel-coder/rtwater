@@ -3,33 +3,33 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { useTheme } from "../../theme/ThemeContext";
 import { useI18n } from "../../i18n/I18nContext";
+import { useSiteContent } from "../../context/SiteContentContext";
+
+const SOCIAL_ICONS: Record<string, React.ElementType> = {
+  facebook: Facebook,
+  twitter: Twitter,
+  linkedin: Linkedin,
+  instagram: Instagram,
+};
+
+const SOCIAL_COLORS: Record<string, string> = {
+  facebook: "hover:bg-blue-600",
+  twitter: "hover:bg-sky-500",
+  linkedin: "hover:bg-blue-700",
+  instagram: "hover:bg-pink-600",
+};
 
 export function Footer() {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   const { t } = useI18n();
-
-  const serviceLinks = [
-    t("footer.purification"),
-    t("footer.waterPumps"),
-    t("footer.disinfectants"),
-    t("footer.drilling"),
-    t("footer.pools"),
-    t("footer.maintenance"),
-  ];
+  const { footer } = useSiteContent();
 
   const quickLinks = [
     { label: t("common.home"), path: "/" },
     { label: t("common.gallery"), path: "/gallery" },
     { label: t("common.about"), path: "/about" },
     { label: t("common.quote"), path: "/devis" },
-  ];
-
-  const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook", color: "hover:bg-blue-600" },
-    { icon: Twitter, href: "#", label: "Twitter", color: "hover:bg-sky-500" },
-    { icon: Linkedin, href: "#", label: "LinkedIn", color: "hover:bg-blue-700" },
-    { icon: Instagram, href: "#", label: "Instagram", color: "hover:bg-pink-600" },
   ];
 
   const handleNavigation = (path: string) => {
@@ -69,16 +69,16 @@ export function Footer() {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <img src="/logo.svg" alt="RT Water Solution" className="h-12 w-auto" />
+              <img src={footer.logoUrl} alt={`${footer.companyName} ${footer.companyTagline}`} className="h-12 w-auto" />
               <div className="flex flex-col">
-                <span className="text-xl font-extrabold text-white leading-none">RT Water</span>
-                <span className="text-[11px] font-semibold tracking-widest text-[#00A8E8] uppercase leading-none mt-1">Solution</span>
+                <span className="text-xl font-extrabold text-white leading-none">{footer.companyName}</span>
+                <span className="text-[11px] font-semibold tracking-widest text-[#00A8E8] uppercase leading-none mt-1">{footer.companyTagline}</span>
               </div>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              {t("footer.tagline")}
+              {footer.tagline}
             </p>
-            
+
             {/* Newsletter */}
             <div className="mt-6">
               <p className="text-sm text-gray-400 mb-3">{t("footer.stayInformed")}</p>
@@ -110,7 +110,7 @@ export function Footer() {
               {t("footer.services")}
             </h3>
             <ul className="space-y-3">
-              {serviceLinks.map((service, index) => (
+              {footer.serviceLinks.map((service, index) => (
                 <motion.li
                   key={service}
                   initial={{ opacity: 0, x: -20 }}
@@ -178,7 +178,7 @@ export function Footer() {
                 </div>
                 <div>
                   <p className="text-gray-400 leading-relaxed">
-                    Yaoundé, Cameroun
+                    {footer.address}
                   </p>
                 </div>
               </li>
@@ -188,10 +188,10 @@ export function Footer() {
                 </div>
                 <div>
                   <a
-                    href="tel:+237"
+                    href={`tel:${footer.phone}`}
                     className="text-gray-400 hover:text-[#00A8E8] transition-colors"
                   >
-                    +237 XXX XXX XXX
+                    {footer.phone}
                   </a>
                 </div>
               </li>
@@ -201,10 +201,10 @@ export function Footer() {
                 </div>
                 <div>
                   <a
-                    href="mailto:info@rt-water.cm"
+                    href={`mailto:${footer.email}`}
                     className="text-gray-400 hover:text-[#00A8E8] transition-colors"
                   >
-                    info@rt-water.cm
+                    {footer.email}
                   </a>
                 </div>
               </li>
@@ -214,16 +214,17 @@ export function Footer() {
             <div className="mt-8">
               <p className="text-sm text-gray-400 mb-4">{t("footer.followUs")}</p>
               <div className="flex gap-3">
-                {socialLinks.map((social) => {
-                  const Icon = social.icon;
+                {footer.socialLinks.map((social) => {
+                  const Icon = SOCIAL_ICONS[social.platform] ?? Facebook;
+                  const colorClass = SOCIAL_COLORS[social.platform] ?? "hover:bg-gray-600";
                   return (
                     <motion.a
-                      key={social.label}
-                      href={social.href}
+                      key={social.platform}
+                      href={social.url}
                       whileHover={{ y: -3, scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`w-11 h-11 bg-white/5 rounded-xl flex items-center justify-center ${social.color} transition-all duration-300 border border-white/10 hover:border-transparent`}
-                      aria-label={social.label}
+                      className={`w-11 h-11 bg-white/5 rounded-xl flex items-center justify-center ${colorClass} transition-all duration-300 border border-white/10 hover:border-transparent`}
+                      aria-label={social.platform}
                     >
                       <Icon className="w-5 h-5" />
                     </motion.a>
@@ -244,7 +245,7 @@ export function Footer() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
-              © {currentYear} RT Water Solution. {t("footer.allRightsReserved")}
+              © {currentYear} {footer.companyName} {footer.companyTagline}. {t("footer.allRightsReserved")}
             </p>
             <div className="flex gap-6 text-sm">
               <a

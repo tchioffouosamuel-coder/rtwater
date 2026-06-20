@@ -7,6 +7,7 @@ import { useI18n } from "../../i18n/I18nContext";
 import { useCart } from "../../context/CartContext";
 import { useCartUI } from "../../context/CartUIContext";
 import { useUserAuth } from "../../context/UserAuthContext";
+import { useSiteContent } from "../../context/SiteContentContext";
 
 export function Header() {
   const navigate = useNavigate();
@@ -16,15 +17,10 @@ export function Header() {
   const { cartCount } = useCart();
   const { openCart } = useCartUI();
   const { user, logout } = useUserAuth();
+  const { header } = useSiteContent();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const menuItems = [
-    { label: t("common.home"), path: "/" },
-    { label: t("common.gallery"), path: "/gallery" },
-    { label: t("common.about"), path: "/about" },
-    { label: t("common.quote"), path: "/devis" },
-    { label: t("shop.title"), path: "/shop" },
-  ];
+  const menuItems = header.navLinks;
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -56,10 +52,10 @@ export function Header() {
               transition={{ type: "spring", stiffness: 400 }}
             >
               <div className="flex items-center gap-2.5">
-                <img src="/logo.svg" alt="RT Water Solution" className="h-10 w-auto" />
+                <img src={header.logoUrl} alt={`${header.companyName} ${header.companyTagline}`} className="h-10 w-auto" />
                 <span className="text-lg font-bold leading-none hidden sm:flex flex-col">
-                  <span className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] bg-clip-text text-transparent">RT Water</span>
-                  <span className="text-[10px] font-semibold tracking-widest text-gray-400 dark:text-gray-500 uppercase">Solution</span>
+                  <span className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] bg-clip-text text-transparent">{header.companyName}</span>
+                  <span className="text-[10px] font-semibold tracking-widest text-gray-400 dark:text-gray-500 uppercase">{header.companyTagline}</span>
                 </span>
               </div>
             </motion.button>
@@ -220,8 +216,8 @@ export function Header() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex flex-col">
-                      <span className="text-white font-extrabold text-base leading-none">RT Water</span>
-                      <span className="text-white/70 font-semibold text-[10px] tracking-widest uppercase leading-none mt-0.5">Solution</span>
+                      <span className="text-white font-extrabold text-base leading-none">{header.companyName}</span>
+                      <span className="text-white/70 font-semibold text-[10px] tracking-widest uppercase leading-none mt-0.5">{header.companyTagline}</span>
                     </div>
                   </div>
                   <button
@@ -249,7 +245,6 @@ export function Header() {
                       </span>
                     )}
                   </motion.button>
-
                 </div>
               </div>
 

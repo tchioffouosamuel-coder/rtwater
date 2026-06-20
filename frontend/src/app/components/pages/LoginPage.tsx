@@ -307,6 +307,12 @@ export const LoginPage: React.FC = () => {
 
               <div className="mt-5 grid grid-cols-1 gap-3">
                 <Link
+                  to="/register"
+                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-[#0077BE] dark:border-[#00A8E8] text-[#0077BE] dark:text-[#00A8E8] text-sm font-semibold hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-all"
+                >
+                  Créer un compte gratuitement
+                </Link>
+                <Link
                   to="/shop"
                   className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:border-[#0077BE] dark:hover:border-[#00A8E8] hover:text-[#0077BE] dark:hover:text-[#00A8E8] hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-all"
                 >

@@ -10,9 +10,11 @@ import { Footer } from "./components/Footer";
 import { ContactPage } from "./components/pages/ContactPage";
 import { ShopPage } from "./components/pages/ShopPage";
 import { LoginPage } from "./components/pages/LoginPage";
+import { RegisterPage } from "./components/pages/RegisterPage";
 import { ProfilePage } from "./components/pages/ProfilePage";
 import { OrdersPage } from "./components/pages/OrdersPage";
 import { BlogPage, BlogPostPage } from "./components/pages/BlogPage";
+import { DynamicPage } from "./components/pages/DynamicPage";
 import { Cart } from "./components/Cart";
 import { CheckoutModal } from "./components/CheckoutModal";
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -164,6 +166,7 @@ export default function App() {
         {/* Pages publiques avec Header et Footer */}
         <Route element={<Layout />}>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/gallery" element={<GalleryPage />} />
@@ -175,6 +178,7 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/pages/:slug" element={<DynamicPage />} />
         </Route>
 
         {/* Redirection par défaut */}

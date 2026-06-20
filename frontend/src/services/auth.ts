@@ -24,6 +24,7 @@ export async function register(payload: {
   name: string;
   email: string;
   password: string;
+  password_confirmation: string;
 }) {
   const res = await api.request("/register", {
     method: "POST",

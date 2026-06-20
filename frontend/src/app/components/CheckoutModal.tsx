@@ -7,6 +7,7 @@ import {
 import { useCart } from "../../context/CartContext";
 import { useCartUI } from "../../context/CartUIContext";
 import { useI18n } from "../../i18n/I18nContext";
+import { useUserAuth } from "../../context/UserAuthContext";
 import { initiatePayment, OPERATORS, type OperatorId } from "../../services/payments";
 import { fetchOrder } from "../../services/orders";
 
@@ -27,9 +28,21 @@ export function CheckoutModal() {
   const { isCheckoutOpen, closeCheckout } = useCartUI();
   const { cartTotal, checkout, items } = useCart();
   const { t } = useI18n();
+  const { user } = useUserAuth();
 
   const [step, setStep]               = useState<Step>("info");
   const [formData, setFormData]       = useState({ name: "", email: "", phone: "", address: "" });
+
+  // Pre-fill name and email from logged-in user when the modal opens
+  useEffect(() => {
+    if (isCheckoutOpen && user) {
+      setFormData(prev => ({
+        ...prev,
+        name:  prev.name  || user.name  || "",
+        email: prev.email || user.email || "",
+      }));
+    }
+  }, [isCheckoutOpen, user]);
   const [payOnDelivery, setPayOnDelivery] = useState(false);
   const [infoError, setInfoError]     = useState<string | null>(null);
   const [creatingOrder, setCreatingOrder] = useState(false);
@@ -260,6 +273,14 @@ export function CheckoutModal() {
                       </span>
                     </div>
                   </div>
+
+                  {/* Logged-in user banner */}
+                  {user && (
+                    <div className="mb-4 flex items-center gap-2.5 px-3.5 py-2.5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-sm text-green-700 dark:text-green-300">
+                      <User size={14} className="flex-shrink-0" />
+                      <span>Connecté en tant que <strong>{user.name}</strong> — formulaire pré-rempli</span>
+                    </div>
+                  )}
 
                   <form onSubmit={handleInfoSubmit} className="space-y-4">
                     {/* Name */}

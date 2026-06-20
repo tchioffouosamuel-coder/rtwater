@@ -6,6 +6,7 @@ import { CartProvider } from "./context/CartContext";
 import { CartUIProvider } from "./context/CartUIContext";
 import { AdminAuthProvider } from "./context/AdminAuthContext";
 import { UserAuthProvider } from "./context/UserAuthContext";
+import { SiteContentProvider } from "./context/SiteContentContext";
 import { InventoryProvider } from "./context/InventoryContext";
 import { POSProvider } from "./context/POSContext";
 import { ReceiptProvider } from "./context/ReceiptContext";
@@ -20,13 +21,15 @@ createRoot(document.getElementById("root")!).render(
           <CartUIProvider>
             <AdminAuthProvider>
               <UserAuthProvider>
-                <InventoryProvider>
-                  <POSProvider>
-                    <ReceiptProvider>
-                      <App />
-                    </ReceiptProvider>
-                  </POSProvider>
-                </InventoryProvider>
+                <SiteContentProvider>
+                  <InventoryProvider>
+                    <POSProvider>
+                      <ReceiptProvider>
+                        <App />
+                      </ReceiptProvider>
+                    </POSProvider>
+                  </InventoryProvider>
+                </SiteContentProvider>
               </UserAuthProvider>
             </AdminAuthProvider>
           </CartUIProvider>
