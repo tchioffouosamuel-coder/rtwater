@@ -5,7 +5,7 @@ import { useAdminAuth } from '../../../context/AdminAuthContext';
 import * as productsService from '../../../services/products';
 import api from '../../../services/api';
 import { toast } from 'sonner';
-import { Plus, Search, Edit2, Trash2, X, Save, AlertCircle, FileSpreadsheet } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, X, Save, AlertCircle, FileSpreadsheet, Image as ImageIcon } from 'lucide-react';
 
 interface ProductForm {
   name: string;
@@ -69,6 +69,7 @@ export const ProductsPage: React.FC = () => {
     stock: d.stock ?? 0,
     is_available: d.is_available ?? true,
     image_url: d.image_url ?? null,
+    awaiting_image: d.awaiting_image ?? null,
     category: d.category ?? null,
   });
 
@@ -333,11 +334,23 @@ export const ProductsPage: React.FC = () => {
                     <tr key={product.id} className={`hover:bg-slate-50 transition-colors ${isCritical ? 'bg-red-50' : isLow ? 'bg-amber-50' : ''}`}>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          {product.image_url && (
+                          {product.image_url ? (
                             <img src={product.image_url} alt={product.name} className="w-10 h-10 object-cover rounded-lg border border-slate-200" />
-                          )}
+                          ) : product.awaiting_image ? (
+                            <span
+                              title={`Photo attendue : ${product.awaiting_image}`}
+                              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-dashed border-amber-300 bg-amber-50 text-amber-600"
+                            >
+                              <ImageIcon size={16} />
+                            </span>
+                          ) : null}
                           <div>
                             <p className="text-sm font-medium text-slate-900">{product.name}</p>
+                            {product.awaiting_image && (
+                              <p className="text-xs text-amber-600">
+                                Photo attendue : <code>{product.awaiting_image}</code>
+                              </p>
+                            )}
                             {product.category && (
                               <p className="text-xs text-slate-400">{product.category.name ?? product.category}</p>
                             )}

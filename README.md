@@ -187,15 +187,48 @@ abandonnés sont purgés après 24 h.
 Les en-têtes sont reconnus en deux passes — exacte d'abord, puis mot entier — pour
 qu'une colonne `prix_achat` ne soit jamais prise pour `prix`.
 
-Rattachement automatique des images, par ordre de priorité :
+### Import d'images : les deux temps
 
-1. colonne `image` = nom de fichier → cherché dans l'archive ZIP ;
-2. colonne `image` = URL `https://` → téléchargée (type MIME vérifié, 8 Mo max) ;
-3. colonne `image` vide → recherche par référence (`RTW-B15.jpg`) puis par nom
-   slugifié. Les suffixes de série `-1` / `_1` sont acceptés.
+Le flux prévu est **« l'Excel d'abord, les photos ensuite »**, parce qu'un catalogue
+se saisit avant que le photographe ait livré.
 
-Les entrées de l'archive sont aplaties et filtrées : une entrée `../../evil.png` ne
-peut pas sortir du dossier d'import (couvert par un test).
+1. La colonne `image` de l'Excel porte le **nom du fichier attendu**
+   (`RTW-B15.jpg`). Si le fichier n'est pas fourni avec le tableur, ce nom est
+   enregistré dans `products.image_filename` : rien n'est perdu, le produit est
+   simplement « en attente de photo ».
+2. Plus tard, **Produits → Import Excel → onglet Images** reçoit toutes les photos
+   d'un coup (ZIP ou fichiers isolés) et les rattache. `image_filename` est remis à
+   `null` dès que l'image est en place — la colonne ne contient donc que les produits
+   encore en attente.
+
+`ProductImageImportService` cherche le produit d'un fichier par trois clés, dans cet
+ordre de fiabilité :
+
+| Clé | Exemple |
+|---|---|
+| `image_filename` — le nom déclaré dans l'Excel | `photo-speciale.jpg` |
+| la référence (SKU), slugifiée | `RTW-B15.jpg` → produit `RTW-B15` |
+| le nom du produit, slugifié | `bidon-10-l.jpg` → « Bidon 10 L » |
+
+Points qui ne se devinent pas :
+
+- **L'extension n'a pas à correspondre.** L'Excel annonce `RTW-B15.jpg`, le
+  photographe livre `RTW-B15.png` : le rattachement fonctionne, la recherche se fait
+  aussi sur le nom sans extension.
+- **Un fichier n'est jamais attribué deux fois.** Deux produits homonymes : le premier
+  prend la photo, le second reste en attente.
+- **Les produits qui ont nommé leur fichier passent en premier**, avant une
+  correspondance par nom de produit — ils sont plus fiables, l'admin l'a écrit.
+- Les fichiers sans correspondance sont **listés**, jamais abandonnés en silence.
+- Un visuel ajouté à la main dans le formulaire produit lève aussi l'attente.
+
+L'URL `https://` dans la colonne `image` reste possible : l'image est alors
+téléchargée tout de suite (type MIME vérifié, 8 Mo max).
+
+`App\Support\ImportUploads` porte le dépôt temporaire, l'extraction ZIP et
+l'indexation, partagés par les deux imports. Les entrées de l'archive sont aplaties et
+filtrées : une entrée `../../evil.png` ne peut pas sortir du dossier d'import (couvert
+par un test de chaque côté).
 
 ### Fiche technique produit
 
@@ -274,6 +307,7 @@ Les tests tournent sur SQLite en mémoire (`phpunit.xml`), sans toucher à MySQL
 | `CommerceFoundationsTest` | référence, verrou de stock, livraison, codes promo, réglages, permissions, clients, newsletter |
 | `ProductImportTest` | lecture Excel/CSV, correspondance des colonnes, images, sécurité de l'archive |
 | `ProductDatasheetTest` | fiche technique : texte, image, PDF, remplacement, retrait, formats refusés |
+| `ProductImageImportTest` | import d'images en masse : rattachement par nom / SKU / libellé, remplacement, fichiers orphelins |
 | `PerformanceAndMonitoringTest` | cache, remontée d'erreurs |
 
 **Deux échecs connus** dans `Auth/AuthenticationTest` : tests Breeze par session, hérités
@@ -295,10 +329,11 @@ rtwater/
 │   │   │   ├── Controllers/Api/  # 24 contrôleurs
 │   │   │   └── Middleware/       # CheckRole, CheckPermission
 │   │   ├── Models/
-│   │   ├── Services/             # ProductImportService, SebpayService
+│   │   ├── Services/             # ProductImportService,
+│   │   │                         # ProductImageImportService, SebpayService
 │   │   └── Support/              # Permissions, OrderPricing, StockReserver,
-│   │                             # DatasheetStorage, ImageOptimizer,
-│   │                             # CacheVersion, Notifier
+│   │                             # DatasheetStorage, ImportUploads,
+│   │                             # ImageOptimizer, CacheVersion, Notifier
 │   ├── database/migrations/
 │   ├── database/seeders/
 │   ├── routes/api.php            # toutes les routes, groupées par permission
