@@ -1,4 +1,5 @@
-import { Menu, X, Sun, Moon, Globe, ShoppingCart } from "lucide-react";
+import { Menu, X, Sun, Moon, Globe, ShoppingCart, UserCircle2, Package, LogIn, LogOut, Truck, Heart } from "lucide-react";
+import { useShopMemory } from "../../context/ShopMemoryContext";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
@@ -13,14 +14,22 @@ export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
-  const { language, setLanguage, t } = useI18n();
+  const { language, setLanguage, t, tx } = useI18n();
   const { cartCount } = useCart();
   const { openCart } = useCartUI();
   const { user, logout } = useUserAuth();
-  const { header } = useSiteContent();
+  const { header, contact } = useSiteContent();
+  const { favorites } = useShopMemory();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const menuItems = header.navLinks;
+  // Menu géré dans le CMS (en français) : en anglais, les rubriques standard sont traduites
+  const EN_LABELS: Record<string, string> = {
+    "/": "Home", "/gallery": "Gallery", "/about": "About", "/devis": "Free quote",
+    "/shop": "Shop", "/contact": "Contact", "/blog": "Blog",
+  };
+  const menuItems = header.navLinks.map((item) =>
+    language === "en" && EN_LABELS[item.path] ? { ...item, label: EN_LABELS[item.path] } : item
+  );
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -51,13 +60,7 @@ export function Header() {
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
-              <div className="flex items-center gap-2.5">
-                <img src={header.logoUrl} alt={`${header.companyName} ${header.companyTagline}`} className="h-10 w-auto" />
-                <span className="text-lg font-bold leading-none hidden sm:flex flex-col">
-                  <span className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] bg-clip-text text-transparent">{header.companyName}</span>
-                  <span className="text-[10px] font-semibold tracking-widest text-gray-400 dark:text-gray-500 uppercase">{header.companyTagline}</span>
-                </span>
-              </div>
+              <img src="/logo.webp" alt="RT Water Solution" className="h-12 w-auto drop-shadow-md" />
             </motion.button>
 
             {/* Desktop Navigation */}
@@ -87,6 +90,21 @@ export function Header() {
 
             {/* Right side controls - Desktop */}
             <div className="hidden lg:flex lg:items-center lg:gap-2">
+              {/* Favoris */}
+              <button
+                onClick={() => navigate('/favoris')}
+                aria-label={tx("Mes favoris", "My favourites")}
+                title={tx("Mes favoris", "My favourites")}
+                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-300"
+              >
+                <Heart className={`w-5 h-5 ${favorites.length ? "fill-red-500 text-red-500" : ""}`} />
+                {favorites.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#0077BE] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    {favorites.length > 9 ? "9+" : favorites.length}
+                  </span>
+                )}
+              </button>
+
               {/* Cart Button */}
               <motion.button
                 onClick={openCart}
@@ -94,6 +112,7 @@ export function Header() {
                 whileTap={{ scale: 0.95 }}
                 className="relative flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8] hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-300"
                 title={t("shop.cart")}
+                aria-label={t("shop.cart")}
               >
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
@@ -134,33 +153,56 @@ export function Header() {
               {/* User / Login */}
               {user ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{user.name}</span>
+                  <button
+                    onClick={() => navigate('/profile')}
+                    className="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-[#0077BE] dark:hover:text-[#00A8E8] transition-colors"
+                    title={tx("Mon compte", "My account")}
+                  >
+                    <UserCircle2 className="w-5 h-5" />
+                    {user.name.split(' ')[0]}
+                  </button>
                   <motion.button
                     onClick={async () => { await logout(); navigate('/'); }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="px-3 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-sm"
                   >
-                    Déconnexion
+                    {tx("Déconnexion", "Sign out")}
                   </motion.button>
                 </div>
               ) : (
                 <motion.button
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate('/login', { state: { from: location.pathname } })}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="px-3 py-1 rounded-lg bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white text-sm"
                 >
-                  Connexion
+                  {tx("Connexion", "Sign in")}
                 </motion.button>
               )}
             </div>
 
             {/* Mobile menu button */}
             <div className="lg:hidden flex items-center gap-2">
+              {/* Favoris */}
+              <button
+                onClick={() => navigate('/favoris')}
+                aria-label={tx("Mes favoris", "My favourites")}
+                title={tx("Mes favoris", "My favourites")}
+                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-300"
+              >
+                <Heart className={`w-5 h-5 ${favorites.length ? "fill-red-500 text-red-500" : ""}`} />
+                {favorites.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#0077BE] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    {favorites.length > 9 ? "9+" : favorites.length}
+                  </span>
+                )}
+              </button>
+
               {/* Mobile Cart Button */}
               <motion.button
                 onClick={openCart}
+                aria-label={t("shop.cart")}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="relative flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8] hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-300"
@@ -267,6 +309,35 @@ export function Header() {
                 ))}
               </div>
 
+              {/* Compte client */}
+              <div className="p-5 space-y-2 border-t border-gray-200 dark:border-slate-700">
+                {user ? (
+                  <>
+                    <button onClick={() => handleNavigation('/profile')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                      <UserCircle2 className="w-4 h-4" /> {tx("Mon compte", "My account")} ({user.name.split(' ')[0]})
+                    </button>
+                    <button onClick={() => handleNavigation('/orders')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                      <Package className="w-4 h-4" /> {tx("Mes commandes", "My orders")}
+                    </button>
+                    <button onClick={async () => { await logout(); handleNavigation('/'); }} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                      <LogOut className="w-4 h-4" /> {tx("Déconnexion", "Sign out")}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => handleNavigation('/login')} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-[#0077BE] to-[#00A8E8]">
+                      <LogIn className="w-4 h-4" /> {tx("Connexion / Créer un compte", "Sign in / Create account")}
+                    </button>
+                    <button onClick={() => handleNavigation('/suivi-commande')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                      <Truck className="w-4 h-4" /> {tx("Suivre une commande", "Track an order")}
+                    </button>
+                  </>
+                )}
+                <button onClick={() => handleNavigation('/favoris')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                  <Heart className="w-4 h-4" /> {tx("Mes favoris", "My favourites")}{favorites.length > 0 ? ` (${favorites.length})` : ""}
+                </button>
+              </div>
+
               {/* Theme and Language Controls */}
               <div className="p-5 space-y-2 border-t border-gray-200 dark:border-slate-700">
                 {/* Language Toggle */}
@@ -302,7 +373,15 @@ export function Header() {
                   <p className="font-semibold text-gray-900 dark:text-white">
                     {t("common.needHelp")}
                   </p>
-                  <p>+237 XXX XXX XXX</p>
+                  {contact.phone && !/x/i.test(contact.phone) ? (
+                    <a href={`tel:${contact.phone.replace(/\s/g, '')}`} className="text-[#0077BE] dark:text-[#00A8E8] font-medium">
+                      {contact.phone}
+                    </a>
+                  ) : (
+                    <button onClick={() => handleNavigation('/contact')} className="text-[#0077BE] dark:text-[#00A8E8] font-medium">
+                      {tx("Nous contacter", "Contact us")}
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>

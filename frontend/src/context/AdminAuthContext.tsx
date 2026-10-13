@@ -1,13 +1,27 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import * as authService from '../services/auth';
+import api from '../services/api';
 
-export type AdminRole = 'admin' | 'manager' | 'cashier';
+/**
+ * Session du backoffice.
+ *
+ * Les permissions sont désormais **envoyées par le serveur** (App\Support\Permissions)
+ * et re-vérifiées à chaque appel d'API par le middleware `permission:`. Elles étaient
+ * auparavant déduites d'une carte côté React et conservées dans localStorage : un
+ * utilisateur pouvait s'en octroyer, et un rôle absent de la réponse retombait sur
+ * « admin ». Ici, l'absence d'information ne donne aucun droit.
+ */
+
+/** Rôles définis côté serveur (App\Models\Role). */
+export type AdminRole = 'admin' | 'gestionnaire' | 'secretaire' | 'comptable' | 'user';
 
 export interface AdminUser {
   id: string;
   email: string;
   name: string;
+  /** Rôle principal, pour l'affichage. Les droits passent par `permissions`. */
   role: AdminRole;
+  roles: AdminRole[];
   permissions: string[];
 }
 
@@ -23,63 +37,68 @@ interface AdminAuthContextType {
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
-// Permissions par rôle
-const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
-  admin: [
-    'view_dashboard',
-    'manage_products',
-    'manage_pages',
-    'manage_orders',
-    'manage_inventory',
-    'manage_pos',
-    'manage_receipts',
-    'manage_users',
-    'manage_settings',
-    'view_analytics',
-    'manage_reviews',
-  ],
-  manager: [
-    'view_dashboard',
-    'manage_products',
-    'manage_orders',
-    'manage_inventory',
-    'manage_pos',
-    'view_analytics',
-    'manage_reviews',
-  ],
-  cashier: [
-    'manage_pos',
-    'manage_receipts',
-    'view_inventory',
-  ],
+export const ROLE_LABELS: Record<AdminRole, string> = {
+  admin: 'Administrateur',
+  gestionnaire: 'Gestionnaire',
+  secretaire: 'Secrétaire',
+  comptable: 'Comptable',
+  user: 'Client',
 };
+
+const VALID_ROLES: AdminRole[] = ['admin', 'gestionnaire', 'secretaire', 'comptable', 'user'];
+
+/** Normalise la charge utile renvoyée par /login ou /me. */
+function toAdminUser(payload: any, fallbackEmail = ''): AdminUser | null {
+  if (!payload) return null;
+
+  const roles: AdminRole[] = Array.isArray(payload.roles)
+    ? payload.roles.filter((r: any): r is AdminRole => VALID_ROLES.includes(r))
+    : [];
+
+  const permissions: string[] = Array.isArray(payload.permissions)
+    ? payload.permissions.filter((p: any) => typeof p === 'string')
+    : [];
+
+  return {
+    id: String(payload.id ?? ''),
+    email: payload.email ?? fallbackEmail,
+    name: payload.name ?? '',
+    // Pas de rôle reconnu → 'user', le moins privilégié. Jamais 'admin' par défaut.
+    role: roles[0] ?? 'user',
+    roles,
+    permissions,
+  };
+}
 
 export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AdminUser | null>(null);
-  // true while we're checking localStorage — prevents ProtectedRoute from
-  // redirecting to /admin/login before hydration completes
+  // true pendant la lecture de localStorage : évite que ProtectedRoute
+  // redirige vers /admin/login avant la réhydratation
   const [isLoading, setIsLoading] = useState(true);
 
   const login = useCallback(async (email: string, password: string) => {
     setIsLoading(true);
     try {
       const res = await authService.loginAsAdmin(email, password);
-      const apiUser = res?.user;
-      const roleFromApi = apiUser?.roles?.[0] || 'admin';
+      const newUser = toAdminUser(res?.user, email);
 
-      const newUser: AdminUser = {
-        id: String(apiUser?.id ?? ''),
-        email: apiUser?.email ?? email,
-        name: apiUser?.name ?? '',
-        role: (roleFromApi as AdminRole) || 'admin',
-        permissions: ROLE_PERMISSIONS[(roleFromApi as AdminRole) || 'admin'] || [],
-      };
+      if (!newUser) {
+        throw new Error('Réponse de connexion inattendue.');
+      }
+
+      // Un compte sans aucune permission n'a rien à faire dans le backoffice :
+      // on refuse ici plutôt que de le laisser buter sur des 403 écran par écran.
+      if (newUser.permissions.length === 0) {
+        localStorage.removeItem('adminToken');
+        throw new Error("Ce compte n'a pas accès au backoffice.");
+      }
 
       setUser(newUser);
       localStorage.setItem('adminUser', JSON.stringify(newUser));
-      // adminToken already set by loginAsAdmin via authService
+      // adminToken est déjà posé par loginAsAdmin
     } catch (error) {
-      console.error('Login failed:', error);
+      setUser(null);
+      localStorage.removeItem('adminUser');
       throw error;
     } finally {
       setIsLoading(false);
@@ -93,36 +112,59 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
     try { authService.logout(); } catch { /* ignore */ }
   }, []);
 
-  const hasPermission = useCallback((permission: string) => {
-    if (!user) return false;
-    return user.permissions.includes(permission);
-  }, [user]);
+  const hasPermission = useCallback(
+    (permission: string) => !!user && user.permissions.includes(permission),
+    [user],
+  );
 
-  const hasRole = useCallback((role: AdminRole) => {
-    if (!user) return false;
-    return user.role === role;
-  }, [user]);
+  const hasRole = useCallback(
+    (role: AdminRole) => !!user && user.roles.includes(role),
+    [user],
+  );
 
-  // Rehydrate from localStorage — runs once on mount.
-  // Permissions are recomputed from ROLE_PERMISSIONS so any update takes
-  // effect without requiring the user to log out and back in.
+  // Réhydratation : on restaure l'affichage, puis on redemande au serveur la
+  // liste à jour. C'est la réponse de /me qui fait foi, pas le localStorage —
+  // une permission retirée côté serveur disparaît donc au rechargement.
   React.useEffect(() => {
+    const savedUser = localStorage.getItem('adminUser');
+    const savedToken = localStorage.getItem('adminToken');
+
+    if (!savedUser || !savedToken) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const savedUser = localStorage.getItem('adminUser');
-      if (savedUser) {
-        const parsed = JSON.parse(savedUser) as AdminUser;
-        const freshUser: AdminUser = {
-          ...parsed,
-          permissions: ROLE_PERMISSIONS[parsed.role] ?? [],
-        };
-        setUser(freshUser);
-        localStorage.setItem('adminUser', JSON.stringify(freshUser));
-      }
+      const restored = toAdminUser(JSON.parse(savedUser));
+      if (restored && restored.permissions.length > 0) setUser(restored);
     } catch {
       localStorage.removeItem('adminUser');
-    } finally {
-      setIsLoading(false); // unlock ProtectedRoute regardless of outcome
+      localStorage.removeItem('adminToken');
+      setIsLoading(false);
+      return;
     }
+
+    api.request('/me', { method: 'GET', silent: true })
+      .then((res: any) => {
+        const fresh = toAdminUser(res?.data);
+
+        if (!fresh || fresh.permissions.length === 0) {
+          setUser(null);
+          localStorage.removeItem('adminUser');
+          localStorage.removeItem('adminToken');
+          return;
+        }
+
+        setUser(fresh);
+        localStorage.setItem('adminUser', JSON.stringify(fresh));
+      })
+      .catch(() => {
+        // Jeton révoqué (redémarrage serveur, reconnexion ailleurs) : on nettoie
+        setUser(null);
+        localStorage.removeItem('adminUser');
+        localStorage.removeItem('adminToken');
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
@@ -144,8 +186,8 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAdminAuth = () => {
   const context = useContext(AdminAuthContext);
-  if (context === undefined) {
-    throw new Error('useAdminAuth must be used within AdminAuthProvider');
+  if (!context) {
+    throw new Error('useAdminAuth doit être utilisé dans un AdminAuthProvider');
   }
   return context;
 };

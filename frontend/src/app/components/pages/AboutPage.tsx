@@ -9,6 +9,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "../ui/carousel";
+import { useSeo } from "../../../lib/seo";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   droplet: Droplet,
@@ -22,6 +23,11 @@ const ICON_MAP: Record<string, React.ElementType> = {
 const STAT_ICONS: React.ElementType[] = [Award, Target, Users, Globe];
 
 export function AboutPage() {
+  useSeo({
+    title: "À propos",
+    description: "Découvrez RT Water Solution, votre partenaire pour une eau pure et saine au Cameroun : notre mission, nos valeurs et notre histoire.",
+    path: "/about",
+  });
   const { about } = useSiteContent();
   const { theme } = useTheme();
 
@@ -63,7 +69,7 @@ export function AboutPage() {
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
               {about.heroTitle}{" "}
-              <span className="bg-gradient-to-r from-[#00A8E8] to-cyan-300 bg-clip-text text-transparent">
+              <span className="text-white underline decoration-cyan-200/80 decoration-[6px] underline-offset-[10px]">
                 {about.heroTitleHighlight}
               </span>
             </h1>

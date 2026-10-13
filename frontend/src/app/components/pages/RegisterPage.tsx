@@ -3,39 +3,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, Lock, Eye, EyeOff, UserPlus, Droplets, Shield, Truck, Award, ArrowLeft, User } from 'lucide-react';
 import { useUserAuth } from '../../../context/UserAuthContext';
+import { useI18n } from '../../../i18n/I18nContext';
+import { useSeo } from "../../../lib/seo";
 
-function WaterLogo({ size = 64 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <motion.path
-        d="M32 4 C32 4 12 28 12 40 C12 52 21 60 32 60 C43 60 52 52 52 40 C52 28 32 4 32 4Z"
-        fill="url(#dropGradReg)"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.6, type: 'spring' }}
-      />
-      <motion.ellipse
-        cx="24" cy="38" rx="5" ry="7"
-        fill="white" opacity={0.35}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.35 }}
-        transition={{ delay: 0.4 }}
-      />
-      <defs>
-        <linearGradient id="dropGradReg" x1="12" y1="4" x2="52" y2="60" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#00C6FF" />
-          <stop offset="1" stopColor="#0077BE" />
-        </linearGradient>
-      </defs>
-    </svg>
-  );
-}
 
 const BENEFITS = [
-  { icon: Droplets, text: 'Produits de traitement d\'eau certifiés' },
-  { icon: Shield,   text: 'Paiement sécurisé et données protégées' },
-  { icon: Truck,    text: 'Livraison gratuite à Yaoundé' },
-  { icon: Award,    text: 'Garantie qualité sur tous les produits' },
+  { icon: Droplets, fr: 'Produits de traitement d\'eau certifiés', en: 'Certified water treatment products' },
+  { icon: Shield,   fr: 'Paiement sécurisé et données protégées', en: 'Secure payment and protected data' },
+  { icon: Truck,    fr: 'Livraison gratuite à Yaoundé', en: 'Free delivery in Yaoundé' },
+  { icon: Award,    fr: 'Garantie qualité sur tous les produits', en: 'Quality guarantee on every product' },
 ];
 
 function Bubble({ delay, size, x, duration }: { delay: number; size: number; x: number; duration: number }) {
@@ -50,6 +26,8 @@ function Bubble({ delay, size, x, duration }: { delay: number; size: number; x: 
 }
 
 export const RegisterPage: React.FC = () => {
+  const { tx, language } = useI18n();
+  useSeo({ title: tx("Créer un compte", "Create an account"), path: "/register", noindex: true });
   const [name, setName]                   = useState('');
   const [email, setEmail]                 = useState('');
   const [password, setPassword]           = useState('');
@@ -66,11 +44,11 @@ export const RegisterPage: React.FC = () => {
     setError('');
 
     if (password !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas.');
+      setError(tx('Les mots de passe ne correspondent pas.', 'The passwords do not match.'));
       return;
     }
     if (password.length < 8) {
-      setError('Le mot de passe doit contenir au moins 8 caractères.');
+      setError(tx('Le mot de passe doit contenir au moins 8 caractères.', 'The password must be at least 8 characters long.'));
       return;
     }
 
@@ -88,11 +66,11 @@ export const RegisterPage: React.FC = () => {
       if (firstFieldError) {
         setError(firstFieldError);
       } else if (topMsg.toLowerCase().includes('email') || topMsg.toLowerCase().includes('already')) {
-        setError('Cette adresse email est déjà utilisée.');
+        setError(tx('Cette adresse email est déjà utilisée.', 'This email address is already in use.'));
       } else if (topMsg) {
         setError(topMsg);
       } else {
-        setError('Une erreur est survenue. Veuillez réessayer.');
+        setError(tx('Une erreur est survenue. Veuillez réessayer.', 'Something went wrong. Please try again.'));
       }
     } finally {
       setIsLoading(false);
@@ -111,14 +89,14 @@ export const RegisterPage: React.FC = () => {
 
   const passwordStrength = (() => {
     if (!password) return null;
-    if (password.length < 8) return { level: 0, label: 'Trop court', color: 'bg-red-400' };
+    if (password.length < 8) return { level: 0, label: tx('Trop court', 'Too short'), color: 'bg-red-400' };
     let score = 0;
     if (/[A-Z]/.test(password)) score++;
     if (/[0-9]/.test(password)) score++;
     if (/[^A-Za-z0-9]/.test(password)) score++;
-    if (score === 0) return { level: 1, label: 'Faible', color: 'bg-orange-400' };
-    if (score === 1) return { level: 2, label: 'Moyen', color: 'bg-yellow-400' };
-    return { level: 3, label: 'Fort', color: 'bg-green-400' };
+    if (score === 0) return { level: 1, label: tx('Faible', 'Weak'), color: 'bg-orange-400' };
+    if (score === 1) return { level: 2, label: tx('Moyen', 'Medium'), color: 'bg-yellow-400' };
+    return { level: 3, label: tx('Fort', 'Strong'), color: 'bg-green-400' };
   })();
 
   return (
@@ -147,11 +125,7 @@ export const RegisterPage: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-4 mb-12"
           >
-            <WaterLogo size={56} />
-            <div>
-              <h1 className="text-3xl font-extrabold tracking-tight leading-none">RT Water</h1>
-              <p className="text-white/70 text-sm font-medium mt-0.5">Solution</p>
-            </div>
+            <img src="/logo.webp" alt="RT Water" className="h-14 w-auto object-contain" />
           </motion.div>
 
           <motion.h2
@@ -160,8 +134,8 @@ export const RegisterPage: React.FC = () => {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-4xl font-bold leading-tight mb-4"
           >
-            Rejoignez-nous,<br />
-            <span className="text-white/80">c'est gratuit</span>
+            {tx("Rejoignez-nous,", "Join us,")}<br />
+            <span className="text-white/80">{tx("c'est gratuit", "it's free")}</span>
           </motion.h2>
 
           <motion.p
@@ -170,11 +144,11 @@ export const RegisterPage: React.FC = () => {
             transition={{ delay: 0.35 }}
             className="text-white/70 text-base leading-relaxed mb-10"
           >
-            Créez votre compte et accédez à nos produits de traitement d'eau certifiés, livrés directement chez vous à Yaoundé.
+            {tx("Créez votre compte et accédez à nos produits de traitement d'eau certifiés, livrés directement chez vous à Yaoundé.", "Create your account to order certified water treatment products, delivered to your door in Yaoundé.")}
           </motion.p>
 
           <div className="space-y-4">
-            {BENEFITS.map(({ icon: Icon, text }, idx) => (
+            {BENEFITS.map(({ icon: Icon, fr, en }, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, x: -20 }}
@@ -185,7 +159,7 @@ export const RegisterPage: React.FC = () => {
                 <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
                   <Icon size={15} className="text-white" />
                 </div>
-                <span className="text-white/85 text-sm">{text}</span>
+                <span className="text-white/85 text-sm">{language === 'en' ? en : fr}</span>
               </motion.div>
             ))}
           </div>
@@ -204,12 +178,8 @@ export const RegisterPage: React.FC = () => {
           className="w-full max-w-md relative z-10"
         >
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-            <WaterLogo size={44} />
-            <div>
-              <h1 className="text-2xl font-extrabold text-[#0077BE] dark:text-[#00A8E8]">RT Water</h1>
-              <p className="text-gray-500 text-xs">Solution — Yaoundé</p>
-            </div>
+          <div className="lg:hidden flex items-center justify-center mb-8">
+            <img src="/logo.webp" alt="RT Water" className="h-11 w-auto object-contain" />
           </div>
 
           {/* Back to login */}
@@ -219,7 +189,7 @@ export const RegisterPage: React.FC = () => {
               className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8] transition-colors group"
             >
               <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
-              Déjà un compte ? Se connecter
+              {tx("Déjà un compte ? Se connecter", "Already have an account? Sign in")}
             </Link>
           </div>
 
@@ -227,10 +197,10 @@ export const RegisterPage: React.FC = () => {
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-gray-200/60 dark:shadow-black/30 border border-gray-100 dark:border-slate-700 p-8 sm:p-10">
             <div className="mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                Créer un compte
+                {tx("Créer un compte", "Create an account")}
               </h2>
               <p className="text-gray-500 dark:text-gray-400 text-sm mt-1.5">
-                Rejoignez RT Water Solution en quelques secondes
+                {tx("Rejoignez RT Water Solution en quelques secondes", "Join RT Water Solution in seconds")}
               </p>
             </div>
 
@@ -255,7 +225,7 @@ export const RegisterPage: React.FC = () => {
               {/* Full name */}
               <div className="space-y-1.5">
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
-                  Nom complet
+                  {tx("Nom complet", "Full name")}
                 </label>
                 <div className="relative group">
                   <User
@@ -277,7 +247,7 @@ export const RegisterPage: React.FC = () => {
               {/* Email */}
               <div className="space-y-1.5">
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
-                  Adresse email
+                  {tx("Adresse email", "Email address")}
                 </label>
                 <div className="relative group">
                   <Mail
@@ -290,7 +260,7 @@ export const RegisterPage: React.FC = () => {
                     required
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    placeholder="votre@email.com"
+                    placeholder={tx("votre@email.com", "you@email.com")}
                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0077BE]/25 focus:border-[#0077BE] dark:focus:border-[#00A8E8] transition-all text-sm"
                   />
                 </div>
@@ -299,7 +269,7 @@ export const RegisterPage: React.FC = () => {
               {/* Password */}
               <div className="space-y-1.5">
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
-                  Mot de passe
+                  {tx("Mot de passe", "Password")}
                 </label>
                 <div className="relative group">
                   <Lock
@@ -346,7 +316,7 @@ export const RegisterPage: React.FC = () => {
               {/* Confirm password */}
               <div className="space-y-1.5">
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
-                  Confirmer le mot de passe
+                  {tx("Confirmer le mot de passe", "Confirm password")}
                 </label>
                 <div className="relative group">
                   <Lock
@@ -395,12 +365,12 @@ export const RegisterPage: React.FC = () => {
                       transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                       className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full"
                     />
-                    Création du compte…
+                    {tx("Création du compte…", "Creating account…")}
                   </>
                 ) : (
                   <>
                     <UserPlus size={17} />
-                    Créer mon compte
+                    {tx("Créer mon compte", "Create my account")}
                   </>
                 )}
               </motion.button>
@@ -410,7 +380,7 @@ export const RegisterPage: React.FC = () => {
             <div className="mt-7">
               <div className="relative flex items-center gap-3">
                 <div className="flex-1 h-px bg-gray-200 dark:bg-slate-700" />
-                <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">Déjà inscrit ?</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">{tx("Déjà inscrit ?", "Already registered?")}</span>
                 <div className="flex-1 h-px bg-gray-200 dark:bg-slate-700" />
               </div>
 
@@ -419,7 +389,7 @@ export const RegisterPage: React.FC = () => {
                   to="/login"
                   className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:border-[#0077BE] dark:hover:border-[#00A8E8] hover:text-[#0077BE] dark:hover:text-[#00A8E8] hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-all"
                 >
-                  Se connecter à mon compte
+                  {tx("Se connecter à mon compte", "Sign in to my account")}
                 </Link>
               </div>
             </div>
@@ -427,10 +397,10 @@ export const RegisterPage: React.FC = () => {
 
           {/* Footer note */}
           <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-6">
-            En créant un compte, vous acceptez nos{' '}
-            <span className="text-[#0077BE] dark:text-[#00A8E8] cursor-pointer hover:underline">conditions d'utilisation</span>
-            {' '}et notre{' '}
-            <span className="text-[#0077BE] dark:text-[#00A8E8] cursor-pointer hover:underline">politique de confidentialité</span>.
+            {tx("En créant un compte, vous acceptez nos", "By creating an account, you accept our")}{' '}
+            <Link to="/pages/conditions-generales" className="text-[#0077BE] dark:text-[#00A8E8] hover:underline">{tx("conditions générales", "terms and conditions")}</Link>
+            {' '}{tx("et notre", "and our")}{' '}
+            <Link to="/pages/politique-de-confidentialite" className="text-[#0077BE] dark:text-[#00A8E8] hover:underline">{tx("politique de confidentialité", "privacy policy")}</Link>.
           </p>
         </motion.div>
       </div>

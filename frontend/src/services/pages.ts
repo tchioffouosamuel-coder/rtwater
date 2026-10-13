@@ -8,6 +8,11 @@ export async function fetchPage(slug: string) {
   return api.request(`/pages/${slug}`, { method: "GET" });
 }
 
+/** Plusieurs pages publiées en une requête : { data: { slug: page } } */
+export async function fetchPagesBySlugs(slugs: string[]) {
+  return api.request("/pages", { method: "GET", params: { slugs: slugs.join(",") }, silent: true });
+}
+
 export async function fetchAdminPages() {
   return api.request("/admin/pages", { method: "GET" });
 }
@@ -24,4 +29,4 @@ export async function deletePage(id: string | number) {
   return api.request(`/admin/pages/${id}`, { method: "DELETE" });
 }
 
-export default { fetchPublishedPages, fetchPage, fetchAdminPages, createPage, updatePage, deletePage };
+export default { fetchPublishedPages, fetchPage, fetchPagesBySlugs, fetchAdminPages, createPage, updatePage, deletePage };

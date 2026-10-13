@@ -62,10 +62,14 @@ export const POSPage: React.FC = () => {
         const data = res?.data || [];
         setApiProducts(data.map((d: any) => ({
           id: String(d.id),
-          sku: '',
+          sku: d.sku ?? '',
           name: d.name,
           quantity: 0,
-          unitPrice: Number(d.price ?? 0),
+          // final_price : prix remise. Le serveur facture ce montant (OrderPricing),
+          // la caisse doit donc l'afficher et non le prix barre.
+          unitPrice: Number(d.final_price ?? d.price ?? 0),
+          basePrice: Number(d.price ?? 0),
+          discount: Number(d.discount ?? 0),
           category: d.category?.name ?? d.category ?? '',
         })));
         setPagination(res?.pagination ?? null);
@@ -285,6 +289,11 @@ export const POSPage: React.FC = () => {
                       <div className="flex justify-between items-center">
                         <p className="text-lg font-bold text-blue-600">
                           {Number(product.unitPrice).toLocaleString('fr-FR')} XAF
+                          {!!product.discount && product.basePrice ? (
+                            <span className="ml-1.5 text-xs font-normal text-slate-400 line-through">
+                              {Number(product.basePrice).toLocaleString('fr-FR')}
+                            </span>
+                          ) : null}
                         </p>
                         <button
                           onClick={() => handleAddProduct(product)}

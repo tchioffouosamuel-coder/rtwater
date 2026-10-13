@@ -108,6 +108,8 @@ export interface ContactContent {
   email: string;
   hours: string;
   mapEmbedUrl?: string;
+  /** Numéro WhatsApp affiché dans le bouton flottant (sinon le téléphone est utilisé) */
+  whatsapp?: string;
 }
 
 export interface GalleryImage {
@@ -380,7 +382,7 @@ export const DEFAULT_GALLERY: GalleryContent = {
 };
 
 export const DEFAULT_HEADER: HeaderContent = {
-  logoUrl: "/logo.svg",
+  logoUrl: "/logo.webp",
   companyName: "RT Water",
   companyTagline: "Solution",
   navLinks: [
@@ -393,7 +395,7 @@ export const DEFAULT_HEADER: HeaderContent = {
 };
 
 export const DEFAULT_FOOTER: FooterContent = {
-  logoUrl: "/logo.svg",
+  logoUrl: "/logo.webp",
   companyName: "RT Water",
   companyTagline: "Solution",
   tagline:

@@ -1,42 +1,17 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useSeo } from '../../../lib/seo';
+import { useI18n } from '../../../i18n/I18nContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, Lock, Eye, EyeOff, LogIn, Droplets, Shield, Truck, Award, ArrowLeft } from 'lucide-react';
 import { useUserAuth } from '../../../context/UserAuthContext';
 
-// Animated water drop SVG used in the brand panel
-function WaterLogo({ size = 64 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <motion.path
-        d="M32 4 C32 4 12 28 12 40 C12 52 21 60 32 60 C43 60 52 52 52 40 C52 28 32 4 32 4Z"
-        fill="url(#dropGrad)"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.6, type: 'spring' }}
-      />
-      <motion.ellipse
-        cx="24" cy="38" rx="5" ry="7"
-        fill="white" opacity={0.35}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.35 }}
-        transition={{ delay: 0.4 }}
-      />
-      <defs>
-        <linearGradient id="dropGrad" x1="12" y1="4" x2="52" y2="60" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#00C6FF" />
-          <stop offset="1" stopColor="#0077BE" />
-        </linearGradient>
-      </defs>
-    </svg>
-  );
-}
 
 const BENEFITS = [
-  { icon: Droplets, text: 'Produits de traitement d\'eau certifiés' },
-  { icon: Shield,   text: 'Paiement sécurisé et données protégées' },
-  { icon: Truck,    text: 'Livraison gratuite à Yaoundé' },
-  { icon: Award,    text: 'Garantie qualité sur tous les produits' },
+  { icon: Droplets, fr: 'Produits de traitement d\'eau certifiés', en: 'Certified water treatment products' },
+  { icon: Shield,   fr: 'Paiement sécurisé et données protégées', en: 'Secure payment and protected data' },
+  { icon: Truck,    fr: 'Livraison gratuite à Yaoundé', en: 'Free delivery in Yaoundé' },
+  { icon: Award,    fr: 'Garantie qualité sur tous les produits', en: 'Quality guarantee on every product' },
 ];
 
 // Floating bubble animation
@@ -52,13 +27,18 @@ function Bubble({ delay, size, x, duration }: { delay: number; size: number; x: 
 }
 
 export const LoginPage: React.FC = () => {
-  const [email, setEmail]               = useState('');
+  const location = useLocation();
+  const navState = (location.state ?? {}) as { from?: string; notice?: string; email?: string };
+  const [email, setEmail]               = useState(navState.email ?? '');
   const [password, setPassword]         = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError]               = useState('');
   const [isLoading, setIsLoading]       = useState(false);
   const { login } = useUserAuth();
   const navigate  = useNavigate();
+  const { tx, language } = useI18n();
+
+  useSeo({ title: tx('Connexion', 'Sign in'), path: '/login', noindex: true });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,9 +46,14 @@ export const LoginPage: React.FC = () => {
     setIsLoading(true);
     try {
       await login(email, password);
-      navigate('/shop');
-    } catch {
-      setError('Email ou mot de passe incorrect. Veuillez réessayer.');
+      // Retour à la page d'origine (ex. /profile, /orders) plutôt qu'à la boutique
+      navigate(navState.from && navState.from !== '/login' ? navState.from : '/shop', { replace: true });
+    } catch (err: any) {
+      setError(
+        err?.status === 429
+          ? tx('Trop de tentatives. Patientez une minute avant de réessayer.', 'Too many attempts. Please wait a minute and try again.')
+          : tx('Email ou mot de passe incorrect. Veuillez réessayer.', 'Incorrect email or password. Please try again.')
+      );
     } finally {
       setIsLoading(false);
     }
@@ -113,11 +98,7 @@ export const LoginPage: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-4 mb-12"
           >
-            <WaterLogo size={56} />
-            <div>
-              <h1 className="text-3xl font-extrabold tracking-tight leading-none">RT Water</h1>
-              <p className="text-white/70 text-sm font-medium mt-0.5">Solution</p>
-            </div>
+            <img src="/logo.webp" alt="RT Water" className="h-14 w-auto object-contain" />
           </motion.div>
 
           <motion.h2
@@ -126,8 +107,8 @@ export const LoginPage: React.FC = () => {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-4xl font-bold leading-tight mb-4"
           >
-            L'eau pure,<br />
-            <span className="text-white/80">à votre service</span>
+            {tx("L'eau pure,", "Pure water,")}<br />
+            <span className="text-white/80">{tx("à votre service", "at your service")}</span>
           </motion.h2>
 
           <motion.p
@@ -136,11 +117,11 @@ export const LoginPage: React.FC = () => {
             transition={{ delay: 0.35 }}
             className="text-white/70 text-base leading-relaxed mb-10"
           >
-            Spécialiste du traitement de l'eau à Yaoundé, Cameroun. Des solutions certifiées pour votre santé et votre confort.
+            {tx("Spécialiste du traitement de l'eau à Yaoundé, Cameroun. Des solutions certifiées pour votre santé et votre confort.", "Water treatment specialist in Yaoundé, Cameroon. Certified solutions for your health and comfort.")}
           </motion.p>
 
           <div className="space-y-4">
-            {BENEFITS.map(({ icon: Icon, text }, idx) => (
+            {BENEFITS.map(({ icon: Icon, fr, en }, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, x: -20 }}
@@ -151,7 +132,7 @@ export const LoginPage: React.FC = () => {
                 <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
                   <Icon size={15} className="text-white" />
                 </div>
-                <span className="text-white/85 text-sm">{text}</span>
+                <span className="text-white/85 text-sm">{language === 'en' ? en : fr}</span>
               </motion.div>
             ))}
           </div>
@@ -171,12 +152,8 @@ export const LoginPage: React.FC = () => {
           className="w-full max-w-md relative z-10"
         >
           {/* Mobile logo (visible only on small screens) */}
-          <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-            <WaterLogo size={44} />
-            <div>
-              <h1 className="text-2xl font-extrabold text-[#0077BE] dark:text-[#00A8E8]">RT Water</h1>
-              <p className="text-gray-500 text-xs">Solution — Yaoundé</p>
-            </div>
+          <div className="lg:hidden flex items-center justify-center mb-8">
+            <img src="/logo.webp" alt="RT Water" className="h-11 w-auto object-contain" />
           </div>
 
           {/* Back to home */}
@@ -186,7 +163,7 @@ export const LoginPage: React.FC = () => {
               className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8] transition-colors group"
             >
               <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
-              Retour au site
+              {tx("Retour au site", "Back to site")}
             </Link>
           </div>
 
@@ -194,12 +171,18 @@ export const LoginPage: React.FC = () => {
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-gray-200/60 dark:shadow-black/30 border border-gray-100 dark:border-slate-700 p-8 sm:p-10">
             <div className="mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                Bon retour !
+                {tx("Bon retour !", "Welcome back!")}
               </h2>
               <p className="text-gray-500 dark:text-gray-400 text-sm mt-1.5">
-                Connectez-vous à votre compte client
+                {tx("Connectez-vous à votre compte client", "Sign in to your customer account")}
               </p>
             </div>
+
+            {navState.notice && !error && (
+              <div role="status" className="mb-5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 rounded-xl px-4 py-3 text-sm">
+                {navState.notice}
+              </div>
+            )}
 
             {/* Error message */}
             <AnimatePresence>
@@ -221,8 +204,8 @@ export const LoginPage: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Email */}
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
-                  Adresse email
+                <label htmlFor="login-email" className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
+                  {tx("Adresse email", "Email address")}
                 </label>
                 <div className="relative group">
                   <Mail
@@ -230,12 +213,13 @@ export const LoginPage: React.FC = () => {
                     className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#0077BE] transition-colors"
                   />
                   <input
+                    id="login-email"
                     type="email"
                     autoComplete="email"
                     required
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    placeholder="votre@email.com"
+                    placeholder={tx("votre@email.com", "you@email.com")}
                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0077BE]/25 focus:border-[#0077BE] dark:focus:border-[#00A8E8] transition-all text-sm"
                   />
                 </div>
@@ -243,15 +227,21 @@ export const LoginPage: React.FC = () => {
 
               {/* Password */}
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
-                  Mot de passe
-                </label>
+                <div className="flex items-center justify-between">
+                  <label htmlFor="login-password" className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
+                    {tx("Mot de passe", "Password")}
+                  </label>
+                  <Link to="/forgot-password" className="text-xs font-medium text-[#0077BE] dark:text-[#00A8E8] hover:underline">
+                    {tx("Mot de passe oublié ?", "Forgot password?")}
+                  </Link>
+                </div>
                 <div className="relative group">
                   <Lock
                     size={17}
                     className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#0077BE] transition-colors"
                   />
                   <input
+                    id="login-password"
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="current-password"
                     required
@@ -264,7 +254,7 @@ export const LoginPage: React.FC = () => {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-0.5"
-                    tabIndex={-1}
+                    aria-label={showPassword ? tx('Masquer le mot de passe', 'Hide password') : tx('Afficher le mot de passe', 'Show password')}
                   >
                     {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                   </button>
@@ -286,12 +276,12 @@ export const LoginPage: React.FC = () => {
                       transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                       className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full"
                     />
-                    Connexion en cours…
+                    {tx("Connexion en cours…", "Signing in…")}
                   </>
                 ) : (
                   <>
                     <LogIn size={17} />
-                    Se connecter
+                    {tx("Se connecter", "Sign in")}
                   </>
                 )}
               </motion.button>
@@ -301,7 +291,7 @@ export const LoginPage: React.FC = () => {
             <div className="mt-7">
               <div className="relative flex items-center gap-3">
                 <div className="flex-1 h-px bg-gray-200 dark:bg-slate-700" />
-                <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">Nouveau client ?</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">{tx("Nouveau client ?", "New customer?")}</span>
                 <div className="flex-1 h-px bg-gray-200 dark:bg-slate-700" />
               </div>
 
@@ -310,14 +300,14 @@ export const LoginPage: React.FC = () => {
                   to="/register"
                   className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-[#0077BE] dark:border-[#00A8E8] text-[#0077BE] dark:text-[#00A8E8] text-sm font-semibold hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-all"
                 >
-                  Créer un compte gratuitement
+                  {tx("Créer un compte gratuitement", "Create a free account")}
                 </Link>
                 <Link
                   to="/shop"
                   className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:border-[#0077BE] dark:hover:border-[#00A8E8] hover:text-[#0077BE] dark:hover:text-[#00A8E8] hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-all"
                 >
                   <Droplets size={16} className="text-[#0077BE] dark:text-[#00A8E8]" />
-                  Parcourir la boutique sans compte
+                  {tx("Parcourir la boutique sans compte", "Browse the shop without an account")}
                 </Link>
               </div>
             </div>
@@ -325,10 +315,10 @@ export const LoginPage: React.FC = () => {
 
           {/* Footer note */}
           <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-6">
-            En vous connectant, vous acceptez nos{' '}
-            <span className="text-[#0077BE] dark:text-[#00A8E8] cursor-pointer hover:underline">conditions d'utilisation</span>
-            {' '}et notre{' '}
-            <span className="text-[#0077BE] dark:text-[#00A8E8] cursor-pointer hover:underline">politique de confidentialité</span>.
+            {tx("En vous connectant, vous acceptez nos", "By signing in, you accept our")}{' '}
+            <Link to="/pages/conditions-generales" className="text-[#0077BE] dark:text-[#00A8E8] hover:underline">{tx("conditions générales", "terms and conditions")}</Link>
+            {' '}{tx("et notre", "and our")}{' '}
+            <Link to="/pages/politique-de-confidentialite" className="text-[#0077BE] dark:text-[#00A8E8] hover:underline">{tx("politique de confidentialité", "privacy policy")}</Link>.
           </p>
         </motion.div>
       </div>

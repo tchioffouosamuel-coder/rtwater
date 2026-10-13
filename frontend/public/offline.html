@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0077BE" />
+    <title>Hors ligne | RT Water Solution</title>
+    <style>
+      :root { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b; --brand: #0077be; }
+      @media (prefers-color-scheme: dark) {
+        :root { --bg: #020617; --card: #1e293b; --text: #f1f5f9; --muted: #94a3b8; --brand: #00a8e8; }
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        padding: 16px; background: var(--bg); color: var(--text);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+      main { max-width: 420px; text-align: center; background: var(--card); padding: 32px 24px; border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+      img { width: 160px; height: auto; }
+      h1 { font-size: 22px; margin: 20px 0 8px; }
+      p { color: var(--muted); line-height: 1.55; margin: 0 0 8px; }
+      button { margin-top: 18px; border: 0; border-radius: 12px; padding: 12px 22px; font-weight: 600;
+        color: #fff; background: var(--brand); font-size: 15px; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/logo.webp" alt="RT Water Solution" width="160" height="79" />
+      <h1>Vous êtes hors ligne</h1>
+      <p>Vérifiez votre connexion internet. Les pages déjà consultées restent disponibles.</p>
+      <p lang="en">You are offline. Pages you already visited are still available.</p>
+      <button type="button" onclick="location.reload()">Réessayer</button>
+    </main>
+  </body>
+</html>

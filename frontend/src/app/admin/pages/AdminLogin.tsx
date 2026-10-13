@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, LogIn } from 'lucide-react';
 
 export const AdminLogin: React.FC = () => {
-  const [email, setEmail] = useState('admin@rtwater.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -40,13 +40,7 @@ export const AdminLogin: React.FC = () => {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-xl">RT</span>
-            </div>
-            <div className="text-left">
-              <h1 className="text-2xl font-bold text-white">RTWater</h1>
-              <p className="text-slate-400 text-sm">Backoffice</p>
-            </div>
+            <img src="/logo.webp" alt="RT Water" className="h-14 w-auto object-contain" />
           </div>
           <h2 className="text-3xl font-bold text-white mb-2">Connexion</h2>
           <p className="text-slate-400">Accédez à votre tableau de bord</p>
@@ -74,9 +68,11 @@ export const AdminLogin: React.FC = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition"
-                placeholder="admin@rtwater.com"
+                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:border-[#00A8E8] focus:ring-2 focus:ring-[#00A8E8]/20 outline-none transition"
+                placeholder="votre@email.com"
+                autoComplete="username"
                 disabled={isLoading}
+                required
               />
             </div>
 
@@ -90,14 +86,17 @@ export const AdminLogin: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition pr-12"
+                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:border-[#00A8E8] focus:ring-2 focus:ring-[#00A8E8]/20 outline-none transition pr-12"
                   placeholder="••••••••"
+                  autoComplete="current-password"
                   disabled={isLoading}
+                  required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 transition"
+                  tabIndex={-1}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -108,7 +107,7 @@ export const AdminLogin: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-slate-600 disabled:to-slate-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2 mt-6"
+              className="w-full bg-gradient-to-r from-[#0077BE] to-[#00A8E8] hover:from-[#005f9e] hover:to-[#0095D9] disabled:from-slate-600 disabled:to-slate-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2 mt-6"
             >
               {isLoading ? (
                 <>
@@ -123,33 +122,11 @@ export const AdminLogin: React.FC = () => {
               )}
             </button>
           </form>
-
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-600"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-slate-800 text-slate-400">Credentials de test</span>
-            </div>
-          </div>
-
-          {/* Demo Credentials */}
-          <div className="bg-slate-700/50 rounded-lg p-4 text-sm space-y-2">
-            <div>
-              <p className="text-slate-400">Email:</p>
-              <p className="text-slate-200 font-mono text-xs">admin@rtwater.com</p>
-            </div>
-            <div>
-              <p className="text-slate-400">Mot de passe:</p>
-              <p className="text-slate-200 font-mono text-xs">password123</p>
-            </div>
-          </div>
         </div>
 
         {/* Footer */}
         <div className="mt-6 text-center text-slate-400 text-sm">
-          <p>RTWater © 2026. Tous droits réservés.</p>
+          <p>RT Water Solution © {new Date().getFullYear()}. Tous droits réservés.</p>
         </div>
       </div>
     </div>

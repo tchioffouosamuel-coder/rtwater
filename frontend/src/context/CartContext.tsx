@@ -2,6 +2,8 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 import * as cartService from '../services/cart';
 import * as ordersService from '../services/orders';
 import { toast } from 'sonner';
+import { useI18n } from '../i18n/I18nContext';
+import { trackEvent } from '../lib/monitoring';
 
 export interface CartItem {
   id: string;
@@ -32,11 +34,15 @@ export interface Order {
 interface CartContextType {
   items: CartItem[];
   orders: Order[];
-  addToCart: (item: Omit<CartItem, "quantity">) => void;
+  addToCart: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
-  checkout: (customerInfo: Order["customerInfo"]) => Promise<string | null>;
+  /** Crée la commande ; statusUrl permet de suivre le paiement même sans compte */
+  checkout: (
+    customerInfo: Order["customerInfo"],
+    options?: { shipping_zone_id?: number | null; discount_code?: string | null; payment_method?: string | null },
+  ) => Promise<{ id: string; reference: string; statusUrl: string | null; total: number } | null>;
   cartTotal: number;
   cartCount: number;
 }
@@ -44,6 +50,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { tx } = useI18n();
   const [items, setItems] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
 
@@ -74,20 +81,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return () => { mounted = false; };
   }, []);
 
-  const addToCart = (item: Omit<CartItem, "quantity">) => {
+  const addToCart = (item: Omit<CartItem, "quantity">, quantity = 1) => {
+    toast.success(quantity > 1
+      ? tx(`${quantity} × ${item.name} ajoutés au panier`, `${quantity} × ${item.name} added to cart`)
+      : tx(`${item.name} ajouté au panier`, `${item.name} added to cart`));
+    trackEvent('add_to_cart', { item_id: item.id, item_name: item.name, quantity, value: item.price * quantity });
     const token = localStorage.getItem('userToken');
     if (!token) {
       setItems((prev) => {
         const existing = prev.find((i) => i.id === item.id);
-        if (existing) return prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
-        return [...prev, { ...item, quantity: 1 }];
+        if (existing) return prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i);
+        return [...prev, { ...item, quantity }];
       });
       return;
     }
 
     (async () => {
       try {
-        const res = await cartService.addCartItem(item.id, 1);
+        const res = await cartService.addCartItem(item.id, quantity);
         const ci = res?.data;
         if (!ci) return;
         setItems((prev) => {
@@ -95,7 +106,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           if (exists) {
             return prev.map((p) =>
               p.id === String(ci.product?.id ?? item.id)
-                ? { ...p, quantity: ci.quantity ?? (p.quantity + 1), serverId: String(ci.id) }
+                ? { ...p, quantity: ci.quantity ?? (p.quantity + quantity), serverId: String(ci.id) }
                 : p
             );
           }
@@ -104,7 +115,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             serverId: String(ci.id),
             name: ci.product?.name ?? item.name,
             price: ci.product?.price ?? item.price,
-            quantity: ci.quantity ?? 1,
+            quantity: ci.quantity ?? quantity,
             image: ci.product?.image_url ?? item.image,
             description: ci.product?.description ?? item.description,
           }];
@@ -112,8 +123,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       } catch {
         setItems((prev) => {
           const existing = prev.find((i) => i.id === item.id);
-          if (existing) return prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
-          return [...prev, { ...item, quantity: 1 }];
+          if (existing) return prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i);
+          return [...prev, { ...item, quantity }];
         });
       }
     })();
@@ -166,7 +177,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = () => setItems([]);
 
-  const checkout = async (customerInfo?: Order["customerInfo"]): Promise<string | null> => {
+  /**
+   * Cree la commande. `options` porte la zone de livraison, le code promo et le
+   * moyen de paiement : les montants, eux, sont recalcules par le serveur.
+   */
+  const checkout = async (
+    customerInfo?: Order["customerInfo"],
+    options?: { shipping_zone_id?: number | null; discount_code?: string | null; payment_method?: string | null },
+  ): Promise<{ id: string; reference: string; statusUrl: string | null; total: number } | null> => {
     if (items.length === 0) return null;
 
     const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -181,6 +199,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (customerInfo?.name)  payload.name  = customerInfo.name;
       if (customerInfo?.email) payload.email = customerInfo.email;
       if (customerInfo?.phone) payload.phone = customerInfo.phone;
+
+      if (options?.shipping_zone_id) payload.shipping_zone_id = options.shipping_zone_id;
+      if (options?.discount_code)    payload.discount_code    = options.discount_code;
+      if (options?.payment_method)   payload.payment_method   = options.payment_method;
 
       const res = await ordersService.createOrder(payload);
       const orderData = res?.data;
@@ -197,10 +219,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       setOrders((prev) => [...prev, createdOrder]);
       clearCart();
-      return createdOrder.id;
+      return {
+        id: createdOrder.id,
+        reference: orderData.reference ?? String(orderData.id),
+        statusUrl: res?.status_url ?? null,
+        // Total reel facture par le serveur, livraison et remise comprises
+        total: Number(orderData.total ?? total),
+      };
     } catch (e: any) {
-      toast(`Erreur commande : ${e?.message || 'inconnu'}`, { icon: '⚠️' });
-      return null;
+      // Relance : le tunnel de commande affiche le message du serveur
+      // (« Stock insuffisant… », « Ce code promo a expire. ») a cote du champ
+      // concerne, plutot qu'un toast generique.
+      throw e;
     }
   };
 

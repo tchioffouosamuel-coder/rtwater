@@ -1,9 +1,10 @@
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { useTheme } from "../../theme/ThemeContext";
 import { useI18n } from "../../i18n/I18nContext";
 import { useSiteContent } from "../../context/SiteContentContext";
+import { NewsletterForm } from "./NewsletterForm";
 
 const SOCIAL_ICONS: Record<string, React.ElementType> = {
   facebook: Facebook,
@@ -22,7 +23,7 @@ const SOCIAL_COLORS: Record<string, string> = {
 export function Footer() {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const { footer } = useSiteContent();
 
   const quickLinks = [
@@ -30,6 +31,7 @@ export function Footer() {
     { label: t("common.gallery"), path: "/gallery" },
     { label: t("common.about"), path: "/about" },
     { label: t("common.quote"), path: "/devis" },
+    { label: language === "en" ? "Track my order" : "Suivre ma commande", path: "/suivi-commande" },
   ];
 
   const handleNavigation = (path: string) => {
@@ -68,35 +70,15 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="flex items-center gap-3 mb-6">
-              <img src={footer.logoUrl} alt={`${footer.companyName} ${footer.companyTagline}`} className="h-12 w-auto" />
-              <div className="flex flex-col">
-                <span className="text-xl font-extrabold text-white leading-none">{footer.companyName}</span>
-                <span className="text-[11px] font-semibold tracking-widest text-[#00A8E8] uppercase leading-none mt-1">{footer.companyTagline}</span>
-              </div>
+            <div className="mb-6">
+              <img src="/logo.webp" alt="RT Water Solution" className="h-12 w-auto" />
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
               {footer.tagline}
             </p>
 
-            {/* Newsletter */}
-            <div className="mt-6">
-              <p className="text-sm text-gray-400 mb-3">{t("footer.stayInformed")}</p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Votre email"
-                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#0077BE] transition-colors"
-                />
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] p-2 rounded-lg hover:shadow-lg hover:shadow-[#0077BE]/30 transition-all"
-                >
-                  <Send className="w-5 h-5" />
-                </motion.button>
-              </div>
-            </div>
+            {/* Lettre d'information — formulaire reellement branche sur /api/newsletter */}
+            <NewsletterForm />
           </motion.div>
 
           {/* Services */}

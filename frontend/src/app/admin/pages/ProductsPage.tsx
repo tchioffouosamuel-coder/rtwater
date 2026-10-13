@@ -1,29 +1,41 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AdminLayout } from '../layout/AdminLayout';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import * as productsService from '../../../services/products';
+import api from '../../../services/api';
 import { toast } from 'sonner';
-import { Plus, Search, Edit2, Trash2, X, Save, AlertCircle } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, X, Save, AlertCircle, FileSpreadsheet } from 'lucide-react';
 
 interface ProductForm {
   name: string;
   description: string;
   price: number;
+  /** Remise en pourcentage, 0 a 100. Alimente les badges « -X % » de la boutique. */
+  discount: number;
+  /** Fin de promotion, format « AAAA-MM-JJTHH:MM ». Vide = sans fin. */
+  discount_ends_at: string;
   stock: number;
   is_available: boolean;
+  category_id: string;
 }
 
 const EMPTY_FORM: ProductForm = {
   name: '',
   description: '',
   price: 0,
+  discount: 0,
+  discount_ends_at: '',
   stock: 0,
   is_available: true,
+  category_id: '',
 };
 
 export const ProductsPage: React.FC = () => {
+  const navigate = useNavigate();
   const { hasPermission } = useAdminAuth();
   const [items, setItems] = useState<any[]>([]);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,6 +54,9 @@ export const ProductsPage: React.FC = () => {
     name: d.name,
     description: d.description || '',
     price: d.price ?? 0,
+    discount: d.discount ?? 0,
+    final_price: d.final_price ?? d.price ?? 0,
+    discount_ends_at: d.discount_ends_at ?? null,
     stock: d.stock ?? 0,
     is_available: d.is_available ?? true,
     image_url: d.image_url ?? null,
@@ -94,6 +109,12 @@ export const ProductsPage: React.FC = () => {
     return () => { mounted = false; };
   }, [searchTerm, currentPage]);
 
+  useEffect(() => {
+    api.request('/categories', { method: 'GET' })
+      .then((res: any) => setCategories(res?.data ?? []))
+      .catch(() => {});
+  }, []);
+
   if (!hasPermission('manage_products')) {
     return (
       <AdminLayout>
@@ -111,8 +132,11 @@ export const ProductsPage: React.FC = () => {
         name: product.name,
         description: product.description,
         price: product.price,
+        discount: product.discount ?? 0,
+        discount_ends_at: product.discount_ends_at ? String(product.discount_ends_at).slice(0, 16) : '',
         stock: product.stock,
         is_available: product.is_available,
+        category_id: product.category?.id ? String(product.category.id) : '',
       });
       setImagePreview(product.image_url ?? null);
     } else {
@@ -146,16 +170,22 @@ export const ProductsPage: React.FC = () => {
           payload.append('name', formData.name);
           payload.append('description', formData.description);
           payload.append('price', String(formData.price));
+          payload.append('discount', String(formData.discount));
+          if (formData.discount_ends_at) payload.append('discount_ends_at', formData.discount_ends_at);
           payload.append('stock', String(formData.stock));
           payload.append('is_available', formData.is_available ? '1' : '0');
-          payload.append('image', imageFile);
+          if (formData.category_id) payload.append('category_id', formData.category_id);
+          payload.append('image_url', imageFile);
         } else {
           payload = {
             name: formData.name,
             description: formData.description,
             price: formData.price,
+            discount: formData.discount,
+            discount_ends_at: formData.discount_ends_at || null,
             stock: formData.stock,
             is_available: formData.is_available,
+            ...(formData.category_id ? { category_id: Number(formData.category_id) } : {}),
           };
         }
 
@@ -234,6 +264,14 @@ export const ProductsPage: React.FC = () => {
             className="w-full pl-12 pr-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-white"
           />
         </div>
+        <button
+          onClick={() => navigate('/admin/products/import')}
+          className="flex items-center gap-2 border border-slate-200 bg-white text-slate-700 px-6 py-2.5 rounded-lg hover:bg-slate-50 transition font-medium whitespace-nowrap"
+          title="Importer un catalogue Excel avec rattachement automatique des images"
+        >
+          <FileSpreadsheet size={18} />
+          Import Excel
+        </button>
         <button
           onClick={() => handleOpenModal()}
           className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition font-medium whitespace-nowrap"
@@ -387,13 +425,27 @@ export const ProductsPage: React.FC = () => {
 
             <div className="p-6 space-y-4">
               <div>
+                <label className="block text-sm font-medium text-slate-900 mb-2">Catégorie</label>
+                <select
+                  value={formData.category_id}
+                  onChange={(e) => setFormData(p => ({ ...p, category_id: e.target.value }))}
+                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white text-slate-900"
+                >
+                  <option value="">— Sans catégorie —</option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={String(cat.id)}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-slate-900 mb-2">Nom du produit *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
                   placeholder="Nom du produit"
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-slate-900"
                 />
               </div>
 
@@ -408,6 +460,56 @@ export const ProductsPage: React.FC = () => {
                   min="0"
                   className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 />
+              </div>
+
+              {/* Promotion — alimente les badges « -X % » et la section
+                  « Offres du moment » de la boutique */}
+              <div className="rounded-lg border border-slate-200 p-4 space-y-3">
+                <p className="text-sm font-medium text-slate-900">Promotion</p>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="block">
+                    <span className="block text-xs font-medium text-slate-600 mb-1">Remise (%)</span>
+                    <input
+                      type="number"
+                      value={formData.discount}
+                      onChange={(e) => setFormData(p => ({
+                        ...p,
+                        discount: Math.max(0, Math.min(100, parseInt(e.target.value) || 0)),
+                      }))}
+                      min="0"
+                      max="100"
+                      className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    />
+                  </label>
+
+                  <label className="block">
+                    <span className="block text-xs font-medium text-slate-600 mb-1">Fin de promotion</span>
+                    <input
+                      type="datetime-local"
+                      value={formData.discount_ends_at}
+                      onChange={(e) => setFormData(p => ({ ...p, discount_ends_at: e.target.value }))}
+                      className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                    />
+                  </label>
+                </div>
+
+                {formData.discount > 0 ? (
+                  <p className="text-xs text-green-700">
+                    Prix affiche au client :{' '}
+                    <strong>
+                      {Math.round(formData.price * (100 - formData.discount) / 100).toLocaleString('fr-FR')} XAF
+                    </strong>{' '}
+                    au lieu de {Math.round(formData.price).toLocaleString('fr-FR')} XAF
+                    {formData.discount_ends_at
+                      ? `, jusqu'au ${new Date(formData.discount_ends_at).toLocaleDateString('fr-FR')}.`
+                      : ', sans date de fin.'}
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-400">
+                    0 % : aucune promotion. Le produit se vend au prix de vente.
+                  </p>
+                )}
               </div>
 
               <div>

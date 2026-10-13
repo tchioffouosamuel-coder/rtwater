@@ -1,4 +1,4 @@
-import api from "./api";
+import api, { API_BASE } from "./api";
 
 export async function createOrder(payload: any) {
   return api.request("/orders", { method: "POST", body: payload });
@@ -29,7 +29,7 @@ export async function updateOrderStatus(id: string | number, status: string) {
 export async function downloadOrderReceipt(orderId: string | number): Promise<void> {
   const token = localStorage.getItem('adminToken') || localStorage.getItem('userToken');
   const isAdmin = !!localStorage.getItem('adminToken');
-  const url = `${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/${isAdmin ? 'admin/' : ''}orders/${orderId}/receipt`;
+  const url = `${API_BASE}/${isAdmin ? 'admin/' : ''}orders/${orderId}/receipt`;
 
   const response = await fetch(url, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -45,3 +45,8 @@ export async function downloadOrderReceipt(orderId: string | number): Promise<vo
 }
 
 export default { createOrder, fetchOrders, fetchOrder, fetchAdminOrders, updateOrderStatus, downloadOrderReceipt };
+
+/** Suivi public sans compte : référence (CMD-000042) + téléphone ou e-mail */
+export async function trackOrder(reference: string, contact: string) {
+  return api.request("/orders/track", { method: "GET", params: { reference, contact }, silent: true });
+}

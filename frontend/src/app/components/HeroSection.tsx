@@ -36,13 +36,30 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           animate={{ scale: 1 }}
           transition={{ duration: 2.2, ease: "easeOut" }}
           src={hero.backgroundImage}
-          alt="Station de traitement d'eau"
+          alt=""
+          aria-hidden="true"
+          fetchPriority="high"
+          decoding="async"
+          // Image décorative : si elle ne charge pas, le dégradé bleu prend le relais sans texte parasite
+          onError={(e) => { e.currentTarget.style.visibility = "hidden"; }}
           className="w-full h-full object-cover"
         />
         {/* Gradient overlay for readability */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#003f6e]/90 via-[#0077BE]/80 to-[#00A8E8]/60"></div>
         {/* Vignette edges */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20"></div>
+
+        {/* Watermark logo */}
+        <motion.img
+          src="/logo.webp"
+          alt=""
+          aria-hidden="true"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 0.22, scale: 1 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          className="absolute right-[-8%] top-1/2 -translate-y-1/2 w-[420px] sm:w-[580px] lg:w-[720px] pointer-events-none select-none"
+          style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 40px rgba(255,255,255,0.4))" }}
+        />
 
         {/* Animated rising bubbles */}
         <div className="absolute inset-0 overflow-hidden">
@@ -90,7 +107,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight text-balance"
           >
             {hero.title}{" "}
             <span className="bg-gradient-to-r from-[#00A8E8] to-cyan-300 bg-clip-text text-transparent">
@@ -139,21 +156,11 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
         <svg
           viewBox="0 0 1200 120"
           preserveAspectRatio="none"
-          className="w-full h-20 md:h-24 fill-white"
+          className="w-full h-20 md:h-24 fill-white dark:fill-slate-900"
+          aria-hidden="true"
         >
-          <motion.path
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
-            d="M0,0 C300,80 600,80 900,40 L900,120 L0,120 Z"
-          />
-          <motion.path
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2, delay: 0.3, ease: "easeInOut" }}
-            d="M900,40 C1050,10 1150,10 1200,20 L1200,120 L900,120 Z"
-            opacity="0.5"
-          />
+          {/* Même couleur que la section suivante, en mode clair comme en mode sombre */}
+          <path d="M0,0 C300,80 600,80 900,40 C1050,10 1150,10 1200,20 L1200,120 L0,120 Z" />
         </svg>
       </div>
     </section>

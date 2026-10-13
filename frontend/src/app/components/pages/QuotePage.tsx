@@ -1,11 +1,19 @@
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { User, Mail, Phone, MapPin, Home, Droplet, MessageSquare, Send, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { useI18n } from "../../../i18n/I18nContext";
 import { useTheme } from "../../../theme/ThemeContext";
 import { submitQuoteRequest } from "../../../services/quotes";
+import { useSeo } from "../../../lib/seo";
+import { trackEvent } from "../../../lib/monitoring";
 
 export function QuotePage() {
+  useSeo({
+    title: "Devis gratuit",
+    description: "Demandez un devis gratuit pour votre installation de traitement de l'eau : particuliers, entreprises, forages. Réponse sous 24 h.",
+    path: "/devis",
+  });
   const { t } = useI18n();
   const { theme } = useTheme();
   const [submitted, setSubmitted] = useState(false);
@@ -30,6 +38,19 @@ export function QuotePage() {
     t("services.pools.title"),
     t("services.maintenance.title"),
   ];
+
+  // Arrivée depuis une carte de service de l'accueil : /devis?service=Forage
+  const [searchParams] = useSearchParams();
+  const requestedService = searchParams.get("service");
+  useEffect(() => {
+    if (!requestedService) return;
+    // Comparaison sans accents ni majuscules : « Purification d'eau » = « purification d'eau »
+    const norm = (v: string) => v.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+    const match = services.find((sv) => norm(sv) === norm(requestedService));
+    setFormData((f) => match
+      ? { ...f, serviceType: match }
+      : { ...f, message: f.message || `Service souhaité : ${requestedService}\n` });
+  }, [requestedService]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +78,7 @@ export function QuotePage() {
         solution_type: formData.serviceType,
         description: formData.message,
       });
+      trackEvent("generate_lead", { solution_type: formData.serviceType || "non précisé" });
       setSubmitted(true);
       setFormData({ name: "", email: "", phone: "", address: "", serviceType: "", message: "" });
     } catch {
@@ -164,7 +186,7 @@ export function QuotePage() {
             </motion.span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
               {t("quote.requestYourQuote")}{" "}
-              <span className="bg-gradient-to-r from-[#00A8E8] to-cyan-300 bg-clip-text text-transparent">
+              <span className="text-white underline decoration-cyan-200/80 decoration-[6px] underline-offset-[10px]">
                 {t("quote.freeQuoteText")}
               </span>
             </h1>

@@ -4,6 +4,7 @@ import { ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useI18n } from "../../../i18n/I18nContext";
 import { useTheme } from "../../../theme/ThemeContext";
 import { useSiteContent } from "../../../context/SiteContentContext";
+import { useSeo } from "../../../lib/seo";
 
 const CATEGORY_LABELS: Record<string, string> = {
   all: "Tout",
@@ -17,6 +18,11 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export function GalleryPage() {
+  useSeo({
+    title: "Réalisations",
+    description: "Nos installations de traitement de l'eau en images : forages, osmoseurs, stations de filtration au Cameroun.",
+    path: "/gallery",
+  });
   const { t } = useI18n();
   const { theme } = useTheme();
   const { gallery } = useSiteContent();
@@ -104,7 +110,7 @@ export function GalleryPage() {
             </motion.span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
               {gallery.title}{" "}
-              <span className="bg-gradient-to-r from-[#00A8E8] to-cyan-300 bg-clip-text text-transparent">
+              <span className="text-white underline decoration-cyan-200/80 decoration-[6px] underline-offset-[10px]">
                 {gallery.titleHighlight}
               </span>
             </h1>

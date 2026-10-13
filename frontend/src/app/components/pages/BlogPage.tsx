@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { ArrowLeft, Calendar, User, Loader2, Rss } from "lucide-react";
 import { fetchPosts, fetchPost } from "../../../services/blog";
+import { useSeo } from "../../../lib/seo";
 
 interface Post {
   id: number;
@@ -18,6 +19,11 @@ interface Post {
 // ── List view ───────────────────────────────────────────────────────────────
 
 export function BlogPage() {
+  useSeo({
+    title: "Blog et conseils",
+    description: "Conseils d'experts sur la qualité de l'eau, l'entretien des filtres et le choix d'une solution de traitement.",
+    path: "/blog",
+  });
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -137,6 +143,14 @@ export function BlogPostPage() {
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  useSeo({
+    title: post?.title ?? (notFound ? "Article introuvable" : "Blog"),
+    description: (post as any)?.excerpt ?? undefined,
+    image: (post as any)?.image_url ?? (post as any)?.cover_image ?? null,
+    type: "article",
+    noindex: notFound,
+  });
 
   useEffect(() => {
     if (!slug) return;

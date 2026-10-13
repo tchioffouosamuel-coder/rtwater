@@ -1,44 +1,45 @@
 import { motion } from "motion/react";
-import { ArrowLeft, Package, Calendar, MapPin, Loader2, LogIn } from "lucide-react";
+import { ArrowLeft, Package, Calendar, MapPin, Loader2, LogIn, Download, Truck } from "lucide-react";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { useSeo } from "../../../lib/seo";
+import { orderReference, statusColor, statusLabel, type OrderStatus } from "../../../lib/orderStatus";
 import { useNavigate } from "react-router-dom";
 import { useI18n } from "../../../i18n/I18nContext";
 import { useEffect, useState } from "react";
 import * as ordersService from "../../../services/orders";
 
-type OrderStatus = "pending" | "paid" | "shipped" | "delivered" | "cancelled";
-
 interface ApiOrder {
   id: string | number;
+  reference?: string;
   status: OrderStatus;
-  total_price: number;
+  total: number;
   created_at: string;
   address?: string;
   items: { id: number; product: { id: number; name: string } | null; quantity: number; price: number }[];
 }
 
-const STATUS_COLORS: Record<OrderStatus, string> = {
-  pending: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300",
-  paid: "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300",
-  shipped: "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300",
-  delivered: "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300",
-  cancelled: "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300",
-};
-
-const STATUS_LABELS: Record<OrderStatus, string> = {
-  pending: "En attente",
-  paid: "Payée",
-  shipped: "Expédiée",
-  delivered: "Livrée",
-  cancelled: "Annulée",
-};
-
 export function OrdersPage() {
   const navigate = useNavigate();
-  const { t } = useI18n();
+  const { t, tx, language, locale } = useI18n();
 
   const [orders, setOrders] = useState<ApiOrder[]>([]);
   const [loading, setLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [downloading, setDownloading] = useState<string | number | null>(null);
+
+  useSeo({ title: tx("Mes commandes", "My orders"), path: "/orders", noindex: true });
+
+  const handleReceipt = async (orderId: string | number) => {
+    setDownloading(orderId);
+    try {
+      await ordersService.downloadOrderReceipt(orderId);
+    } catch {
+      toast(tx("Le reçu n'a pas pu être téléchargé. Réessayez dans un instant.", "The receipt could not be downloaded. Please try again shortly."), { icon: "⚠️" });
+    } finally {
+      setDownloading(null);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
@@ -95,7 +96,7 @@ export function OrdersPage() {
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Connexion requise</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">Connectez-vous pour voir vos commandes.</p>
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/login", { state: { from: "/orders" } })}
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
               >
                 <LogIn size={18} />
@@ -147,21 +148,42 @@ export function OrdersPage() {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div>
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                          {t("orders.orderId")}: #{order.id}
+                          {orderReference(order)}
                         </h3>
                         <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                           <div className="flex items-center gap-2">
                             <Calendar size={16} />
-                            {new Date(order.created_at).toLocaleDateString("fr-FR")}
+                            {order.created_at}
                           </div>
                           <div className="text-xl font-bold text-[#0077BE] dark:text-[#00A8E8]">
-                            {order.total_price.toLocaleString("fr-FR")} XAF
+                            {Math.round(Number(order.total ?? 0)).toLocaleString(locale)} XAF
                           </div>
                         </div>
                       </div>
-                      <span className={`px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap ${STATUS_COLORS[order.status] ?? "bg-gray-100 text-gray-700"}`}>
-                        {STATUS_LABELS[order.status] ?? order.status}
-                      </span>
+                      <div className="flex flex-col items-start sm:items-end gap-2">
+                        <span className={`px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap ${statusColor(order.status)}`}>
+                          {statusLabel(order.status, language)}
+                        </span>
+                        <div className="flex gap-3 text-sm">
+                          <Link
+                            to={`/suivi-commande?ref=${orderReference(order)}`}
+                            className="inline-flex items-center gap-1 text-[#0077BE] dark:text-[#00A8E8] hover:underline"
+                          >
+                            <Truck size={14} /> {tx("Suivre", "Track")}
+                          </Link>
+                          {order.status !== "pending" && order.status !== "cancelled" && (
+                            <button
+                              type="button"
+                              onClick={() => handleReceipt(order.id)}
+                              disabled={downloading === order.id}
+                              className="inline-flex items-center gap-1 text-[#0077BE] dark:text-[#00A8E8] hover:underline disabled:opacity-60"
+                            >
+                              {downloading === order.id ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+                              {tx("Reçu PDF", "PDF receipt")}
+                            </button>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -177,14 +199,14 @@ export function OrdersPage() {
                           >
                             <div>
                               <p className="font-medium text-gray-900 dark:text-white">
-                                {item.product?.name ?? "Produit supprimé"}
+                                {item.product?.name ?? tx("Produit supprimé", "Product removed")}
                               </p>
                               <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {t("orders.quantity")}: {item.quantity} × {item.price.toLocaleString("fr-FR")} XAF
+                                {t("orders.quantity")}: {item.quantity} × {Number(item.price).toLocaleString(locale)} XAF
                               </p>
                             </div>
                             <p className="font-semibold text-gray-900 dark:text-white">
-                              {(item.price * item.quantity).toLocaleString("fr-FR")} XAF
+                              {(item.price * item.quantity).toLocaleString(locale)} XAF
                             </p>
                           </div>
                         ))}

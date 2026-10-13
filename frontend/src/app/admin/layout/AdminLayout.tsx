@@ -127,7 +127,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
   if (!isAuthenticated) return <>{children}</>;
 
   return (
-    <div className="flex h-screen bg-slate-100">
+    <div className="flex h-screen bg-slate-100 text-slate-900">
       <Sidebar />
 
       <div className="flex-1 overflow-auto lg:ml-64 flex flex-col">

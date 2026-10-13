@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAdminAuth } from '../../../context/AdminAuthContext';
-import { ChevronDown, LogOut, Menu, X, LayoutDashboard, Package, FileText, ShoppingCart, Warehouse, CreditCard, Receipt, BarChart3, Settings, Star, FileQuestion } from 'lucide-react';
+import { useAdminAuth, ROLE_LABELS } from '../../../context/AdminAuthContext';
+import { ChevronDown, LogOut, Menu, X, LayoutDashboard, Package, FileText, FileSpreadsheet, FolderTree, Newspaper, Tag, Users, Wrench, ShoppingCart, Warehouse, CreditCard, Receipt, BarChart3, Settings, Star, FileQuestion } from 'lucide-react';
 
 interface NavItem {
   label: string;
@@ -42,16 +42,46 @@ export const Sidebar: React.FC = () => {
           requiredPermission: 'manage_products',
         },
         {
+          label: 'Catégories',
+          icon: <FolderTree size={18} />,
+          path: '/admin/categories',
+          requiredPermission: 'manage_categories',
+        },
+        {
+          label: 'Prestations',
+          icon: <Wrench size={18} />,
+          path: '/admin/services',
+          requiredPermission: 'manage_services',
+        },
+        {
+          label: 'Import Excel',
+          icon: <FileSpreadsheet size={18} />,
+          path: '/admin/products/import',
+          requiredPermission: 'manage_products',
+        },
+        {
           label: 'Pages Web',
           icon: <FileText size={18} />,
           path: '/admin/pages',
           requiredPermission: 'manage_pages',
         },
         {
+          label: 'Blog',
+          icon: <Newspaper size={18} />,
+          path: '/admin/blog',
+          requiredPermission: 'manage_blog',
+        },
+        {
           label: 'Commandes',
           icon: <ShoppingCart size={18} />,
           path: '/admin/orders',
           requiredPermission: 'manage_orders',
+        },
+        {
+          label: 'Clients',
+          icon: <Users size={18} />,
+          path: '/admin/customers',
+          requiredPermission: 'manage_customers',
         },
         {
           label: 'Avis Clients',
@@ -72,6 +102,12 @@ export const Sidebar: React.FC = () => {
       icon: <Warehouse size={20} />,
       path: '/admin/inventory',
       requiredPermission: 'manage_inventory',
+    },
+    {
+      label: 'Commercial',
+      icon: <Tag size={20} />,
+      path: '/admin/marketing',
+      requiredPermission: 'manage_discounts',
     },
     {
       label: 'Point de Vente',
@@ -163,13 +199,8 @@ export const Sidebar: React.FC = () => {
         {/* Logo */}
         <div className="px-6 py-8 border-b border-slate-200">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">RT</span>
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-slate-900">RTWater</h1>
-              <p className="text-xs text-slate-500">Backoffice</p>
-            </div>
+            <img src="/logo.webp" alt="RT Water" className="h-10 w-auto object-contain" />
+            <p className="text-xs text-slate-500">Backoffice</p>
           </div>
         </div>
 
@@ -185,7 +216,7 @@ export const Sidebar: React.FC = () => {
             <p className="text-xs text-slate-500 truncate">{user.email}</p>
             <div className="mt-3">
               <span className="inline-block px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
-                {user.role === 'admin' ? 'Administrateur' : user.role === 'manager' ? 'Gestionnaire' : 'Caissier'}
+                {ROLE_LABELS[user.role] ?? user.role}
               </span>
             </div>
           </div>

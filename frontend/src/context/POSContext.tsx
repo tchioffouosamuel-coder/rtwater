@@ -5,7 +5,10 @@ export interface CartItem {
   sku: string;
   name: string;
   quantity: number;
+  /** Prix reellement encaisse, remise produit deja appliquee. */
   unitPrice: number;
+  /** Prix catalogue avant remise, pour afficher le prix barre en caisse. */
+  basePrice?: number;
   discount?: number; // En pourcentage
   category?: string;
 }

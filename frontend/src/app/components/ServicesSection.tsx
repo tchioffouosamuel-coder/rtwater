@@ -1,4 +1,6 @@
-import { Droplet, Zap, Beaker, Drill, Waves, Wrench } from "lucide-react";
+import { Droplet, Zap, Beaker, Drill, Waves, Wrench, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useI18n } from "../../i18n/I18nContext";
 import { motion } from "motion/react";
 import { useRef } from "react";
 import { useTheme } from "../../theme/ThemeContext";
@@ -30,7 +32,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: "easeOut",
+      ease: "easeOut" as const,
     },
   },
 };
@@ -40,6 +42,7 @@ export function ServicesSection() {
   const { home } = useSiteContent();
   const { services } = home;
   const { theme } = useTheme();
+  const { tx } = useI18n();
 
   return (
     <section id="services" className="py-16 sm:py-24 transition-colors duration-300 relative overflow-hidden">
@@ -125,6 +128,16 @@ export function ServicesSection() {
                 <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
                   {service.description}
                 </p>
+
+                {/* Toute la carte mène au devis, service pré-sélectionné */}
+                <Link
+                  to={`/devis?service=${encodeURIComponent(service.title)}`}
+                  className="relative mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0077BE] dark:text-[#00A8E8] after:absolute after:inset-[-999px] after:content-['']"
+                  aria-label={tx(`Demander un devis : ${service.title}`, `Request a quote: ${service.title}`)}
+                >
+                  {tx("Demander un devis", "Request a quote")}
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
 
                 {/* Decorative Element */}
                 <motion.div

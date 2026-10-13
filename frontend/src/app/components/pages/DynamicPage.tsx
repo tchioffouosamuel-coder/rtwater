@@ -5,6 +5,7 @@ import {
   Droplet, Zap, Award, Users, Truck, Shield, Wrench, Star,
   MapPin, Phone, Mail, Clock, Loader2,
 } from 'lucide-react';
+import { useSeo } from '../../../lib/seo';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -263,6 +264,12 @@ export const DynamicPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
+  useSeo({
+    title: page?.meta_title || page?.title || (notFound ? "Page introuvable" : undefined),
+    description: page?.meta_description ?? undefined,
+    noindex: notFound,
+  });
+
   useEffect(() => {
     if (!slug) return;
     sectionCount = 0;
@@ -326,9 +333,6 @@ export const DynamicPage: React.FC = () => {
 
   return (
     <div className="w-full">
-      {page.meta_title && (
-        <title>{page.meta_title}</title>
-      )}
       {blocks.map((block, index) => renderBlock(block, index))}
     </div>
   );

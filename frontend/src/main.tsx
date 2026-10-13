@@ -7,11 +7,16 @@ import { CartUIProvider } from "./context/CartUIContext";
 import { AdminAuthProvider } from "./context/AdminAuthContext";
 import { UserAuthProvider } from "./context/UserAuthContext";
 import { SiteContentProvider } from "./context/SiteContentContext";
-import { InventoryProvider } from "./context/InventoryContext";
+import { ShopMemoryProvider } from "./context/ShopMemoryContext";
 import { POSProvider } from "./context/POSContext";
-import { ReceiptProvider } from "./context/ReceiptContext";
+import { initAnalytics, initErrorReporting } from "./lib/monitoring";
+import { registerServiceWorker } from "./lib/offline";
 import App from "./app/App.tsx";
 import "./styles/index.css";
+
+initErrorReporting();
+initAnalytics();
+registerServiceWorker();
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -22,13 +27,11 @@ createRoot(document.getElementById("root")!).render(
             <AdminAuthProvider>
               <UserAuthProvider>
                 <SiteContentProvider>
-                  <InventoryProvider>
+                  <ShopMemoryProvider>
                     <POSProvider>
-                      <ReceiptProvider>
-                        <App />
-                      </ReceiptProvider>
+                      <App />
                     </POSProvider>
-                  </InventoryProvider>
+                  </ShopMemoryProvider>
                 </SiteContentProvider>
               </UserAuthProvider>
             </AdminAuthProvider>

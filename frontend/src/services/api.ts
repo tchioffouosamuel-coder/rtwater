@@ -1,7 +1,13 @@
 export const API_BASE =
-  import.meta.env.VITE_API_BASE_URL || "https://rtwater.campusflow.fr/public/api";
+  import.meta.env.VITE_API_BASE_URL || "https://rtwater.campusflow.fr/api/public/api";
 
-type RequestInitLike = RequestInit & { params?: Record<string, any> };
+type RequestInitLike = Omit<RequestInit, "body"> & {
+  /** Un objet est envoyé en JSON automatiquement */
+  body?: BodyInit | Record<string, any> | null;
+  params?: Record<string, any>;
+  /** true : pas de toast global, l'erreur est affichée dans le formulaire appelant */
+  silent?: boolean;
+};
 
 async function request(path: string, init: RequestInitLike = {}) {
   const url = new URL(API_BASE + path);
@@ -19,10 +25,11 @@ async function request(path: string, init: RequestInitLike = {}) {
   const token = localStorage.getItem("adminToken") || localStorage.getItem("userToken");
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const body = init.body;
+  const { params: _params, silent, body, ...fetchInit } = init;
   const finalInit: RequestInit = {
-    ...init,
+    ...fetchInit,
     headers,
+    body: body as BodyInit | null | undefined,
   };
 
   if (body && typeof body === "object" && !(body instanceof FormData)) {
@@ -54,6 +61,7 @@ async function request(path: string, init: RequestInitLike = {}) {
 
     return data;
   } catch (e: any) {
+    if (silent) throw e;
     try {
       // lazy import toast to avoid cycles
       const { toast } = await import("../app/components/ui/sonner");

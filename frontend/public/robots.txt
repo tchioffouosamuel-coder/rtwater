@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /profile
+Disallow: /orders
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+
+# Plan du site généré par l'API (produits, articles, pages).
+# À adapter si l'API change d'adresse.
+Sitemap: https://rtwater.campusflow.fr/api/public/sitemap.xml

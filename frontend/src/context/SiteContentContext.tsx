@@ -82,23 +82,38 @@ export function SiteContentProvider({ children }: { children: React.ReactNode })
       { slug: "site-footer", setter: (raw: unknown) => setFooter(safeParseContent(raw, DEFAULT_FOOTER)) },
     ];
 
-    const promises = slugMap.map(({ slug, setter }) =>
-      pagesService.fetchPage(slug).then((res: any) => {
-        if (cancelled) return;
-        const content = res?.data?.content ?? res?.content;
-        if (content) {
-          setter(content);
-        }
-      }).catch(() => {
-        // Keep defaults on error
-      })
-    );
+    const applyAll = (pages: Record<string, any>) => {
+      slugMap.forEach(({ slug, setter }) => {
+        const content = pages?.[slug]?.content;
+        if (content) setter(content);
+      });
+    };
 
-    Promise.allSettled(promises).finally(() => {
-      if (!cancelled) {
-        setIsLoading(false);
-      }
-    });
+    // Une seule requête pour les 6 blocs du site ; repli page par page si l'API est ancienne
+    pagesService
+      .fetchPagesBySlugs(slugMap.map((s) => s.slug))
+      .then((res: any) => {
+        if (cancelled) return;
+        const data = res?.data;
+        if (data && typeof data === "object" && !Array.isArray(data)) {
+          applyAll(data);
+          return;
+        }
+        return Promise.allSettled(
+          slugMap.map(({ slug, setter }) =>
+            pagesService.fetchPage(slug).then((r: any) => {
+              const content = r?.data?.content ?? r?.content;
+              if (!cancelled && content) setter(content);
+            })
+          )
+        );
+      })
+      .catch(() => {
+        // Contenus par défaut conservés
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
 
     return () => {
       cancelled = true;
