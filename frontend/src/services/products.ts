@@ -20,8 +20,12 @@ export async function createProduct(payload: Record<string, any>) {
   return api.request("/products", { method: "POST", body: payload });
 }
 
-export async function updateProduct(id: string, payload: Record<string, any>) {
+export async function updateProduct(id: string, payload: Record<string, any> | FormData) {
   if (payload instanceof FormData) {
+    // PHP ne parse pas les corps multipart en PUT : on POSTe avec _method=PUT,
+    // que le routeur Laravel interprete comme un PUT. Sans ca la requete part
+    // en POST sur une route qui n'accepte que PUT et repond 405.
+    payload.append("_method", "PUT");
     return api.request(`/products/${id}`, { method: "POST", body: payload });
   }
 

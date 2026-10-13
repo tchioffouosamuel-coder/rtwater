@@ -15,6 +15,9 @@ interface ProductForm {
   discount: number;
   /** Fin de promotion, format « AAAA-MM-JJTHH:MM ». Vide = sans fin. */
   discount_ends_at: string;
+  /** Forme de la fiche technique. '' = aucune fiche. */
+  datasheet_type: '' | 'text' | 'image' | 'pdf';
+  datasheet_text: string;
   stock: number;
   is_available: boolean;
   category_id: string;
@@ -26,6 +29,8 @@ const EMPTY_FORM: ProductForm = {
   price: 0,
   discount: 0,
   discount_ends_at: '',
+  datasheet_type: '',
+  datasheet_text: '',
   stock: 0,
   is_available: true,
   category_id: '',
@@ -48,6 +53,9 @@ export const ProductsPage: React.FC = () => {
   const [formData, setFormData] = useState<ProductForm>(EMPTY_FORM);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [datasheetFile, setDatasheetFile] = useState<File | null>(null);
+  // Fiche deja enregistree, affichee tant que l'admin n'en televerse pas une autre
+  const [datasheetExisting, setDatasheetExisting] = useState<{ type: string; url: string | null; filename: string | null } | null>(null);
 
   const mapApiItem = (d: any) => ({
     id: d.id,
@@ -57,6 +65,7 @@ export const ProductsPage: React.FC = () => {
     discount: d.discount ?? 0,
     final_price: d.final_price ?? d.price ?? 0,
     discount_ends_at: d.discount_ends_at ?? null,
+    datasheet: d.datasheet ?? null,
     stock: d.stock ?? 0,
     is_available: d.is_available ?? true,
     image_url: d.image_url ?? null,
@@ -134,17 +143,22 @@ export const ProductsPage: React.FC = () => {
         price: product.price,
         discount: product.discount ?? 0,
         discount_ends_at: product.discount_ends_at ? String(product.discount_ends_at).slice(0, 16) : '',
+        datasheet_type: product.datasheet?.type ?? '',
+        datasheet_text: product.datasheet?.text ?? '',
         stock: product.stock,
         is_available: product.is_available,
         category_id: product.category?.id ? String(product.category.id) : '',
       });
       setImagePreview(product.image_url ?? null);
+      setDatasheetExisting(product.datasheet ?? null);
     } else {
       setEditingId(null);
       setFormData(EMPTY_FORM);
       setImagePreview(null);
+      setDatasheetExisting(null);
     }
     setImageFile(null);
+    setDatasheetFile(null);
     setShowModal(true);
   };
 
@@ -153,6 +167,8 @@ export const ProductsPage: React.FC = () => {
     setEditingId(null);
     setImageFile(null);
     setImagePreview(null);
+    setDatasheetFile(null);
+    setDatasheetExisting(null);
   };
 
   const handleSaveProduct = () => {
@@ -165,7 +181,9 @@ export const ProductsPage: React.FC = () => {
       setSaveLoading(true);
       try {
         let payload: any;
-        if (imageFile) {
+
+        // Un fichier impose multipart, que ce soit le visuel ou la fiche technique
+        if (imageFile || datasheetFile) {
           payload = new FormData();
           payload.append('name', formData.name);
           payload.append('description', formData.description);
@@ -175,7 +193,13 @@ export const ProductsPage: React.FC = () => {
           payload.append('stock', String(formData.stock));
           payload.append('is_available', formData.is_available ? '1' : '0');
           if (formData.category_id) payload.append('category_id', formData.category_id);
-          payload.append('image_url', imageFile);
+          if (imageFile) payload.append('image_url', imageFile);
+
+          // Chaine vide : FormData ne transporte pas null, le serveur lit '' et
+          // retire la fiche technique.
+          payload.append('datasheet_type', formData.datasheet_type || 'none');
+          if (formData.datasheet_type === 'text') payload.append('datasheet_text', formData.datasheet_text);
+          if (datasheetFile) payload.append('datasheet_file', datasheetFile);
         } else {
           payload = {
             name: formData.name,
@@ -185,6 +209,8 @@ export const ProductsPage: React.FC = () => {
             discount_ends_at: formData.discount_ends_at || null,
             stock: formData.stock,
             is_available: formData.is_available,
+            datasheet_type: formData.datasheet_type || 'none',
+            ...(formData.datasheet_type === 'text' ? { datasheet_text: formData.datasheet_text } : {}),
             ...(formData.category_id ? { category_id: Number(formData.category_id) } : {}),
           };
         }
@@ -521,6 +547,101 @@ export const ProductsPage: React.FC = () => {
                   rows={3}
                   className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
                 />
+              </div>
+
+              {/* Fiche technique — texte, image ou PDF */}
+              <div className="rounded-lg border border-slate-200 p-4 space-y-3">
+                <div>
+                  <p className="text-sm font-medium text-slate-900">Fiche technique</p>
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    Caractéristiques détaillées, affichées sous la description sur la fiche produit.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-4 gap-2">
+                  {([
+                    ['', 'Aucune'],
+                    ['text', 'Texte'],
+                    ['image', 'Image'],
+                    ['pdf', 'PDF'],
+                  ] as const).map(([value, label]) => (
+                    <button
+                      key={value || 'none'}
+                      type="button"
+                      onClick={() => {
+                        setFormData(p => ({ ...p, datasheet_type: value }));
+                        // Changer de type invalide le fichier choisi pour l'autre
+                        if (value !== 'image' && value !== 'pdf') setDatasheetFile(null);
+                      }}
+                      className={`rounded-lg border px-2 py-2 text-xs font-medium transition ${
+                        formData.datasheet_type === value
+                          ? 'border-blue-500 bg-blue-50 text-blue-700'
+                          : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                {formData.datasheet_type === 'text' && (
+                  <label className="block">
+                    <span className="block text-xs font-medium text-slate-600 mb-1">Caractéristiques</span>
+                    <textarea
+                      value={formData.datasheet_text}
+                      onChange={(e) => setFormData(p => ({ ...p, datasheet_text: e.target.value }))}
+                      rows={6}
+                      maxLength={20000}
+                      placeholder={'Débit : 10 L/min\nPression : 2 à 6 bar\nFiltration : 5 µm\nGarantie : 2 ans'}
+                      className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm leading-relaxed"
+                    />
+                    <span className="mt-1 block text-xs text-slate-400">
+                      Une caractéristique par ligne. {formData.datasheet_text.length} / 20 000 caractères.
+                    </span>
+                  </label>
+                )}
+
+                {(formData.datasheet_type === 'image' || formData.datasheet_type === 'pdf') && (
+                  <div className="space-y-2">
+                    <input
+                      type="file"
+                      accept={formData.datasheet_type === 'pdf' ? 'application/pdf' : 'image/jpeg,image/png,image/webp'}
+                      onChange={(e) => setDatasheetFile(e.target.files?.[0] ?? null)}
+                      className="w-full text-xs text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-xs file:font-medium file:text-slate-700"
+                    />
+
+                    {datasheetFile ? (
+                      <p className="text-xs text-green-700">
+                        Nouveau fichier : {datasheetFile.name} ({(datasheetFile.size / 1024 / 1024).toFixed(1)} Mo)
+                      </p>
+                    ) : datasheetExisting?.url ? (
+                      <p className="text-xs text-slate-500">
+                        Fiche actuelle :{' '}
+                        <a
+                          href={datasheetExisting.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-blue-600 underline hover:no-underline"
+                        >
+                          {datasheetExisting.filename || 'voir le fichier'}
+                        </a>
+                        {' '}— conservée si vous n'en téléversez pas d'autre.
+                      </p>
+                    ) : (
+                      <p className="text-xs text-slate-400">
+                        {formData.datasheet_type === 'pdf'
+                          ? 'PDF du fabricant, 10 Mo maximum.'
+                          : 'JPG, PNG ou WebP — 10 Mo maximum. Le tableau reste lisible : la réduction est moins forte que pour un visuel produit.'}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {formData.datasheet_type === '' && datasheetExisting && (
+                  <p className="text-xs text-amber-600">
+                    La fiche technique enregistrée sera retirée à l'enregistrement.
+                  </p>
+                )}
               </div>
 
               <div>

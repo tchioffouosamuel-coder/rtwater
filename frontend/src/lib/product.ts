@@ -15,6 +15,18 @@ export interface ShopProduct {
   finalPrice: number;
   stock: number;
   inStock: boolean;
+  /** Fiche technique : texte saisi, image ou PDF. null quand le produit n'en a pas. */
+  datasheet: ProductDatasheet | null;
+}
+
+export interface ProductDatasheet {
+  type: "text" | "image" | "pdf";
+  /** Renseigne pour type === "text" uniquement. */
+  text: string | null;
+  /** Renseigne pour les types "image" et "pdf". */
+  url: string | null;
+  /** Nom d'origine du fichier, pour le libelle du lien de telechargement. */
+  filename: string | null;
 }
 
 export function slugify(text: string): string {
@@ -60,6 +72,7 @@ export function mapApiProduct(p: any): ShopProduct {
     discount: Number(p.discount ?? 0),
     // final_price vient de l'API ; le calcul local ne sert que de repli
     finalPrice: Number(p.final_price ?? discountedPrice(Number(p.price), Number(p.discount ?? 0))),
+    datasheet: p.datasheet ?? null,
     stock: Number(p.stock ?? 0),
     inStock: !!p.is_available && Number(p.stock ?? 0) > 0,
   };

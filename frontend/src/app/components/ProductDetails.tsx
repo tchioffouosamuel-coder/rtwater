@@ -8,6 +8,7 @@ import { FavoriteButton } from "./shop/ShopWidgets";
 import { useState, useEffect, useCallback } from "react";
 import { fetchProduct } from "../../services/products";
 import { fetchProductReviews, createReview, type Review, type ReviewStats } from "../../services/reviews";
+import { ProductDatasheet } from "./ProductDatasheet";
 import { toast } from "sonner";
 
 interface ProductDetailsProps {
@@ -342,6 +343,9 @@ export function ProductDetails({ product, isOpen, onClose, onAddToCart, variant 
                     <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{prod.description}</p>
                   </motion.div>
                 )}
+
+                {/* Fiche technique — texte, image ou PDF */}
+                <ProductDatasheet datasheet={prod.datasheet ?? null} />
 
                 {/* Reviews Section */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-10 pt-8 border-t border-gray-200 dark:border-slate-700">

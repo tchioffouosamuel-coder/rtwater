@@ -6,12 +6,17 @@ import * as importService from '../../../services/productImport';
 import type { ImportPreview, ImportRecord, ImportRow } from '../../../services/productImport';
 import { toast } from 'sonner';
 import {
-  AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Download, FileSpreadsheet,
+  AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, Download, FileSpreadsheet,
   History, Image as ImageIcon, Link2, Loader2, Package, RefreshCw, Trash2,
   Upload, X, XCircle,
 } from 'lucide-react';
+import { ProductImagesPanel } from './ProductImagesPanel';
+import { fetchPendingImages } from '../../../services/productImages';
 
 type Step = 'upload' | 'preview' | 'done';
+
+/** Les deux temps du flux : le catalogue d'abord, les photos ensuite. */
+type Mode = 'catalogue' | 'images';
 
 /** Libellés français des colonnes reconnues, pour l'écran de correspondance. */
 const FIELD_LABELS: Record<string, string> = {
@@ -43,6 +48,10 @@ export const ProductImportPage: React.FC = () => {
   const navigate = useNavigate();
   const { hasPermission } = useAdminAuth();
 
+  const [mode, setMode] = useState<Mode>('catalogue');
+  // Compteur affiche sur l'onglet Images : signale qu'il reste des photos a fournir
+  const [awaitingImages, setAwaitingImages] = useState<number | null>(null);
+
   const [step, setStep] = useState<Step>('upload');
   const [sheet, setSheet] = useState<File | null>(null);
   const [archive, setArchive] = useState<File | null>(null);
@@ -73,6 +82,15 @@ export const ProductImportPage: React.FC = () => {
   }, []);
 
   useEffect(loadHistory, [loadHistory]);
+
+  // Nombre de produits en attente d'image, relu apres chaque import de catalogue
+  const refreshAwaiting = useCallback(() => {
+    fetchPendingImages()
+      .then(res => setAwaitingImages(res?.summary?.awaiting ?? 0))
+      .catch(() => { /* indicatif : pas d'alerte */ });
+  }, []);
+
+  useEffect(refreshAwaiting, [refreshAwaiting]);
 
   // Un aperçu abandonné laisse des fichiers temporaires côté serveur
   useEffect(() => {
@@ -173,6 +191,7 @@ export const ProductImportPage: React.FC = () => {
       setResult(record);
       setStep('done');
       loadHistory();
+      refreshAwaiting();
       toast(`${record.created_count} création(s), ${record.updated_count} mise(s) à jour`, { icon: '✅' });
     } catch (e: any) {
       setError(e?.data?.message || e?.message || "L'import n'a pas abouti.");
@@ -201,6 +220,42 @@ export const ProductImportPage: React.FC = () => {
         { label: 'Import Excel' },
       ]}
     >
+      {/* Les deux temps de l'import */}
+      <div className="mb-6 flex gap-2 border-b border-slate-200">
+        <button
+          onClick={() => setMode('catalogue')}
+          className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition ${
+            mode === 'catalogue'
+              ? 'border-blue-600 text-blue-700'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <FileSpreadsheet size={16} />
+          Catalogue (Excel)
+        </button>
+        <button
+          onClick={() => setMode('images')}
+          className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition ${
+            mode === 'images'
+              ? 'border-blue-600 text-blue-700'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <ImageIcon size={16} />
+          Images
+          {!!awaitingImages && (
+            <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">
+              <Clock size={10} />
+              {awaitingImages}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {mode === 'images' ? (
+        <ProductImagesPanel />
+      ) : (
+      <>
       <Stepper step={step} />
 
       {error && (
@@ -571,6 +626,9 @@ export const ProductImportPage: React.FC = () => {
             </button>
           </div>
         </div>
+      )}
+
+      </>
       )}
 
       {/* ══ JOURNAL DES IMPORTS ══ */}

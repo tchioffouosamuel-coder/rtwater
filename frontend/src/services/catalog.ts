@@ -62,10 +62,14 @@ export async function createService(payload: Record<string, any> | FormData) {
 }
 
 export async function updateService(id: number, payload: Record<string, any> | FormData) {
-  // FormData implique un envoi de fichier : Laravel ne lit pas les fichiers
-  // en PUT, on passe donc par POST comme pour les produits.
-  const method = payload instanceof FormData ? "POST" : "PUT";
-  return api.request(`/services/${id}`, { method, body: payload, silent: true });
+  if (payload instanceof FormData) {
+    // PHP ne parse pas les corps multipart en PUT : on POSTe avec _method=PUT,
+    // que le routeur Laravel interprete comme un PUT.
+    payload.append("_method", "PUT");
+    return api.request(`/services/${id}`, { method: "POST", body: payload, silent: true });
+  }
+
+  return api.request(`/services/${id}`, { method: "PUT", body: payload, silent: true });
 }
 
 export async function deleteService(id: number) {
