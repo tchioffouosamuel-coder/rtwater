@@ -411,7 +411,14 @@ php artisan config:cache && php artisan route:cache
 ```
 
 `frontend/public/_redirects` assure le routage SPA sur Cloudflare Pages et Netlify.
-Sur un autre hébergeur, rediriger toutes les routes inconnues vers `index.html`.
+Sur Hostinger / Apache / LiteSpeed, `frontend/public/.htaccess` assure ce routage.
+Vite le copie dans `frontend/dist/.htaccess` au build : déployer tout le contenu de
+`dist/`, y compris ce fichier caché, dans `public_html/` (à côté d'`index.html`).
+Sans cette règle, une actualisation sur `/gallery`, `/shop` ou `/admin` renvoie une
+404 de l'hébergeur avant que React ne démarre. Si le site est déjà déployé, copier
+uniquement ce `.htaccess` suffit ; fusionner les règles si un `.htaccess` existe déjà.
+Sur un autre hébergeur, configurer une réécriture interne vers `index.html` pour les
+chemins ne correspondant pas à un fichier ou dossier existant.
 
 Côté API, vérifier que `config/cors.php` accepte le domaine du frontend.
 
