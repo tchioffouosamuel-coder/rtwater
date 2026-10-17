@@ -49,11 +49,18 @@ export const LoginPage: React.FC = () => {
       // Retour à la page d'origine (ex. /profile, /orders) plutôt qu'à la boutique
       navigate(navState.from && navState.from !== '/login' ? navState.from : '/shop', { replace: true });
     } catch (err: any) {
-      setError(
-        err?.status === 429
-          ? tx('Trop de tentatives. Patientez une minute avant de réessayer.', 'Too many attempts. Please wait a minute and try again.')
-          : tx('Email ou mot de passe incorrect. Veuillez réessayer.', 'Incorrect email or password. Please try again.')
-      );
+      // On distingue les causes : sans cela une panne réseau ou une erreur
+      // serveur s'affichait comme « mot de passe incorrect » et masquait le vrai problème.
+      const status = err?.status as number | undefined;
+      if (status === 429) {
+        setError(tx('Trop de tentatives. Patientez une minute avant de réessayer.', 'Too many attempts. Please wait a minute and try again.'));
+      } else if (status === 401 || status === 422) {
+        setError(tx('Email ou mot de passe incorrect. Veuillez réessayer.', 'Incorrect email or password. Please try again.'));
+      } else if (status === undefined) {
+        setError(tx('Connexion au serveur impossible. Vérifiez votre réseau puis réessayez.', 'Could not reach the server. Check your connection and try again.'));
+      } else {
+        setError(tx(`Le serveur a répondu une erreur (${status}). Réessayez plus tard.`, `The server returned an error (${status}). Please try again later.`));
+      }
     } finally {
       setIsLoading(false);
     }

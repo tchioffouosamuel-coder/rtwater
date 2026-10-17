@@ -90,7 +90,12 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          if (response.ok) caches.open(SHELL).then((c) => c.put("/", response.clone()));
+          // clone() doit etre appele tout de suite : des que la reponse part vers
+          // le navigateur son corps est consomme et la copie n'est plus possible.
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(SHELL).then((c) => c.put("/", copy));
+          }
           return response;
         })
         .catch(async () => (await caches.match("/")) || caches.match("/offline.html"))

@@ -1,5 +1,5 @@
 export const API_BASE =
-  import.meta.env.VITE_API_BASE_URL || "https://rtwater.campusflow.fr/api/public/api";
+  import.meta.env.VITE_API_BASE_URL || "https://api.rt-watersolution.com/api";
 
 type RequestInitLike = Omit<RequestInit, "body"> & {
   /** Un objet est envoyé en JSON automatiquement */
