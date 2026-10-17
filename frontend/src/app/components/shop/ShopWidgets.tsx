@@ -27,9 +27,9 @@ export function FavoriteButton({
       aria-pressed={active}
       aria-label={active ? tx(`Retirer ${product.name} des favoris`, `Remove ${product.name} from favourites`) : tx(`Ajouter ${product.name} aux favoris`, `Add ${product.name} to favourites`)}
       title={active ? tx("Retirer des favoris", "Remove from favourites") : tx("Ajouter aux favoris", "Add to favourites")}
-      className={`${dim} flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-800/90 shadow hover:scale-110 transition-transform ${className}`}
+      className={`${dim} flex items-center justify-center rounded-full bg-white/90 dark:bg-ink-800/90 shadow hover:scale-110 transition-transform ${className}`}
     >
-      <Heart className={`${icon} ${active ? "fill-red-500 text-red-500" : "text-gray-600 dark:text-gray-300"}`} />
+      <Heart className={`${icon} ${active ? "fill-red-500 text-red-500" : "text-ink-600 dark:text-ink-300"}`} />
     </button>
   );
 }
@@ -42,23 +42,23 @@ export function ProductMiniCard({ product, showFavorite = true }: { product: Rem
   return (
     <Link
       to={productPath(product)}
-      className="group relative block bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-shadow"
+      className="group relative block bg-white dark:bg-ink-900 rounded-2xl overflow-hidden border border-ink-200 dark:border-white/10 hover:border-brand-300 dark:hover:border-brand-400/40 hover:shadow-xl hover:shadow-brand-500/5 hover:-translate-y-1 transition-all duration-300"
     >
-      <div className="h-36 sm:h-44 bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center overflow-hidden">
+      <div className="h-36 sm:h-44 bg-gradient-to-br from-brand-50 to-ink-100 dark:from-ink-700 dark:to-ink-600 flex items-center justify-center overflow-hidden">
         {product.image ? (
           <img src={product.image} alt={product.name} loading="lazy" decoding="async"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
-          <Droplets className="w-10 h-10 text-blue-200" />
+          <Droplets className="w-10 h-10 text-brand-200" />
         )}
       </div>
       {showFavorite && <FavoriteButton product={product} size="sm" className="absolute top-2 right-2" />}
       <div className="p-3">
-        <p className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-[#0077BE]">{product.name}</p>
-        <p className="mt-1 text-sm font-bold text-[#0077BE] dark:text-[#00A8E8]">
+        <p className="text-sm font-semibold text-ink-900 dark:text-white line-clamp-2 group-hover:text-brand-600">{product.name}</p>
+        <p className="mt-1 text-sm font-bold text-brand-600 dark:text-aqua-500">
           {Math.round(price).toLocaleString(locale)} XAF
           {product.discount > 0 && (
-            <span className="ml-2 text-xs font-normal line-through text-gray-400">{Math.round(product.price).toLocaleString(locale)}</span>
+            <span className="ml-2 text-xs font-normal line-through text-ink-400">{Math.round(product.price).toLocaleString(locale)}</span>
           )}
         </p>
       </div>
@@ -75,7 +75,7 @@ export function RecentlyViewed({ excludeId, title }: { excludeId?: string; title
 
   return (
     <section className="mt-12" aria-labelledby="recent-title">
-      <h2 id="recent-title" className="text-xl font-bold text-gray-900 dark:text-white mb-5">
+      <h2 id="recent-title" className="text-xl font-bold text-ink-900 dark:text-white mb-5">
         {title ?? tx("Récemment consultés", "Recently viewed")}
       </h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

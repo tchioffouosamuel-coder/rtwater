@@ -31,7 +31,7 @@ interface BlogPost {
 const STATUS_META: Record<BlogPost['status'], { label: string; tone: string }> = {
   draft:     { label: 'Brouillon', tone: 'bg-amber-100 text-amber-700' },
   published: { label: 'Publié',    tone: 'bg-green-100 text-green-700' },
-  archived:  { label: 'Archivé',   tone: 'bg-slate-100 text-slate-500' },
+  archived:  { label: 'Archivé',   tone: 'bg-ink-100 text-ink-500' },
 };
 
 const formatDate = (iso: string | null | undefined) =>
@@ -180,16 +180,16 @@ export const BlogAdminPage: React.FC = () => {
     >
       <div className="mb-4 flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-3 text-slate-400" size={18} />
+          <Search className="absolute left-4 top-3 text-ink-400" size={18} />
           <input
             type="search" value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher un article…"
-            className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-12 pr-4 outline-none transition focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-ink-200 bg-white py-2.5 pl-12 pr-4 outline-none transition focus:ring-2 focus:ring-brand-500"
           />
         </div>
         <button
           onClick={() => openForm()}
-          className="flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition hover:bg-blue-700"
+          className="flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-brand-600 px-6 py-2.5 font-medium text-white transition hover:bg-brand-700"
         >
           <Plus size={18} />
           Nouvel article
@@ -207,7 +207,7 @@ export const BlogAdminPage: React.FC = () => {
             key={key}
             onClick={() => setStatusFilter(key as BlogPost['status'] | 'all')}
             className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-              statusFilter === key ? 'bg-blue-600 text-white' : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+              statusFilter === key ? 'bg-brand-600 text-white' : 'border border-ink-200 bg-white text-ink-600 hover:bg-ink-50'
             }`}
           >
             {label}
@@ -215,25 +215,25 @@ export const BlogAdminPage: React.FC = () => {
         ))}
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-ink-200 bg-white">
         {loading ? (
-          <div className="py-16 text-center text-sm text-slate-400">
+          <div className="py-16 text-center text-sm text-ink-400">
             <Loader2 size={20} className="mx-auto mb-2 animate-spin" />
             Chargement…
           </div>
         ) : visible.length === 0 ? (
           <div className="px-6 py-16 text-center">
-            <FileText size={32} className="mx-auto text-slate-300" />
-            <p className="mt-3 text-sm font-medium text-slate-900">
+            <FileText size={32} className="mx-auto text-ink-300" />
+            <p className="mt-3 text-sm font-medium text-ink-900">
               {search || statusFilter !== 'all' ? 'Aucun article dans cette sélection' : 'Aucun article'}
             </p>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-ink-500">
               Conseils d'entretien, qualité de l'eau, nouveautés : le blog améliore aussi votre référencement.
             </p>
             {!search && statusFilter === 'all' && (
               <button
                 onClick={() => openForm()}
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-brand-700"
               >
                 <Plus size={16} />
                 Écrire le premier
@@ -241,17 +241,17 @@ export const BlogAdminPage: React.FC = () => {
             )}
           </div>
         ) : (
-          <ul className="divide-y divide-slate-200">
+          <ul className="divide-y divide-ink-200">
             {visible.map(post => {
               const status = STATUS_META[post.status];
 
               return (
-                <li key={post.id} className="flex items-start gap-4 p-4 transition-colors hover:bg-slate-50">
-                  <div className="h-16 w-24 flex-shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+                <li key={post.id} className="flex items-start gap-4 p-4 transition-colors hover:bg-ink-50">
+                  <div className="h-16 w-24 flex-shrink-0 overflow-hidden rounded-lg border border-ink-200 bg-ink-100">
                     {post.cover_image ? (
                       <img src={post.cover_image} alt="" className="h-full w-full object-cover" />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-slate-300">
+                      <div className="flex h-full items-center justify-center text-ink-300">
                         <FileText size={18} />
                       </div>
                     )}
@@ -259,17 +259,17 @@ export const BlogAdminPage: React.FC = () => {
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-sm font-semibold text-slate-900">{post.title}</h3>
+                      <h3 className="text-sm font-semibold text-ink-900">{post.title}</h3>
                       <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${status.tone}`}>
                         {status.label}
                       </span>
                     </div>
 
                     {post.excerpt && (
-                      <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-600">{post.excerpt}</p>
+                      <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-ink-600">{post.excerpt}</p>
                     )}
 
-                    <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-400">
+                    <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-ink-400">
                       <span className="flex items-center gap-1">
                         <Calendar size={12} />
                         {post.status === 'published' ? formatDate(post.published_at) : formatDate(post.created_at)}
@@ -291,7 +291,7 @@ export const BlogAdminPage: React.FC = () => {
                         target="_blank"
                         rel="noreferrer"
                         aria-label={`Voir « ${post.title} » sur le site`}
-                        className="rounded-lg p-1.5 text-slate-500 transition hover:bg-slate-100"
+                        className="rounded-lg p-1.5 text-ink-500 transition hover:bg-ink-100"
                       >
                         <Eye size={16} />
                       </a>
@@ -299,7 +299,7 @@ export const BlogAdminPage: React.FC = () => {
                     <button
                       onClick={() => openForm(post)}
                       aria-label={`Modifier ${post.title}`}
-                      className="rounded-lg p-1.5 text-blue-600 transition hover:bg-blue-50"
+                      className="rounded-lg p-1.5 text-brand-600 transition hover:bg-brand-50"
                     >
                       <Edit2 size={16} />
                     </button>
@@ -321,14 +321,14 @@ export const BlogAdminPage: React.FC = () => {
       {/* Formulaire */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-900/40" onClick={() => setShowForm(false)} aria-hidden />
+          <div className="absolute inset-0 bg-ink-900/40" onClick={() => setShowForm(false)} aria-hidden />
 
           <div className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
-              <h2 className="text-base font-semibold text-slate-900">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-ink-200 bg-white px-6 py-4">
+              <h2 className="text-base font-semibold text-ink-900">
                 {form.id ? "Modifier l'article" : 'Nouvel article'}
               </h2>
-              <button onClick={() => setShowForm(false)} aria-label="Fermer" className="text-slate-400 hover:text-slate-700">
+              <button onClick={() => setShowForm(false)} aria-label="Fermer" className="text-ink-400 hover:text-ink-700">
                 <X size={20} />
               </button>
             </div>
@@ -342,67 +342,67 @@ export const BlogAdminPage: React.FC = () => {
               )}
 
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Titre *</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Titre *</span>
                 <input
                   type="text" value={form.title} autoFocus
                   onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))}
                   placeholder="Comment choisir son système de filtration"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
 
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Chapeau</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Chapeau</span>
                 <textarea
                   rows={2} value={form.excerpt} maxLength={500}
                   onChange={(e) => setForm(f => ({ ...f, excerpt: e.target.value }))}
                   placeholder="Résumé affiché dans la liste des articles et sur les réseaux sociaux."
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
-                <span className="mt-1 block text-xs text-slate-400">{form.excerpt.length} / 500 caractères</span>
+                <span className="mt-1 block text-xs text-ink-400">{form.excerpt.length} / 500 caractères</span>
               </label>
 
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Contenu *</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Contenu *</span>
                 <textarea
                   rows={12} value={form.content}
                   onChange={(e) => setForm(f => ({ ...f, content: e.target.value }))}
                   placeholder="<p>Votre article…</p>"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 font-mono text-xs leading-relaxed outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 font-mono text-xs leading-relaxed outline-none focus:ring-2 focus:ring-brand-500"
                 />
-                <span className="mt-1 block text-xs text-slate-400">
+                <span className="mt-1 block text-xs text-ink-400">
                   Le HTML simple est accepté : &lt;p&gt;, &lt;h2&gt;, &lt;ul&gt;, &lt;a&gt;, &lt;strong&gt;.
                 </span>
               </label>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block">
-                  <span className="mb-1.5 block text-sm font-medium text-slate-700">Image de couverture</span>
+                  <span className="mb-1.5 block text-sm font-medium text-ink-700">Image de couverture</span>
                   <input
                     type="url" value={form.cover_image}
                     onChange={(e) => setForm(f => ({ ...f, cover_image: e.target.value }))}
                     placeholder="https://…"
-                    className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                   />
                 </label>
 
                 <label className="block">
-                  <span className="mb-1.5 block text-sm font-medium text-slate-700">Mots-clés</span>
+                  <span className="mb-1.5 block text-sm font-medium text-ink-700">Mots-clés</span>
                   <input
                     type="text" value={form.tags}
                     onChange={(e) => setForm(f => ({ ...f, tags: e.target.value }))}
                     placeholder="filtration, entretien, conseils"
-                    className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                   />
-                  <span className="mt-1 block text-xs text-slate-400">Séparés par des virgules.</span>
+                  <span className="mt-1 block text-xs text-ink-400">Séparés par des virgules.</span>
                 </label>
 
                 <label className="block">
-                  <span className="mb-1.5 block text-sm font-medium text-slate-700">Statut</span>
+                  <span className="mb-1.5 block text-sm font-medium text-ink-700">Statut</span>
                   <select
                     value={form.status}
                     onChange={(e) => setForm(f => ({ ...f, status: e.target.value as BlogPost['status'] }))}
-                    className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                   >
                     <option value="draft">Brouillon — invisible sur le site</option>
                     <option value="published">Publié — visible de tous</option>
@@ -411,30 +411,30 @@ export const BlogAdminPage: React.FC = () => {
                 </label>
 
                 <label className="block">
-                  <span className="mb-1.5 block text-sm font-medium text-slate-700">Date de publication</span>
+                  <span className="mb-1.5 block text-sm font-medium text-ink-700">Date de publication</span>
                   <input
                     type="datetime-local" value={form.published_at}
                     onChange={(e) => setForm(f => ({ ...f, published_at: e.target.value }))}
-                    className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                   />
-                  <span className="mt-1 block text-xs text-slate-400">
+                  <span className="mt-1 block text-xs text-ink-400">
                     Vide et publié : la date d'aujourd'hui est appliquée.
                   </span>
                 </label>
               </div>
             </div>
 
-            <div className="sticky bottom-0 flex justify-end gap-3 border-t border-slate-200 bg-white px-6 py-4">
+            <div className="sticky bottom-0 flex justify-end gap-3 border-t border-ink-200 bg-white px-6 py-4">
               <button
                 onClick={() => setShowForm(false)}
-                className="rounded-lg border border-slate-200 px-5 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                className="rounded-lg border border-ink-200 px-5 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-50"
               >
                 Annuler
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-slate-300"
+                className="flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-brand-700 disabled:bg-ink-300"
               >
                 {saving && <Loader2 size={16} className="animate-spin" />}
                 {form.id ? 'Enregistrer' : 'Créer'}
@@ -446,17 +446,17 @@ export const BlogAdminPage: React.FC = () => {
 
       {deleting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-900/40" onClick={() => setDeleting(null)} aria-hidden />
+          <div className="absolute inset-0 bg-ink-900/40" onClick={() => setDeleting(null)} aria-hidden />
           <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-            <h2 className="text-base font-semibold text-slate-900">Supprimer cet article ?</h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <h2 className="text-base font-semibold text-ink-900">Supprimer cet article ?</h2>
+            <p className="mt-2 text-sm text-ink-600">
               « {deleting.title} » sera définitivement supprimé. Pour le retirer du site sans le perdre,
               passez-le en « Archivé ».
             </p>
             <div className="mt-5 flex justify-end gap-3">
               <button
                 onClick={() => setDeleting(null)}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                className="rounded-lg border border-ink-200 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-50"
               >
                 Annuler
               </button>

@@ -107,12 +107,12 @@ export function QuotePage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white dark:from-slate-950 to-gray-50 dark:to-slate-900 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white dark:from-ink-950 to-ink-50 dark:to-ink-900 px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 200 }}
-          className="bg-white dark:bg-slate-800 rounded-3xl p-8 sm:p-12 text-center max-w-md shadow-2xl border border-gray-100 dark:border-slate-700"
+          className="bg-white dark:bg-ink-800 rounded-3xl p-8 sm:p-12 text-center max-w-md shadow-2xl border border-ink-100 dark:border-ink-700"
         >
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
@@ -126,7 +126,7 @@ export function QuotePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4"
+            className="text-2xl sm:text-3xl font-bold text-ink-900 dark:text-white mb-3 sm:mb-4"
           >
             {t("quote.successTitle")}
           </motion.h2>
@@ -134,7 +134,7 @@ export function QuotePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-gray-600 dark:text-gray-300 text-base sm:text-lg leading-relaxed"
+            className="text-ink-600 dark:text-ink-300 text-base sm:text-lg leading-relaxed"
           >
             {t("quote.successMessage")}
           </motion.p>
@@ -144,9 +144,9 @@ export function QuotePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-ink-950 transition-colors duration-300">
       {/* Hero Section */}
-      <section className="relative py-20 sm:py-32 bg-gradient-to-br from-[#0077BE] to-[#00A8E8] overflow-hidden">
+      <section className="relative py-20 sm:py-32 bg-gradient-to-br from-brand-600 to-aqua-500 overflow-hidden">
         <div className="absolute inset-0">
           {[...Array(15)].map((_, i) => (
             <motion.div
@@ -186,7 +186,7 @@ export function QuotePage() {
             </motion.span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
               {t("quote.requestYourQuote")}{" "}
-              <span className="text-white underline decoration-cyan-200/80 decoration-[6px] underline-offset-[10px]">
+              <span className="text-white underline decoration-aqua-200/80 decoration-[6px] underline-offset-[10px]">
                 {t("quote.freeQuoteText")}
               </span>
             </h1>
@@ -198,14 +198,14 @@ export function QuotePage() {
       </section>
 
       {/* Form Section */}
-      <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-gray-50 dark:from-slate-900 via-white dark:via-slate-800 to-gray-50 dark:to-slate-900 transition-colors duration-300">
+      <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-ink-50 dark:from-ink-900 via-white dark:via-ink-800 to-ink-50 dark:to-ink-900 transition-colors duration-300">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 border border-gray-100 dark:border-slate-700 transition-colors duration-300"
+            className="bg-white dark:bg-ink-800 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 border border-ink-100 dark:border-ink-700 transition-colors duration-300"
           >
             <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
               {/* Name */}
@@ -215,8 +215,8 @@ export function QuotePage() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
               >
-                <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-semibold mb-3">
-                  <User className="w-5 h-5 text-[#0077BE]" />
+                <label className="flex items-center gap-2 text-ink-700 dark:text-ink-200 font-semibold mb-3">
+                  <User className="w-5 h-5 text-brand-600" />
                   {t("quote.fullNameRequired")}
                 </label>
                 <input
@@ -227,12 +227,12 @@ export function QuotePage() {
                   onFocus={() => setFocusedField("name")}
                   onBlur={() => setFocusedField(null)}
                   required
-                  className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-slate-700 border-2 rounded-xl transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                  className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-ink-50 dark:bg-ink-700 border-2 rounded-xl transition-all duration-300 text-ink-900 dark:text-white placeholder-ink-400 dark:placeholder-ink-500 ${
                     fieldErrors.name 
                       ? "border-red-500 dark:border-red-500" 
                       : focusedField === "name"
-                      ? "border-[#0077BE] dark:border-[#00A8E8]"
-                      : "border-gray-200 dark:border-slate-600"
+                      ? "border-brand-600 dark:border-aqua-500"
+                      : "border-ink-200 dark:border-ink-600"
                   } focus:outline-none`}
                   placeholder={t("quote.yourFullName")}
                 />
@@ -257,8 +257,8 @@ export function QuotePage() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.15 }}
                 >
-                  <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-semibold mb-3">
-                    <Mail className="w-5 h-5 text-[#0077BE]" />
+                  <label className="flex items-center gap-2 text-ink-700 dark:text-ink-200 font-semibold mb-3">
+                    <Mail className="w-5 h-5 text-brand-600" />
                     {t("quote.emailRequired")}
                   </label>
                   <input
@@ -269,12 +269,12 @@ export function QuotePage() {
                     onFocus={() => setFocusedField("email")}
                     onBlur={() => setFocusedField(null)}
                     required
-                    className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-slate-700 border-2 rounded-xl transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                    className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-ink-50 dark:bg-ink-700 border-2 rounded-xl transition-all duration-300 text-ink-900 dark:text-white placeholder-ink-400 dark:placeholder-ink-500 ${
                       fieldErrors.email 
                         ? "border-red-500 dark:border-red-500" 
                         : focusedField === "email"
-                        ? "border-[#0077BE] dark:border-[#00A8E8]"
-                        : "border-gray-200 dark:border-slate-600"
+                        ? "border-brand-600 dark:border-aqua-500"
+                        : "border-ink-200 dark:border-ink-600"
                     } focus:outline-none`}
                     placeholder={t("quote.yourEmail")}
                   />
@@ -297,8 +297,8 @@ export function QuotePage() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 }}
                 >
-                  <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-semibold mb-3">
-                    <Phone className="w-5 h-5 text-[#0077BE]" />
+                  <label className="flex items-center gap-2 text-ink-700 dark:text-ink-200 font-semibold mb-3">
+                    <Phone className="w-5 h-5 text-brand-600" />
                     {t("quote.phoneRequired")}
                   </label>
                   <input
@@ -309,12 +309,12 @@ export function QuotePage() {
                     onFocus={() => setFocusedField("phone")}
                     onBlur={() => setFocusedField(null)}
                     required
-                    className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-slate-700 border-2 rounded-xl transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                    className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-ink-50 dark:bg-ink-700 border-2 rounded-xl transition-all duration-300 text-ink-900 dark:text-white placeholder-ink-400 dark:placeholder-ink-500 ${
                       fieldErrors.phone 
                         ? "border-red-500 dark:border-red-500" 
                         : focusedField === "phone"
-                        ? "border-[#0077BE] dark:border-[#00A8E8]"
-                        : "border-gray-200 dark:border-slate-600"
+                        ? "border-brand-600 dark:border-aqua-500"
+                        : "border-ink-200 dark:border-ink-600"
                     } focus:outline-none`}
                     placeholder={t("quote.phoneNumber")}
                   />
@@ -338,8 +338,8 @@ export function QuotePage() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.25 }}
               >
-                <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-semibold mb-3">
-                  <MapPin className="w-5 h-5 text-[#0077BE]" />
+                <label className="flex items-center gap-2 text-ink-700 dark:text-ink-200 font-semibold mb-3">
+                  <MapPin className="w-5 h-5 text-brand-600" />
                   {t("quote.address")}
                 </label>
                 <input
@@ -349,10 +349,10 @@ export function QuotePage() {
                   onChange={handleChange}
                   onFocus={() => setFocusedField("address")}
                   onBlur={() => setFocusedField(null)}
-                  className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-slate-700 border-2 rounded-xl transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                  className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-ink-50 dark:bg-ink-700 border-2 rounded-xl transition-all duration-300 text-ink-900 dark:text-white placeholder-ink-400 dark:placeholder-ink-500 ${
                     focusedField === "address"
-                      ? "border-[#0077BE] dark:border-[#00A8E8]"
-                      : "border-gray-200 dark:border-slate-600"
+                      ? "border-brand-600 dark:border-aqua-500"
+                      : "border-ink-200 dark:border-ink-600"
                   } focus:outline-none`}
                   placeholder={t("quote.yourAddressYaonde")}
                 />
@@ -365,8 +365,8 @@ export function QuotePage() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
               >
-                <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-semibold mb-3">
-                  <Droplet className="w-5 h-5 text-[#0077BE]" />
+                <label className="flex items-center gap-2 text-ink-700 dark:text-ink-200 font-semibold mb-3">
+                  <Droplet className="w-5 h-5 text-brand-600" />
                   {t("quote.serviceTypeRequired")}
                 </label>
                 <select
@@ -376,12 +376,12 @@ export function QuotePage() {
                   onFocus={() => setFocusedField("serviceType")}
                   onBlur={() => setFocusedField(null)}
                   required
-                  className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-slate-700 border-2 rounded-xl transition-all duration-300 text-gray-900 dark:text-white cursor-pointer ${
+                  className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-ink-50 dark:bg-ink-700 border-2 rounded-xl transition-all duration-300 text-ink-900 dark:text-white cursor-pointer ${
                     fieldErrors.serviceType 
                       ? "border-red-500 dark:border-red-500" 
                       : focusedField === "serviceType"
-                      ? "border-[#0077BE] dark:border-[#00A8E8]"
-                      : "border-gray-200 dark:border-slate-600"
+                      ? "border-brand-600 dark:border-aqua-500"
+                      : "border-ink-200 dark:border-ink-600"
                   } focus:outline-none`}
                 >
                   <option value="">{t("quote.selectService")}</option>
@@ -410,8 +410,8 @@ export function QuotePage() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.35 }}
               >
-                <label className="flex items-center gap-2 text-gray-700 dark:text-gray-200 font-semibold mb-3">
-                  <MessageSquare className="w-5 h-5 text-[#0077BE]" />
+                <label className="flex items-center gap-2 text-ink-700 dark:text-ink-200 font-semibold mb-3">
+                  <MessageSquare className="w-5 h-5 text-brand-600" />
                   {t("quote.projectDetails")}
                 </label>
                 <textarea
@@ -421,10 +421,10 @@ export function QuotePage() {
                   onFocus={() => setFocusedField("message")}
                   onBlur={() => setFocusedField(null)}
                   rows={5}
-                  className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-slate-700 border-2 rounded-xl focus:outline-none transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none ${
+                  className={`w-full px-4 sm:px-6 py-3 sm:py-4 bg-ink-50 dark:bg-ink-700 border-2 rounded-xl focus:outline-none transition-all duration-300 text-ink-900 dark:text-white placeholder-ink-400 dark:placeholder-ink-500 resize-none ${
                     focusedField === "message"
-                      ? "border-[#0077BE] dark:border-[#00A8E8]"
-                      : "border-gray-200 dark:border-slate-600"
+                      ? "border-brand-600 dark:border-aqua-500"
+                      : "border-ink-200 dark:border-ink-600"
                   }`}
                   placeholder={t("quote.describeYourNeed")}
                 />
@@ -452,7 +452,7 @@ export function QuotePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
-                className="w-full bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-6 sm:px-8 py-4 sm:py-5 rounded-xl font-bold text-base sm:text-lg shadow-xl shadow-[#0077BE]/30 hover:shadow-2xl hover:shadow-[#0077BE]/40 transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-brand-600 to-aqua-500 text-white px-6 sm:px-8 py-4 sm:py-5 rounded-xl font-bold text-base sm:text-lg shadow-xl shadow-brand-600/30 hover:shadow-2xl hover:shadow-brand-600/40 transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {submitting ? (
                   <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
@@ -466,7 +466,7 @@ export function QuotePage() {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ delay: 0.45 }}
-                className="text-center text-gray-500 dark:text-gray-400 text-xs sm:text-sm"
+                className="text-center text-ink-500 dark:text-ink-400 text-xs sm:text-sm"
               >
                 {t("quote.formConsent")}
               </motion.p>
@@ -501,16 +501,16 @@ export function QuotePage() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
-                  className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-lg dark:shadow-xl dark:shadow-black/20 border border-gray-100 dark:border-slate-700 transition-all duration-300 text-center"
+                  className="bg-white dark:bg-ink-800 p-6 sm:p-8 rounded-2xl shadow-lg dark:shadow-xl dark:shadow-black/20 border border-ink-100 dark:border-ink-700 transition-all duration-300 text-center"
                 >
                   <motion.div 
                     whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                    className="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-br from-brand-600 to-aqua-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
                   >
                     <Icon className="w-6 sm:w-7 h-6 sm:h-7 text-white" />
                   </motion.div>
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 text-sm sm:text-base">{item.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">{item.text}</p>
+                  <h3 className="font-bold text-ink-900 dark:text-white mb-2 text-sm sm:text-base">{item.title}</h3>
+                  <p className="text-ink-600 dark:text-ink-400 text-xs sm:text-sm">{item.text}</p>
                 </motion.div>
               );
             })}

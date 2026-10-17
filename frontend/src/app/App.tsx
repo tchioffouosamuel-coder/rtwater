@@ -58,17 +58,17 @@ const QuotesAdminPage = lazy(() => import("./admin/pages/QuotesAdminPage").then(
 
 // Composant de chargement pour le Suspense
 const AdminLoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+  <div className="flex items-center justify-center min-h-screen bg-ink-100 dark:bg-ink-900">
     <div className="text-center">
-      <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-gray-600 dark:text-gray-400">Chargement...</p>
+      <div className="w-16 h-16 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-ink-600 dark:text-ink-400">Chargement...</p>
     </div>
   </div>
 );
 
 const PageLoadingFallback = () => (
   <div className="min-h-[60vh] flex items-center justify-center" aria-busy="true">
-    <div className="w-10 h-10 border-4 border-[#0077BE] border-t-transparent rounded-full animate-spin" />
+    <div className="w-10 h-10 border-4 border-brand-600 border-t-transparent rounded-full animate-spin" />
   </div>
 );
 
@@ -311,10 +311,10 @@ function Layout() {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-ink-950 flex flex-col transition-colors duration-300">
       <a
         href="#contenu"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-[#0077BE] focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-brand-600 focus:shadow-lg"
       >
         Aller au contenu
       </a>

@@ -16,7 +16,7 @@ import { fetchAnalytics, type AnalyticsData, type AnalyticsPeriod } from '../../
 const STATUS_ICON: Record<string, React.ReactNode> = {
   pending:   <Clock size={14} className="text-yellow-500" />,
   paid:      <CheckCircle size={14} className="text-green-500" />,
-  shipped:   <Truck size={14} className="text-blue-500" />,
+  shipped:   <Truck size={14} className="text-brand-500" />,
   delivered: <CheckCircle size={14} className="text-emerald-600" />,
   cancelled: <XCircle size={14} className="text-red-500" />,
 };
@@ -66,7 +66,7 @@ export const AdminDashboard: React.FC = () => {
           value: `${fmt(kpis.total_revenue)} XAF`,
           change: `${fmt(kpis.today_revenue)} XAF aujourd'hui`,
           pct: kpis.revenue_change_pct,
-          icon: DollarSign, color: 'bg-blue-50', iconColor: 'text-blue-600',
+          icon: DollarSign, color: 'bg-brand-50', iconColor: 'text-brand-600',
         },
         {
           label: 'Commandes',
@@ -111,9 +111,9 @@ export const AdminDashboard: React.FC = () => {
     <AdminLayout title="Tableau de bord" breadcrumbs={[{ label: 'Accueil' }]}>
 
       {/* Welcome */}
-      <div className="mb-8 p-6 bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 rounded-xl text-white">
+      <div className="mb-8 p-6 bg-gradient-to-r from-ink-700 via-ink-800 to-ink-900 rounded-xl text-white">
         <h2 className="text-2xl font-bold mb-1">Bienvenue, {user?.name}! 👋</h2>
-        <p className="text-slate-300 text-sm">
+        <p className="text-ink-300 text-sm">
           {kpis
             ? `${kpis.total_orders} commande(s) • CA : ${fmt(kpis.total_revenue)} XAF${kpis.critical_stock_count > 0 ? ` • ⚠️ ${kpis.critical_stock_count} produit(s) épuisé(s)` : ''}`
             : 'Chargement des données…'}
@@ -123,7 +123,7 @@ export const AdminDashboard: React.FC = () => {
       {/* Stats */}
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="animate-spin text-blue-500" size={36} />
+          <Loader2 className="animate-spin text-brand-500" size={36} />
         </div>
       ) : error ? (
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center text-red-700 mb-8">{error}</div>
@@ -134,18 +134,18 @@ export const AdminDashboard: React.FC = () => {
               const Icon = stat.icon;
               const isUp = stat.pct === null ? null : stat.pct >= 0;
               return (
-                <div key={i} className={`${stat.color} p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-all`}>
+                <div key={i} className={`${stat.color} p-6 rounded-xl border border-ink-200 hover:shadow-lg transition-all`}>
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <p className="text-slate-600 text-sm font-medium">{stat.label}</p>
-                      <p className="text-3xl font-bold text-slate-900 mt-2">{stat.value}</p>
+                      <p className="text-ink-600 text-sm font-medium">{stat.label}</p>
+                      <p className="text-3xl font-bold text-ink-900 mt-2">{stat.value}</p>
                     </div>
                     <div className={`p-3 rounded-lg ${stat.iconColor}`}><Icon size={24} /></div>
                   </div>
                   <div className="flex items-center gap-1">
                     {isUp === true  && <TrendingUp  size={16} className="text-green-600" />}
                     {isUp === false && <TrendingDown size={16} className="text-red-600"   />}
-                    <p className={`text-sm font-medium ${isUp === true ? 'text-green-600' : isUp === false ? 'text-red-600' : 'text-slate-600'}`}>
+                    <p className={`text-sm font-medium ${isUp === true ? 'text-green-600' : isUp === false ? 'text-red-600' : 'text-ink-600'}`}>
                       {stat.change}
                     </p>
                   </div>
@@ -157,13 +157,13 @@ export const AdminDashboard: React.FC = () => {
           {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Revenue trend */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <div className="bg-white rounded-xl border border-ink-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-slate-900">Tendance des revenus</h3>
+                <h3 className="text-lg font-semibold text-ink-900">Tendance des revenus</h3>
                 <select
                   value={period}
                   onChange={e => setPeriod(e.target.value as AnalyticsPeriod)}
-                  className="px-3 py-1 text-sm border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-3 py-1 text-sm border border-ink-200 rounded-lg outline-none focus:ring-2 focus:ring-brand-500"
                 >
                   <option value="week">Cette semaine</option>
                   <option value="month">Ce mois</option>
@@ -171,7 +171,7 @@ export const AdminDashboard: React.FC = () => {
                 </select>
               </div>
               {revenueTrend.length === 0 ? (
-                <p className="text-sm text-slate-400 text-center py-16">Aucune commande sur cette période.</p>
+                <p className="text-sm text-ink-400 text-center py-16">Aucune commande sur cette période.</p>
               ) : (
                 <ResponsiveContainer width="100%" height={280}>
                   <LineChart data={revenueTrend}>
@@ -193,10 +193,10 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             {/* Top products */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Produits les plus vendus</h3>
+            <div className="bg-white rounded-xl border border-ink-200 p-6">
+              <h3 className="text-lg font-semibold text-ink-900 mb-4">Produits les plus vendus</h3>
               {topProducts.length === 0 ? (
-                <p className="text-sm text-slate-400 text-center py-16">Aucune vente sur cette période.</p>
+                <p className="text-sm text-ink-400 text-center py-16">Aucune vente sur cette période.</p>
               ) : (
                 <ResponsiveContainer width="100%" height={280}>
                   <BarChart data={topProducts}>
@@ -217,28 +217,28 @@ export const AdminDashboard: React.FC = () => {
           {/* Bottom grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Recent orders */}
-            <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-slate-200">
-                <h3 className="text-lg font-semibold text-slate-900">Commandes récentes</h3>
+            <div className="lg:col-span-2 bg-white rounded-xl border border-ink-200 overflow-hidden">
+              <div className="px-6 py-4 border-b border-ink-200">
+                <h3 className="text-lg font-semibold text-ink-900">Commandes récentes</h3>
               </div>
               {recentOrders.length === 0 ? (
-                <p className="text-sm text-slate-400 text-center py-10">Aucune commande.</p>
+                <p className="text-sm text-ink-400 text-center py-10">Aucune commande.</p>
               ) : (
-                <div className="divide-y divide-slate-100">
+                <div className="divide-y divide-ink-100">
                   {recentOrders.map(order => (
-                    <div key={order.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition group">
+                    <div key={order.id} className="px-6 py-4 flex items-center justify-between hover:bg-ink-50 transition group">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">
+                        <div className="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 font-bold text-sm">
                           #{order.id}
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-slate-900">{order.customer}</p>
-                          <p className="text-xs text-slate-500">{order.created_at}</p>
+                          <p className="text-sm font-medium text-ink-900">{order.customer}</p>
+                          <p className="text-xs text-ink-500">{order.created_at}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-semibold text-slate-800">{fmt(order.total)} XAF</span>
-                        <span className="flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-slate-100 text-slate-700">
+                        <span className="text-sm font-semibold text-ink-800">{fmt(order.total)} XAF</span>
+                        <span className="flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-ink-100 text-ink-700">
                           {STATUS_ICON[order.status]}
                           {STATUS_LABEL[order.status] ?? order.status}
                         </span>
@@ -247,10 +247,10 @@ export const AdminDashboard: React.FC = () => {
                   ))}
                 </div>
               )}
-              <div className="px-6 py-3 bg-slate-50 border-t border-slate-200">
+              <div className="px-6 py-3 bg-ink-50 border-t border-ink-200">
                 <button
                   onClick={() => navigate('/admin/orders')}
-                  className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-2"
+                  className="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-2"
                 >
                   Voir toutes les commandes <ArrowRight size={14} />
                 </button>
@@ -260,10 +260,10 @@ export const AdminDashboard: React.FC = () => {
             {/* Right column */}
             <div className="space-y-6">
               {/* Payment methods */}
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4">Méthodes de paiement</h3>
+              <div className="bg-white rounded-xl border border-ink-200 p-6">
+                <h3 className="text-lg font-semibold text-ink-900 mb-4">Méthodes de paiement</h3>
                 {paymentMethods.every(p => p.value === 0) ? (
-                  <p className="text-sm text-slate-400 text-center py-6">Aucun paiement enregistré.</p>
+                  <p className="text-sm text-ink-400 text-center py-6">Aucun paiement enregistré.</p>
                 ) : (
                   <>
                     <ResponsiveContainer width="100%" height={180}>
@@ -282,9 +282,9 @@ export const AdminDashboard: React.FC = () => {
                         <div key={i} className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: m.color }} />
-                            <span className="text-slate-600">{m.name}</span>
+                            <span className="text-ink-600">{m.name}</span>
                           </div>
-                          <span className="font-semibold text-slate-900">{m.value}%</span>
+                          <span className="font-semibold text-ink-900">{m.value}%</span>
                         </div>
                       ))}
                     </div>
@@ -293,26 +293,26 @@ export const AdminDashboard: React.FC = () => {
               </div>
 
               {/* Quick actions */}
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4">Actions rapides</h3>
+              <div className="bg-white rounded-xl border border-ink-200 p-6">
+                <h3 className="text-lg font-semibold text-ink-900 mb-4">Actions rapides</h3>
                 <div className="space-y-3">
                   {quickActions.map((action, i) => {
                     const ActionIcon = action.icon;
                     const colors: Record<string, string> = {
-                      blue: 'bg-blue-100 text-blue-600 hover:bg-blue-50',
+                      blue: 'bg-brand-100 text-brand-600 hover:bg-brand-50',
                       green: 'bg-green-100 text-green-600 hover:bg-green-50',
                       amber: 'bg-amber-100 text-amber-600 hover:bg-amber-50',
                       purple: 'bg-purple-100 text-purple-600 hover:bg-purple-50',
                     };
                     return (
                       <button key={i} onClick={() => navigate(action.path)}
-                        className={`w-full p-3 text-left rounded-lg border border-slate-200 hover:border-slate-300 transition-all flex items-center gap-3 group ${colors[action.color].split(' ').slice(2).join(' ')}`}
+                        className={`w-full p-3 text-left rounded-lg border border-ink-200 hover:border-ink-300 transition-all flex items-center gap-3 group ${colors[action.color].split(' ').slice(2).join(' ')}`}
                       >
                         <div className={`p-2 rounded-lg ${colors[action.color].split(' ').slice(0, 2).join(' ')}`}>
                           <ActionIcon size={18} />
                         </div>
-                        <span className="text-sm font-medium text-slate-900">{action.label}</span>
-                        <ArrowRight size={14} className="ml-auto text-slate-400 group-hover:text-slate-600" />
+                        <span className="text-sm font-medium text-ink-900">{action.label}</span>
+                        <ArrowRight size={14} className="ml-auto text-ink-400 group-hover:text-ink-600" />
                       </button>
                     );
                   })}

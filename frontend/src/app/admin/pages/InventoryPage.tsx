@@ -146,7 +146,7 @@ export const InventoryPage: React.FC = () => {
   ), [products, searchTerm]);
 
   const stats = [
-    { label: 'Stock total', value: products.reduce((s, p) => s + p.stock, 0), icon: Warehouse, color: 'bg-blue-50', textColor: 'text-blue-600' },
+    { label: 'Stock total', value: products.reduce((s, p) => s + p.stock, 0), icon: Warehouse, color: 'bg-brand-50', textColor: 'text-brand-600' },
     { label: 'Alerte rupture', value: criticalItems.length, icon: AlertCircle, color: 'bg-red-50', textColor: 'text-red-600' },
     { label: 'Stock faible', value: lowStockItems.length, icon: TrendingDown, color: 'bg-amber-50', textColor: 'text-amber-600' },
     { label: 'Valeur stock', value: `${totalValue.toLocaleString('fr-FR')} XAF`, icon: TrendingUp, color: 'bg-green-50', textColor: 'text-green-600' },
@@ -174,11 +174,11 @@ export const InventoryPage: React.FC = () => {
         {stats.map((stat, i) => {
           const Icon = stat.icon;
           return (
-            <div key={i} className={`${stat.color} p-4 rounded-xl border border-slate-200 hover:shadow-md transition`}>
+            <div key={i} className={`${stat.color} p-4 rounded-xl border border-ink-200 hover:shadow-md transition`}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-600 mb-1">{stat.label}</p>
-                  <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
+                  <p className="text-sm text-ink-600 mb-1">{stat.label}</p>
+                  <p className="text-2xl font-bold text-ink-900">{stat.value}</p>
                 </div>
                 <Icon size={24} className={stat.textColor} />
               </div>
@@ -210,25 +210,25 @@ export const InventoryPage: React.FC = () => {
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="flex-1 relative">
-          <Search className="absolute left-4 top-3 text-slate-400" size={18} />
+          <Search className="absolute left-4 top-3 text-ink-400" size={18} />
           <input
             type="text"
             placeholder="Rechercher un article..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-white"
+            className="w-full pl-12 pr-4 py-2.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition bg-white"
           />
         </div>
         <button
           onClick={() => setShowMovementModal(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition font-medium whitespace-nowrap"
+          className="flex items-center gap-2 bg-brand-600 text-white px-6 py-2.5 rounded-lg hover:bg-brand-700 transition font-medium whitespace-nowrap"
         >
           <Plus size={18} />
           Nouveau mouvement
         </button>
         <button
           onClick={handleToggleHistory}
-          className="flex items-center gap-2 bg-slate-600 text-white px-6 py-2.5 rounded-lg hover:bg-slate-700 transition font-medium whitespace-nowrap"
+          className="flex items-center gap-2 bg-ink-600 text-white px-6 py-2.5 rounded-lg hover:bg-ink-700 transition font-medium whitespace-nowrap"
         >
           <History size={18} />
           Historique
@@ -236,33 +236,33 @@ export const InventoryPage: React.FC = () => {
       </div>
 
       {/* Inventory Table */}
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
+      <div className="bg-white rounded-xl border border-ink-200 overflow-hidden mb-6">
         {loadingProducts ? (
-          <div className="flex items-center justify-center py-16 gap-3 text-slate-400">
+          <div className="flex items-center justify-center py-16 gap-3 text-ink-400">
             <Loader2 size={24} className="animate-spin" />
             <span>Chargement du stock...</span>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50 border-b border-slate-200">
+              <thead className="bg-ink-50 border-b border-ink-200">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Article</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-slate-900">Prix de vente</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-slate-900">Quantité</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-slate-900">Valeur stock</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-slate-900">Statut</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-ink-900">Article</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-ink-900">Prix de vente</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-ink-900">Quantité</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-ink-900">Valeur stock</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-ink-900">Statut</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-ink-200">
                 {filteredProducts.map(p => {
                   const isCritical = p.stock === 0;
                   const isLow = p.stock > 0 && p.stock <= 5;
                   const value = p.stock * (p.price ?? 0);
                   return (
-                    <tr key={p.id} className={`hover:bg-slate-50 transition-colors ${isCritical ? 'bg-red-50' : isLow ? 'bg-amber-50' : ''}`}>
-                      <td className="px-6 py-4 text-sm font-medium text-slate-900">{p.name}</td>
-                      <td className="px-6 py-4 text-right text-sm text-slate-900">
+                    <tr key={p.id} className={`hover:bg-ink-50 transition-colors ${isCritical ? 'bg-red-50' : isLow ? 'bg-amber-50' : ''}`}>
+                      <td className="px-6 py-4 text-sm font-medium text-ink-900">{p.name}</td>
+                      <td className="px-6 py-4 text-right text-sm text-ink-900">
                         {Number(p.price).toLocaleString('fr-FR')} XAF
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -272,7 +272,7 @@ export const InventoryPage: React.FC = () => {
                           {p.stock}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right text-sm font-semibold text-slate-900">
+                      <td className="px-6 py-4 text-right text-sm font-semibold text-ink-900">
                         {value.toLocaleString('fr-FR')} XAF
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -297,8 +297,8 @@ export const InventoryPage: React.FC = () => {
             </table>
             {filteredProducts.length === 0 && (
               <div className="px-6 py-12 text-center">
-                <Warehouse size={48} className="mx-auto text-slate-300 mb-4" />
-                <p className="text-slate-500 font-medium">Aucun article trouvé</p>
+                <Warehouse size={48} className="mx-auto text-ink-300 mb-4" />
+                <p className="text-ink-500 font-medium">Aucun article trouvé</p>
               </div>
             )}
           </div>
@@ -307,51 +307,51 @@ export const InventoryPage: React.FC = () => {
 
       {/* Movement History */}
       {showHistory && (
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
-            <h3 className="text-lg font-semibold text-slate-900">Historique des mouvements</h3>
+        <div className="bg-white rounded-xl border border-ink-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-ink-200 bg-ink-50">
+            <h3 className="text-lg font-semibold text-ink-900">Historique des mouvements</h3>
           </div>
           {loadingMovements ? (
-            <div className="flex items-center justify-center py-12 gap-3 text-slate-400">
+            <div className="flex items-center justify-center py-12 gap-3 text-ink-400">
               <Loader2 size={20} className="animate-spin" />
               <span>Chargement...</span>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-50 border-b border-slate-200">
+                <thead className="bg-ink-50 border-b border-ink-200">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Date & Heure</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Article</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-slate-900">Type</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-slate-900">Quantité</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Raison</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-ink-900">Date & Heure</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-ink-900">Article</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-ink-900">Type</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-ink-900">Quantité</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-ink-900">Raison</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody className="divide-y divide-ink-200">
                   {movements.map(m => {
                     const dt = new Date(m.created_at);
                     const dateStr = dt.toLocaleDateString('fr-FR');
                     const timeStr = dt.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                     return (
-                      <tr key={m.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4 text-sm text-slate-600">
-                          {dateStr} <span className="text-slate-400">{timeStr}</span>
+                      <tr key={m.id} className="hover:bg-ink-50 transition-colors">
+                        <td className="px-6 py-4 text-sm text-ink-600">
+                          {dateStr} <span className="text-ink-400">{timeStr}</span>
                         </td>
-                        <td className="px-6 py-4 text-sm font-medium text-slate-900">{m.product?.name ?? '—'}</td>
+                        <td className="px-6 py-4 text-sm font-medium text-ink-900">{m.product?.name ?? '—'}</td>
                         <td className="px-6 py-4 text-center">
                           <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
                             m.type === 'in' ? 'bg-green-100 text-green-700' :
                             m.type === 'out' ? 'bg-red-100 text-red-700' :
-                            'bg-blue-100 text-blue-700'
+                            'bg-brand-100 text-brand-700'
                           }`}>
                             {m.type === 'in' ? <><ArrowDown size={12} /> Entrée</> :
                              m.type === 'out' ? <><ArrowUp size={12} /> Sortie</> :
                              'Ajustement'}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-center text-sm font-semibold text-slate-900">{m.quantity}</td>
-                        <td className="px-6 py-4 text-sm text-slate-600">{m.reason ?? '—'}</td>
+                        <td className="px-6 py-4 text-center text-sm font-semibold text-ink-900">{m.quantity}</td>
+                        <td className="px-6 py-4 text-sm text-ink-600">{m.reason ?? '—'}</td>
                       </tr>
                     );
                   })}
@@ -359,8 +359,8 @@ export const InventoryPage: React.FC = () => {
               </table>
               {movements.length === 0 && (
                 <div className="px-6 py-12 text-center">
-                  <History size={48} className="mx-auto text-slate-300 mb-4" />
-                  <p className="text-slate-500 font-medium">Aucun mouvement enregistré</p>
+                  <History size={48} className="mx-auto text-ink-300 mb-4" />
+                  <p className="text-ink-500 font-medium">Aucun mouvement enregistré</p>
                 </div>
               )}
             </div>
@@ -372,20 +372,20 @@ export const InventoryPage: React.FC = () => {
       {showMovementModal && (
         <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">Enregistrer un mouvement</h2>
-              <button onClick={resetModal} className="p-1 hover:bg-slate-100 rounded-lg transition">
+            <div className="px-6 py-4 border-b border-ink-200 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-ink-900">Enregistrer un mouvement</h2>
+              <button onClick={resetModal} className="p-1 hover:bg-ink-100 rounded-lg transition">
                 <X size={20} />
               </button>
             </div>
 
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Article *</label>
+                <label className="block text-sm font-medium text-ink-900 mb-2">Article *</label>
                 <select
                   value={selectedProductId}
                   onChange={e => setSelectedProductId(e.target.value)}
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
                 >
                   <option value="">Sélectionner un article</option>
                   {products.map(p => (
@@ -397,12 +397,12 @@ export const InventoryPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Type de mouvement *</label>
+                <label className="block text-sm font-medium text-ink-900 mb-2">Type de mouvement *</label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setMovementType('in')}
                     className={`flex items-center justify-center gap-2 p-3 rounded-lg border-2 font-medium transition ${
-                      movementType === 'in' ? 'border-green-600 bg-green-50 text-green-700' : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-green-300'
+                      movementType === 'in' ? 'border-green-600 bg-green-50 text-green-700' : 'border-ink-200 bg-ink-50 text-ink-600 hover:border-green-300'
                     }`}
                   >
                     <ArrowDown size={18} /> Entrée
@@ -410,7 +410,7 @@ export const InventoryPage: React.FC = () => {
                   <button
                     onClick={() => setMovementType('out')}
                     className={`flex items-center justify-center gap-2 p-3 rounded-lg border-2 font-medium transition ${
-                      movementType === 'out' ? 'border-red-600 bg-red-50 text-red-700' : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-red-300'
+                      movementType === 'out' ? 'border-red-600 bg-red-50 text-red-700' : 'border-ink-200 bg-ink-50 text-ink-600 hover:border-red-300'
                     }`}
                   >
                     <ArrowUp size={18} /> Sortie
@@ -419,41 +419,41 @@ export const InventoryPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Quantité *</label>
+                <label className="block text-sm font-medium text-ink-900 mb-2">Quantité *</label>
                 <input
                   type="number"
                   value={quantity}
                   onChange={e => setQuantity(e.target.value)}
                   placeholder="0"
                   min="1"
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Raison (optionnel)</label>
+                <label className="block text-sm font-medium text-ink-900 mb-2">Raison (optionnel)</label>
                 <textarea
                   value={reason}
                   onChange={e => setReason(e.target.value)}
                   placeholder="Ex: Réapprovisionnement, Vente POS, Retour client..."
                   rows={3}
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none resize-none"
                 />
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex gap-3">
+            <div className="px-6 py-4 border-t border-ink-200 bg-ink-50 flex gap-3">
               <button
                 onClick={resetModal}
                 disabled={saving}
-                className="flex-1 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100 transition text-slate-900 font-medium disabled:opacity-50"
+                className="flex-1 px-4 py-2 border border-ink-300 rounded-lg hover:bg-ink-100 transition text-ink-900 font-medium disabled:opacity-50"
               >
                 Annuler
               </button>
               <button
                 onClick={handleAddMovement}
                 disabled={saving}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-white font-medium disabled:opacity-50"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 rounded-lg transition text-white font-medium disabled:opacity-50"
               >
                 {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                 Enregistrer

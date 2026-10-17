@@ -36,10 +36,10 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="bg-white dark:bg-slate-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
+      className="bg-white dark:bg-ink-800 rounded-2xl border border-ink-200 dark:border-white/10 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-brand-500/5 hover:border-brand-300 dark:hover:border-brand-400/40 transition-all duration-300"
     >
       {/* Product Image */}
-      <div className="relative w-full h-64 bg-gradient-to-b from-blue-100 to-blue-50 dark:from-slate-700 dark:to-slate-600 overflow-hidden group">
+      <div className="relative w-full h-64 bg-gradient-to-b from-brand-100 to-aqua-50 dark:from-ink-800 dark:to-ink-900 overflow-hidden group">
         <div className="w-full h-full flex items-center justify-center text-6xl">
           {product.image}
         </div>
@@ -48,10 +48,10 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Product Info */}
       <div className="p-4">
-        <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-2">
+        <h3 className="font-semibold text-lg text-ink-900 dark:text-white mb-2">
           {product.name}
         </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+        <p className="text-sm text-ink-600 dark:text-ink-400 mb-3 line-clamp-2">
           {product.description}
         </p>
 
@@ -66,13 +66,13 @@ export function ProductCard({ product }: ProductCardProps) {
                   className={`${
                     i < Math.round(product.rating!)
                       ? "fill-yellow-400 text-yellow-400"
-                      : "text-gray-300"
+                      : "text-ink-300"
                   }`}
                 />
               ))}
             </div>
             {product.reviews && (
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs text-ink-500 dark:text-ink-400">
                 ({product.reviews})
               </span>
             )}
@@ -81,7 +81,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Price and Button */}
         <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-[#0077BE] dark:text-blue-400">
+          <span className="text-2xl font-bold text-brand-600 dark:text-aqua-400">
             ${product.price.toFixed(2)}
           </span>
           <motion.button
@@ -91,7 +91,7 @@ export function ProductCard({ product }: ProductCardProps) {
             className={`p-2 rounded-lg transition-all duration-300 ${
               isAdded
                 ? "bg-green-500 text-white"
-                : "bg-[#0077BE] text-white hover:bg-[#005a8d]"
+                : "bg-brand-600 text-white hover:bg-brand-700"
             }`}
           >
             {isAdded ? <Check size={20} /> : <ShoppingCart size={20} />}

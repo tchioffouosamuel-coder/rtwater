@@ -49,10 +49,10 @@ function TextField({
   label: string; value: string; onChange: (v: string) => void;
   placeholder?: string; mono?: boolean; multiline?: boolean; rows?: number;
 }) {
-  const cls = `w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition ${mono ? 'font-mono' : ''}`;
+  const cls = `w-full px-3 py-2 border border-ink-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-400 focus:border-transparent outline-none transition ${mono ? 'font-mono' : ''}`;
   return (
     <div className="space-y-1">
-      <label className="block text-xs font-medium text-slate-600">{label}</label>
+      <label className="block text-xs font-medium text-ink-600">{label}</label>
       {multiline ? (
         <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={rows} className={`${cls} resize-y`} />
       ) : (
@@ -65,19 +65,19 @@ function TextField({
 function ImageField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-slate-700">{label}</label>
+      <label className="block text-sm font-medium text-ink-700">{label}</label>
       <input
         type="text"
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder="https://..."
-        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none"
+        className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-brand-500 outline-none"
       />
       {value && (
         <img
           src={value}
           alt=""
-          className="h-24 w-full object-cover rounded-lg border border-slate-200"
+          className="h-24 w-full object-cover rounded-lg border border-ink-200"
           onError={e => (e.currentTarget.style.display = 'none')}
         />
       )}
@@ -92,12 +92,12 @@ function ArrayItemRow({
   label: string; children: React.ReactNode;
 }) {
   return (
-    <div className="border border-slate-200 rounded-lg overflow-hidden">
+    <div className="border border-ink-200 rounded-lg overflow-hidden">
       <div
-        className="flex items-center justify-between px-3 py-2 bg-slate-50 cursor-pointer select-none"
+        className="flex items-center justify-between px-3 py-2 bg-ink-50 cursor-pointer select-none"
         onClick={onToggle}
       >
-        <span className="text-sm font-medium text-slate-700">{label}</span>
+        <span className="text-sm font-medium text-ink-700">{label}</span>
         <div className="flex items-center gap-1">
           <button
             onClick={e => { e.stopPropagation(); onDelete(); }}
@@ -105,7 +105,7 @@ function ArrayItemRow({
           >
             <Trash2 size={13} />
           </button>
-          {expanded ? <ChevronUp size={14} className="text-slate-400" /> : <ChevronDown size={14} className="text-slate-400" />}
+          {expanded ? <ChevronUp size={14} className="text-ink-400" /> : <ChevronDown size={14} className="text-ink-400" />}
         </div>
       </div>
       {expanded && <div className="p-3 space-y-3">{children}</div>}
@@ -143,7 +143,7 @@ function ServicesEditor({ data, onChange }: { data: ServicesContent; onChange: (
   };
 
   const addItem = () => {
-    const newItem: ServiceItem = { icon: 'droplet', title: '', description: '', gradient: 'from-blue-500 to-cyan-500' };
+    const newItem: ServiceItem = { icon: 'droplet', title: '', description: '', gradient: 'from-brand-500 to-aqua-500' };
     onChange({ ...data, items: [...data.items, newItem] });
     setExpandedIdx(data.items.length);
   };
@@ -160,7 +160,7 @@ function ServicesEditor({ data, onChange }: { data: ServicesContent; onChange: (
       <TextField label="Description de section" value={data.sectionDescription} onChange={v => onChange({ ...data, sectionDescription: v })} multiline rows={2} />
       <ImageField label="Image de fond" value={data.backgroundImage} onChange={v => onChange({ ...data, backgroundImage: v })} />
       <div className="space-y-2">
-        <p className="text-sm font-medium text-slate-700">Services ({data.items.length})</p>
+        <p className="text-sm font-medium text-ink-700">Services ({data.items.length})</p>
         {data.items.map((item, idx) => (
           <ArrayItemRow
             key={idx}
@@ -171,23 +171,23 @@ function ServicesEditor({ data, onChange }: { data: ServicesContent; onChange: (
             label={item.title || `Service ${idx + 1}`}
           >
             <div className="space-y-1">
-              <label className="block text-xs font-medium text-slate-600">Icône</label>
+              <label className="block text-xs font-medium text-ink-600">Icône</label>
               <select
                 value={item.icon}
                 onChange={e => updateItem(idx, { ...item, icon: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm outline-none"
               >
                 {SERVICE_ICONS.map(ic => <option key={ic} value={ic}>{ic}</option>)}
               </select>
             </div>
             <TextField label="Titre" value={item.title} onChange={v => updateItem(idx, { ...item, title: v })} />
             <TextField label="Description" value={item.description} onChange={v => updateItem(idx, { ...item, description: v })} multiline rows={2} />
-            <TextField label="Gradient (ex: from-blue-500 to-cyan-500)" value={item.gradient} onChange={v => updateItem(idx, { ...item, gradient: v })} mono />
+            <TextField label="Gradient (ex: from-brand-500 to-aqua-500)" value={item.gradient} onChange={v => updateItem(idx, { ...item, gradient: v })} mono />
           </ArrayItemRow>
         ))}
         <button
           onClick={addItem}
-          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 transition w-full justify-center"
+          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-ink-300 hover:border-brand-400 hover:text-brand-600 transition w-full justify-center"
         >
           <Plus size={14} /> Ajouter un service
         </button>
@@ -221,7 +221,7 @@ function TrustEditor({ data, onChange }: { data: TrustContent; onChange: (d: Tru
       <TextField label="Titre (partie colorée)" value={data.sectionTitleHighlight} onChange={v => onChange({ ...data, sectionTitleHighlight: v })} />
       <TextField label="Description" value={data.sectionDescription} onChange={v => onChange({ ...data, sectionDescription: v })} multiline rows={2} />
       <div className="space-y-2">
-        <p className="text-sm font-medium text-slate-700">Statistiques ({data.stats.length})</p>
+        <p className="text-sm font-medium text-ink-700">Statistiques ({data.stats.length})</p>
         {data.stats.map((stat, idx) => (
           <ArrayItemRow
             key={idx}
@@ -241,7 +241,7 @@ function TrustEditor({ data, onChange }: { data: TrustContent; onChange: (d: Tru
         ))}
         <button
           onClick={addStat}
-          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 transition w-full justify-center"
+          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-ink-300 hover:border-brand-400 hover:text-brand-600 transition w-full justify-center"
         >
           <Plus size={14} /> Ajouter une statistique
         </button>
@@ -267,7 +267,7 @@ function CtaEditor({ data, onChange }: { data: CtaContent; onChange: (d: CtaCont
         <TextField label="Bouton Services" value={data.servicesButtonLabel} onChange={v => onChange({ ...data, servicesButtonLabel: v })} />
       </div>
       <div className="space-y-2">
-        <p className="text-xs font-medium text-slate-600">Indicateurs de confiance (3 items)</p>
+        <p className="text-xs font-medium text-ink-600">Indicateurs de confiance (3 items)</p>
         {[0, 1, 2].map(idx => (
           <TextField
             key={idx}
@@ -293,12 +293,12 @@ function HomeEditor({ data, onChange }: { data: HomeContent; onChange: (d: HomeC
 
   return (
     <div>
-      <div className="flex gap-1 mb-6 border-b border-slate-200">
+      <div className="flex gap-1 mb-6 border-b border-ink-200">
         {tabs.map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition -mb-px ${tab === t.key ? 'bg-white border border-slate-200 border-b-white text-blue-700' : 'text-slate-600 hover:text-slate-900'}`}
+            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition -mb-px ${tab === t.key ? 'bg-white border border-ink-200 border-b-white text-brand-700' : 'text-ink-600 hover:text-ink-900'}`}
           >
             {t.label}
           </button>
@@ -330,7 +330,7 @@ function AboutEditor({ data, onChange }: { data: AboutContent; onChange: (d: Abo
     onChange({ ...data, values: data.values.map((v, i) => i === idx ? val : v) });
   };
   const addValue = () => {
-    onChange({ ...data, values: [...data.values, { icon: 'droplet', title: '', description: '', gradient: 'from-blue-500 to-cyan-500' }] });
+    onChange({ ...data, values: [...data.values, { icon: 'droplet', title: '', description: '', gradient: 'from-brand-500 to-aqua-500' }] });
     setExpandedVal(data.values.length);
   };
   const removeValue = (idx: number) => {
@@ -356,12 +356,12 @@ function AboutEditor({ data, onChange }: { data: AboutContent; onChange: (d: Abo
 
   return (
     <div>
-      <div className="flex flex-wrap gap-1 mb-6 border-b border-slate-200">
+      <div className="flex flex-wrap gap-1 mb-6 border-b border-ink-200">
         {tabs.map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition -mb-px ${tab === t.key ? 'bg-white border border-slate-200 border-b-white text-blue-700' : 'text-slate-600 hover:text-slate-900'}`}
+            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition -mb-px ${tab === t.key ? 'bg-white border border-ink-200 border-b-white text-brand-700' : 'text-ink-600 hover:text-ink-900'}`}
           >
             {t.label}
           </button>
@@ -389,7 +389,7 @@ function AboutEditor({ data, onChange }: { data: AboutContent; onChange: (d: Abo
       {tab === 'stats' && (
         <div className="space-y-3">
           {data.stats.map((stat, idx) => (
-            <div key={idx} className="grid grid-cols-2 gap-3 p-3 border border-slate-200 rounded-lg">
+            <div key={idx} className="grid grid-cols-2 gap-3 p-3 border border-ink-200 rounded-lg">
               <TextField label="Valeur" value={stat.value} onChange={v => updateStat(idx, { ...stat, value: v })} placeholder="15+" />
               <TextField label="Label" value={stat.label} onChange={v => updateStat(idx, { ...stat, label: v })} />
             </div>
@@ -414,11 +414,11 @@ function AboutEditor({ data, onChange }: { data: AboutContent; onChange: (d: Abo
                 label={val.title || `Valeur ${idx + 1}`}
               >
                 <div className="space-y-1">
-                  <label className="block text-xs font-medium text-slate-600">Icône</label>
+                  <label className="block text-xs font-medium text-ink-600">Icône</label>
                   <select
                     value={val.icon}
                     onChange={e => updateValue(idx, { ...val, icon: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none"
+                    className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm outline-none"
                   >
                     {['droplet', 'zap', 'award', 'users', 'target', 'globe', 'wrench', 'shield'].map(ic => (
                       <option key={ic} value={ic}>{ic}</option>
@@ -432,7 +432,7 @@ function AboutEditor({ data, onChange }: { data: AboutContent; onChange: (d: Abo
             ))}
             <button
               onClick={addValue}
-              className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 transition w-full justify-center"
+              className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-ink-300 hover:border-brand-400 hover:text-brand-600 transition w-full justify-center"
             >
               <Plus size={14} /> Ajouter une valeur
             </button>
@@ -464,7 +464,7 @@ function AboutEditor({ data, onChange }: { data: AboutContent; onChange: (d: Abo
             ))}
             <button
               onClick={addTimeline}
-              className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 transition w-full justify-center"
+              className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-ink-300 hover:border-brand-400 hover:text-brand-600 transition w-full justify-center"
             >
               <Plus size={14} /> Ajouter un événement
             </button>
@@ -512,7 +512,7 @@ function GalleryEditor({ data, onChange }: { data: GalleryContent; onChange: (d:
       <TextField label="Titre (partie colorée)" value={data.titleHighlight} onChange={v => onChange({ ...data, titleHighlight: v })} />
       <TextField label="Description" value={data.description} onChange={v => onChange({ ...data, description: v })} multiline rows={2} />
       <div className="space-y-2">
-        <p className="text-sm font-medium text-slate-700">Images ({data.images.length})</p>
+        <p className="text-sm font-medium text-ink-700">Images ({data.images.length})</p>
         {data.images.map((img, idx) => (
           <ArrayItemRow
             key={idx}
@@ -525,11 +525,11 @@ function GalleryEditor({ data, onChange }: { data: GalleryContent; onChange: (d:
             <ImageField label="URL de l'image" value={img.url} onChange={v => updateImage(idx, { ...img, url: v })} />
             <TextField label="Titre" value={img.title} onChange={v => updateImage(idx, { ...img, title: v })} />
             <div className="space-y-1">
-              <label className="block text-xs font-medium text-slate-600">Catégorie</label>
+              <label className="block text-xs font-medium text-ink-600">Catégorie</label>
               <select
                 value={img.category}
                 onChange={e => updateImage(idx, { ...img, category: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm outline-none"
               >
                 {GALLERY_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
               </select>
@@ -538,7 +538,7 @@ function GalleryEditor({ data, onChange }: { data: GalleryContent; onChange: (d:
         ))}
         <button
           onClick={addImage}
-          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 transition w-full justify-center"
+          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-ink-300 hover:border-brand-400 hover:text-brand-600 transition w-full justify-center"
         >
           <Plus size={14} /> Ajouter une image
         </button>
@@ -571,7 +571,7 @@ function HeaderEditor({ data, onChange }: { data: HeaderContent; onChange: (d: H
         <TextField label="Tagline" value={data.companyTagline} onChange={v => onChange({ ...data, companyTagline: v })} />
       </div>
       <div className="space-y-2">
-        <p className="text-sm font-medium text-slate-700">Liens de navigation ({data.navLinks.length})</p>
+        <p className="text-sm font-medium text-ink-700">Liens de navigation ({data.navLinks.length})</p>
         {data.navLinks.map((link, idx) => (
           <ArrayItemRow
             key={idx}
@@ -589,7 +589,7 @@ function HeaderEditor({ data, onChange }: { data: HeaderContent; onChange: (d: H
         ))}
         <button
           onClick={addLink}
-          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 transition w-full justify-center"
+          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-ink-300 hover:border-brand-400 hover:text-brand-600 transition w-full justify-center"
         >
           <Plus size={14} /> Ajouter un lien
         </button>
@@ -634,14 +634,14 @@ function FooterEditor({ data, onChange }: { data: FooterContent; onChange: (d: F
         <TextField label="Email" value={data.email} onChange={v => onChange({ ...data, email: v })} />
       </div>
       <div className="space-y-2">
-        <p className="text-sm font-medium text-slate-700">Liens services ({data.serviceLinks.length})</p>
+        <p className="text-sm font-medium text-ink-700">Liens services ({data.serviceLinks.length})</p>
         {data.serviceLinks.map((link, idx) => (
           <div key={idx} className="flex gap-2 items-center">
             <input
               type="text"
               value={link}
               onChange={e => updateServiceLink(idx, e.target.value)}
-              className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none"
+              className="flex-1 px-3 py-2 border border-ink-200 rounded-lg text-sm outline-none"
               placeholder="Nom du service"
             />
             <button onClick={() => removeServiceLink(idx)} className="p-1.5 text-red-400 hover:text-red-600 transition">
@@ -651,13 +651,13 @@ function FooterEditor({ data, onChange }: { data: FooterContent; onChange: (d: F
         ))}
         <button
           onClick={addServiceLink}
-          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 transition w-full justify-center"
+          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-ink-300 hover:border-brand-400 hover:text-brand-600 transition w-full justify-center"
         >
           <Plus size={14} /> Ajouter un service
         </button>
       </div>
       <div className="space-y-2">
-        <p className="text-sm font-medium text-slate-700">Liens réseaux sociaux ({data.socialLinks.length})</p>
+        <p className="text-sm font-medium text-ink-700">Liens réseaux sociaux ({data.socialLinks.length})</p>
         {data.socialLinks.map((social, idx) => (
           <ArrayItemRow
             key={idx}
@@ -668,11 +668,11 @@ function FooterEditor({ data, onChange }: { data: FooterContent; onChange: (d: F
             label={social.platform || `Social ${idx + 1}`}
           >
             <div className="space-y-1">
-              <label className="block text-xs font-medium text-slate-600">Plateforme</label>
+              <label className="block text-xs font-medium text-ink-600">Plateforme</label>
               <select
                 value={social.platform}
                 onChange={e => updateSocial(idx, { ...social, platform: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none"
+                className="w-full px-3 py-2 border border-ink-200 rounded-lg text-sm outline-none"
               >
                 {['facebook', 'twitter', 'linkedin', 'instagram', 'youtube', 'tiktok'].map(p => (
                   <option key={p} value={p}>{p}</option>
@@ -684,7 +684,7 @@ function FooterEditor({ data, onChange }: { data: FooterContent; onChange: (d: F
         ))}
         <button
           onClick={addSocial}
-          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 transition w-full justify-center"
+          className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border border-dashed border-ink-300 hover:border-brand-400 hover:text-brand-600 transition w-full justify-center"
         >
           <Plus size={14} /> Ajouter un réseau
         </button>
@@ -710,7 +710,7 @@ const SECTIONS: SectionConfig[] = [
     title: 'Accueil',
     description: 'Hero, services, chiffres clés et appel à action',
     icon: Layout,
-    color: 'from-blue-500 to-cyan-500',
+    color: 'from-brand-500 to-aqua-500',
     defaultContent: DEFAULT_HOME,
   },
   {
@@ -742,7 +742,7 @@ const SECTIONS: SectionConfig[] = [
     title: 'En-tête',
     description: 'Logo, nom de la société et navigation',
     icon: Globe,
-    color: 'from-sky-500 to-blue-500',
+    color: 'from-aqua-500 to-brand-500',
     defaultContent: DEFAULT_HEADER,
   },
   {
@@ -750,7 +750,7 @@ const SECTIONS: SectionConfig[] = [
     title: 'Pied de page',
     description: 'Logo, tagline, services, contact et réseaux sociaux',
     icon: ImageIcon,
-    color: 'from-slate-500 to-slate-700',
+    color: 'from-ink-500 to-ink-700',
     defaultContent: DEFAULT_FOOTER,
   },
 ];
@@ -886,9 +886,9 @@ export const PagesManagerPage: React.FC = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-          <p className="text-sm text-blue-600 font-medium">Total sections</p>
-          <p className="text-2xl font-bold text-blue-900 mt-2">{SECTIONS.length}</p>
+        <div className="bg-brand-50 border border-brand-200 rounded-xl p-4">
+          <p className="text-sm text-brand-600 font-medium">Total sections</p>
+          <p className="text-2xl font-bold text-brand-900 mt-2">{SECTIONS.length}</p>
         </div>
         <div className="bg-green-50 border border-green-200 rounded-xl p-4">
           <p className="text-sm text-green-600 font-medium">Publiées</p>
@@ -910,7 +910,7 @@ export const PagesManagerPage: React.FC = () => {
           const SectionIcon = section.icon;
           const apiPage = pages.find(p => p.slug === section.slug);
           return (
-            <div key={section.slug} className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow">
+            <div key={section.slug} className="bg-white rounded-2xl border border-ink-200 overflow-hidden hover:shadow-lg transition-shadow">
               <div className={`h-2 bg-gradient-to-r ${section.color}`}></div>
               <div className="p-6">
                 <div className="flex items-start gap-4 mb-4">
@@ -919,20 +919,20 @@ export const PagesManagerPage: React.FC = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-bold text-slate-900">{section.title}</h3>
+                      <h3 className="font-bold text-ink-900">{section.title}</h3>
                       {apiPage ? (
                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${apiPage.is_published ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
                           {apiPage.is_published ? 'Publié' : 'Brouillon'}
                         </span>
                       ) : (
-                        <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-slate-100 text-slate-500">Non créé</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-ink-100 text-ink-500">Non créé</span>
                       )}
                     </div>
-                    <p className="text-sm text-slate-500">{section.description}</p>
+                    <p className="text-sm text-ink-500">{section.description}</p>
                   </div>
                 </div>
                 {apiPage && (
-                  <p className="text-xs text-slate-400 mb-4">
+                  <p className="text-xs text-ink-400 mb-4">
                     Modifié le {new Date(apiPage.updated_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </p>
                 )}
@@ -952,18 +952,18 @@ export const PagesManagerPage: React.FC = () => {
 
       {/* Full-screen Editor Overlay */}
       {editingSection && (
-        <div className="fixed inset-0 z-50 bg-slate-100 flex flex-col overflow-hidden">
+        <div className="fixed inset-0 z-50 bg-ink-100 flex flex-col overflow-hidden">
           {/* Editor Header */}
-          <div className="flex-shrink-0 bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-4 shadow-sm">
-            <button onClick={closeEditor} className="p-1.5 hover:bg-slate-100 rounded-lg transition text-slate-500">
+          <div className="flex-shrink-0 bg-white border-b border-ink-200 px-6 py-3 flex items-center gap-4 shadow-sm">
+            <button onClick={closeEditor} className="p-1.5 hover:bg-ink-100 rounded-lg transition text-ink-500">
               <X size={20} />
             </button>
             <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${editingSection.color} flex items-center justify-center`}>
               {React.createElement(editingSection.icon, { className: 'w-4 h-4 text-white' })}
             </div>
             <div className="flex-1 min-w-0">
-              <h2 className="font-bold text-slate-900 text-sm">{editingSection.title}</h2>
-              <p className="text-xs text-slate-400 truncate">{editingSection.description}</p>
+              <h2 className="font-bold text-ink-900 text-sm">{editingSection.title}</h2>
+              <p className="text-xs text-ink-400 truncate">{editingSection.description}</p>
             </div>
             {editorError && (
               <div className="flex items-center gap-1.5 text-red-600 text-sm bg-red-50 px-3 py-1.5 rounded-lg border border-red-200">
@@ -985,12 +985,12 @@ export const PagesManagerPage: React.FC = () => {
           {/* Editor Body */}
           <div className="flex-1 overflow-y-auto p-6">
             {editorLoading ? (
-              <div className="flex items-center justify-center py-24 gap-3 text-slate-400">
+              <div className="flex items-center justify-center py-24 gap-3 text-ink-400">
                 <Loader2 size={28} className="animate-spin" />
                 <span className="text-base">Chargement du contenu...</span>
               </div>
             ) : (
-              <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+              <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-ink-200 p-6 sm:p-8">
                 {renderEditor()}
               </div>
             )}

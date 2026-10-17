@@ -25,7 +25,7 @@ interface ApiOrder {
 const STATUS_CONFIG: Record<OrderStatus, { label: string; classes: string }> = {
   pending:   { label: "En attente",  classes: "bg-amber-100 text-amber-800 border border-amber-200" },
   paid:      { label: "Payée",       classes: "bg-emerald-100 text-emerald-800 border border-emerald-200" },
-  shipped:   { label: "Expédiée",    classes: "bg-blue-100 text-blue-800 border border-blue-200" },
+  shipped:   { label: "Expédiée",    classes: "bg-brand-100 text-brand-800 border border-brand-200" },
   delivered: { label: "Livrée",      classes: "bg-green-100 text-green-700 border border-green-200" },
   cancelled: { label: "Annulée",     classes: "bg-red-100 text-red-700 border border-red-200" },
 };
@@ -125,7 +125,7 @@ export const ReceiptsPage: React.FC = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {/* Total commandes */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-2xl p-5 text-white shadow-lg shadow-[#0077BE]/20">
+        <div className="relative overflow-hidden bg-gradient-to-br from-brand-600 to-aqua-500 rounded-2xl p-5 text-white shadow-lg shadow-brand-600/20">
           <div className="flex items-center justify-between mb-3">
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
               <ShoppingBag size={20} />
@@ -174,22 +174,22 @@ export const ReceiptsPage: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-6">
+      <div className="bg-white rounded-2xl border border-ink-100 shadow-sm p-4 mb-6">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" size={16} />
             <input
               type="text"
               placeholder="Rechercher par client, email ou #ID..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE]/30 focus:border-[#0077BE] text-sm"
+              className="w-full pl-9 pr-4 py-2.5 border border-ink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-600/30 focus:border-brand-600 text-sm"
             />
           </div>
           <select
             value={period}
             onChange={e => { setPeriod(e.target.value as any); setCurrentPage(1); }}
-            className="px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE]/30 focus:border-[#0077BE] text-sm bg-white font-medium"
+            className="px-4 py-2.5 border border-ink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-600/30 focus:border-brand-600 text-sm bg-white font-medium"
           >
             <option value="all">Tout</option>
             <option value="day">Aujourd'hui</option>
@@ -198,7 +198,7 @@ export const ReceiptsPage: React.FC = () => {
           </select>
           <button
             onClick={loadOrders}
-            className="px-4 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 text-sm font-medium flex items-center gap-2 text-slate-600 transition"
+            className="px-4 py-2.5 border border-ink-200 rounded-xl hover:bg-ink-50 text-sm font-medium flex items-center gap-2 text-ink-600 transition"
           >
             <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
             Actualiser
@@ -207,14 +207,14 @@ export const ReceiptsPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#0077BE]/10 rounded-lg flex items-center justify-center">
-            <FileText size={16} className="text-[#0077BE]" />
+      <div className="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
+        <div className="px-5 py-4 border-b border-ink-100 flex items-center gap-3">
+          <div className="w-8 h-8 bg-brand-600/10 rounded-lg flex items-center justify-center">
+            <FileText size={16} className="text-brand-600" />
           </div>
-          <h3 className="font-semibold text-slate-900">Historique des reçus</h3>
+          <h3 className="font-semibold text-ink-900">Historique des reçus</h3>
           {pagination && (
-            <span className="ml-auto text-xs text-slate-400 bg-slate-50 px-2.5 py-1 rounded-full">
+            <span className="ml-auto text-xs text-ink-400 bg-ink-50 px-2.5 py-1 rounded-full">
               {pagination.total} commandes
             </span>
           )}
@@ -223,48 +223,48 @@ export const ReceiptsPage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">#ID</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Client</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Date</th>
-                <th className="px-5 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide">Montant</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Statut</th>
-                <th className="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide">Actions</th>
+              <tr className="bg-ink-50 border-b border-ink-100">
+                <th className="px-5 py-3 text-left text-xs font-semibold text-ink-500 uppercase tracking-wide">#ID</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold text-ink-500 uppercase tracking-wide">Client</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold text-ink-500 uppercase tracking-wide">Date</th>
+                <th className="px-5 py-3 text-right text-xs font-semibold text-ink-500 uppercase tracking-wide">Montant</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold text-ink-500 uppercase tracking-wide">Statut</th>
+                <th className="px-5 py-3 text-center text-xs font-semibold text-ink-500 uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-ink-50">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-slate-400">
-                    <div className="w-8 h-8 border-2 border-[#0077BE] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                  <td colSpan={6} className="px-5 py-12 text-center text-ink-400">
+                    <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     Chargement...
                   </td>
                 </tr>
               ) : orders.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-5 py-12 text-center">
-                    <FileText size={36} className="mx-auto text-slate-200 mb-3" />
-                    <p className="text-slate-400 font-medium">Aucune commande trouvée</p>
-                    <p className="text-slate-300 text-sm mt-1">Essayez de modifier les filtres</p>
+                    <FileText size={36} className="mx-auto text-ink-200 mb-3" />
+                    <p className="text-ink-400 font-medium">Aucune commande trouvée</p>
+                    <p className="text-ink-300 text-sm mt-1">Essayez de modifier les filtres</p>
                   </td>
                 </tr>
               ) : orders.map(order => {
-                const statusCfg = STATUS_CONFIG[order.status] ?? { label: order.status, classes: "bg-slate-100 text-slate-600 border border-slate-200" };
+                const statusCfg = STATUS_CONFIG[order.status] ?? { label: order.status, classes: "bg-ink-100 text-ink-600 border border-ink-200" };
                 return (
-                  <tr key={order.id} className="hover:bg-slate-50/50 transition-colors group">
-                    <td className="px-5 py-3.5 text-sm font-bold text-[#0077BE]">
+                  <tr key={order.id} className="hover:bg-ink-50/50 transition-colors group">
+                    <td className="px-5 py-3.5 text-sm font-bold text-brand-600">
                       #{String(order.id).padStart(5, "0")}
                     </td>
                     <td className="px-5 py-3.5 text-sm">
-                      <div className="font-medium text-slate-900">{order.user?.name ?? "Client invité"}</div>
+                      <div className="font-medium text-ink-900">{order.user?.name ?? "Client invité"}</div>
                       {order.user?.email && (
-                        <div className="text-xs text-slate-400 mt-0.5">{order.user.email}</div>
+                        <div className="text-xs text-ink-400 mt-0.5">{order.user.email}</div>
                       )}
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-slate-500">
+                    <td className="px-5 py-3.5 text-sm text-ink-500">
                       {new Date(order.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
-                    <td className="px-5 py-3.5 text-sm font-semibold text-slate-900 text-right">
+                    <td className="px-5 py-3.5 text-sm font-semibold text-ink-900 text-right">
                       {parseFloat(String(order.total)).toLocaleString("fr-FR")} XAF
                     </td>
                     <td className="px-5 py-3.5">
@@ -276,7 +276,7 @@ export const ReceiptsPage: React.FC = () => {
                       <div className="flex items-center justify-center gap-1">
                         <button
                           onClick={() => setSelectedOrder(order)}
-                          className="p-1.5 text-slate-400 hover:text-[#0077BE] hover:bg-[#0077BE]/10 rounded-lg transition"
+                          className="p-1.5 text-ink-400 hover:text-brand-600 hover:bg-brand-600/10 rounded-lg transition"
                           title="Voir les détails"
                         >
                           <Eye size={16} />
@@ -284,7 +284,7 @@ export const ReceiptsPage: React.FC = () => {
                         <button
                           onClick={() => handleDownload(order)}
                           disabled={downloadingId === order.id}
-                          className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition disabled:opacity-50"
+                          className="p-1.5 text-ink-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition disabled:opacity-50"
                           title="Télécharger PDF"
                         >
                           {downloadingId === order.id ? (
@@ -304,20 +304,20 @@ export const ReceiptsPage: React.FC = () => {
 
         {/* Pagination */}
         {pagination && pagination.last_page > 1 && (
-          <div className="px-5 py-3.5 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-sm text-slate-500">
-            <span>Page <strong className="text-slate-700">{pagination.current_page}</strong> / {pagination.last_page} — {pagination.total} commandes</span>
+          <div className="px-5 py-3.5 border-t border-ink-100 bg-ink-50/50 flex items-center justify-between text-sm text-ink-500">
+            <span>Page <strong className="text-ink-700">{pagination.current_page}</strong> / {pagination.last_page} — {pagination.total} commandes</span>
             <div className="flex gap-2">
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40 transition text-xs font-medium"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-ink-200 hover:bg-white disabled:opacity-40 transition text-xs font-medium"
               >
                 <ChevronLeft size={14} /> Précédent
               </button>
               <button
                 onClick={() => setCurrentPage(p => Math.min(pagination.last_page, p + 1))}
                 disabled={currentPage === pagination.last_page}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40 transition text-xs font-medium"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-ink-200 hover:bg-white disabled:opacity-40 transition text-xs font-medium"
               >
                 Suivant <ChevronRight size={14} />
               </button>
@@ -331,23 +331,23 @@ export const ReceiptsPage: React.FC = () => {
         <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+            <div className="sticky top-0 bg-white border-b border-ink-100 px-6 py-4 flex items-center justify-between rounded-t-2xl">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-brand-600 to-aqua-500 rounded-xl flex items-center justify-center">
                   <FileText size={18} className="text-white" />
                 </div>
                 <div>
-                  <h2 className="font-bold text-slate-900">
+                  <h2 className="font-bold text-ink-900">
                     Commande #{String(selectedOrder.id).padStart(5, "0")}
                   </h2>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-ink-400">
                     {new Date(selectedOrder.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedOrder(null)}
-                className="p-2 hover:bg-slate-100 rounded-xl transition text-slate-400 hover:text-slate-700"
+                className="p-2 hover:bg-ink-100 rounded-xl transition text-ink-400 hover:text-ink-700"
               >
                 <X size={18} />
               </button>
@@ -362,26 +362,26 @@ export const ReceiptsPage: React.FC = () => {
               </div>
 
               {/* Client info */}
-              <div className="bg-slate-50 rounded-xl p-4">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Informations client</p>
+              <div className="bg-ink-50 rounded-xl p-4">
+                <p className="text-xs font-semibold text-ink-400 uppercase tracking-wide mb-3">Informations client</p>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
-                    <p className="text-slate-400 text-xs mb-0.5">Nom</p>
-                    <p className="font-semibold text-slate-900">{selectedOrder.user?.name ?? "Client invité"}</p>
+                    <p className="text-ink-400 text-xs mb-0.5">Nom</p>
+                    <p className="font-semibold text-ink-900">{selectedOrder.user?.name ?? "Client invité"}</p>
                   </div>
                   <div>
-                    <p className="text-slate-400 text-xs mb-0.5">Email</p>
-                    <p className="font-medium text-slate-700">{selectedOrder.user?.email ?? "—"}</p>
+                    <p className="text-ink-400 text-xs mb-0.5">Email</p>
+                    <p className="font-medium text-ink-700">{selectedOrder.user?.email ?? "—"}</p>
                   </div>
                   {selectedOrder.user?.phone && (
                     <div>
-                      <p className="text-slate-400 text-xs mb-0.5">Téléphone</p>
-                      <p className="font-medium text-slate-700">{selectedOrder.user.phone}</p>
+                      <p className="text-ink-400 text-xs mb-0.5">Téléphone</p>
+                      <p className="font-medium text-ink-700">{selectedOrder.user.phone}</p>
                     </div>
                   )}
                   <div className={selectedOrder.user?.phone ? "" : "col-span-2"}>
-                    <p className="text-slate-400 text-xs mb-0.5">Adresse</p>
-                    <p className="font-medium text-slate-700">{selectedOrder.address || "Non spécifiée"}</p>
+                    <p className="text-ink-400 text-xs mb-0.5">Adresse</p>
+                    <p className="font-medium text-ink-700">{selectedOrder.address || "Non spécifiée"}</p>
                   </div>
                 </div>
               </div>
@@ -389,24 +389,24 @@ export const ReceiptsPage: React.FC = () => {
               {/* Items */}
               {selectedOrder.items && selectedOrder.items.length > 0 && (
                 <div>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Articles commandés</p>
-                  <div className="border border-slate-100 rounded-xl overflow-hidden">
+                  <p className="text-xs font-semibold text-ink-400 uppercase tracking-wide mb-3">Articles commandés</p>
+                  <div className="border border-ink-100 rounded-xl overflow-hidden">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="bg-slate-50 border-b border-slate-100">
-                          <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500">Article</th>
-                          <th className="px-4 py-2.5 text-center text-xs font-semibold text-slate-500">Qté</th>
-                          <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500">Prix unit.</th>
-                          <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500">Total</th>
+                        <tr className="bg-ink-50 border-b border-ink-100">
+                          <th className="px-4 py-2.5 text-left text-xs font-semibold text-ink-500">Article</th>
+                          <th className="px-4 py-2.5 text-center text-xs font-semibold text-ink-500">Qté</th>
+                          <th className="px-4 py-2.5 text-right text-xs font-semibold text-ink-500">Prix unit.</th>
+                          <th className="px-4 py-2.5 text-right text-xs font-semibold text-ink-500">Total</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-50">
+                      <tbody className="divide-y divide-ink-50">
                         {selectedOrder.items.map((item, idx) => (
-                          <tr key={idx} className="hover:bg-slate-50/50">
-                            <td className="px-4 py-2.5 font-medium text-slate-900">{item.product?.name ?? "Produit supprimé"}</td>
-                            <td className="px-4 py-2.5 text-center text-slate-600">{item.quantity}</td>
-                            <td className="px-4 py-2.5 text-right text-slate-600">{parseFloat(String(item.price)).toLocaleString("fr-FR")} XAF</td>
-                            <td className="px-4 py-2.5 text-right font-semibold text-slate-900">{(item.quantity * parseFloat(String(item.price))).toLocaleString("fr-FR")} XAF</td>
+                          <tr key={idx} className="hover:bg-ink-50/50">
+                            <td className="px-4 py-2.5 font-medium text-ink-900">{item.product?.name ?? "Produit supprimé"}</td>
+                            <td className="px-4 py-2.5 text-center text-ink-600">{item.quantity}</td>
+                            <td className="px-4 py-2.5 text-right text-ink-600">{parseFloat(String(item.price)).toLocaleString("fr-FR")} XAF</td>
+                            <td className="px-4 py-2.5 text-right font-semibold text-ink-900">{(item.quantity * parseFloat(String(item.price))).toLocaleString("fr-FR")} XAF</td>
                           </tr>
                         ))}
                       </tbody>
@@ -416,26 +416,26 @@ export const ReceiptsPage: React.FC = () => {
               )}
 
               {/* Total */}
-              <div className="bg-gradient-to-r from-[#0077BE]/5 to-[#00A8E8]/5 border border-[#0077BE]/10 rounded-xl p-4 flex items-center justify-between">
-                <span className="font-semibold text-slate-700">Total TTC</span>
-                <span className="text-2xl font-bold text-[#0077BE]">
+              <div className="bg-gradient-to-r from-brand-600/5 to-aqua-500/5 border border-brand-600/10 rounded-xl p-4 flex items-center justify-between">
+                <span className="font-semibold text-ink-700">Total TTC</span>
+                <span className="text-2xl font-bold text-brand-600">
                   {parseFloat(String(selectedOrder.total)).toLocaleString("fr-FR")} XAF
                 </span>
               </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-white border-t border-slate-100 px-6 py-4 flex gap-3 rounded-b-2xl">
+            <div className="sticky bottom-0 bg-white border-t border-ink-100 px-6 py-4 flex gap-3 rounded-b-2xl">
               <button
                 onClick={() => setSelectedOrder(null)}
-                className="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition font-medium text-slate-700 text-sm"
+                className="flex-1 px-4 py-2.5 border border-ink-200 rounded-xl hover:bg-ink-50 transition font-medium text-ink-700 text-sm"
               >
                 Fermer
               </button>
               <button
                 onClick={() => { handleDownload(selectedOrder); setSelectedOrder(null); }}
                 disabled={downloadingId === selectedOrder.id}
-                className="flex-1 px-4 py-2.5 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white rounded-xl hover:opacity-90 transition font-medium text-sm flex items-center justify-center gap-2 shadow-md shadow-[#0077BE]/20 disabled:opacity-60"
+                className="flex-1 px-4 py-2.5 bg-gradient-to-r from-brand-600 to-aqua-500 text-white rounded-xl hover:opacity-90 transition font-medium text-sm flex items-center justify-center gap-2 shadow-md shadow-brand-600/20 disabled:opacity-60"
               >
                 <Download size={16} />
                 Télécharger PDF

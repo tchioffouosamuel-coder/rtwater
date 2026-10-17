@@ -1,18 +1,11 @@
-import { Phone, ArrowRight, Sparkles } from "lucide-react";
-import { motion } from "motion/react";
-import { useTheme } from "../../theme/ThemeContext";
+import { Phone, ArrowRight, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSiteContent } from "../../context/SiteContentContext";
+import { Reveal } from "./Reveal";
 
-interface CTASectionProps {
-  onNavigateToQuote?: () => void;
-}
-
-export function CTASection({ onNavigateToQuote }: CTASectionProps) {
+export function CTASection() {
   const { home } = useSiteContent();
   const { cta } = home;
-  const { theme } = useTheme();
-
   const navigate = useNavigate();
 
   const handleContactClick = () => {
@@ -21,164 +14,73 @@ export function CTASection({ onNavigateToQuote }: CTASectionProps) {
   };
 
   const handleServicesClick = () => {
-    const servicesSection = document.getElementById("services");
-    if (servicesSection) {
-      servicesSection.scrollIntoView({ behavior: "smooth" });
-    }
+    document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section className="py-16 sm:py-24 relative overflow-hidden">
-      {/* Animated Gradient Background */}
-      <motion.div
-        animate={{
-          background: [
-            "linear-gradient(135deg, #0077BE 0%, #00A8E8 100%)",
-            "linear-gradient(135deg, #00A8E8 0%, #0077BE 100%)",
-            "linear-gradient(135deg, #0077BE 0%, #00A8E8 100%)",
-          ],
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute inset-0"
-      />
+    <section className="relative py-20 md:py-28 bg-brand-950 overflow-hidden">
+      {/* Fond maillé sombre et trame, à la place du dégradé animé */}
+      <div className="absolute inset-0 mesh-gradient-dark pointer-events-none" />
+      <div className="absolute inset-0 bg-grid-dark opacity-50 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-aqua-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-brand-400/10 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* Animated Background Pattern */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Floating Circles */}
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-white/10"
-            style={{
-              width: Math.random() * 300 + 100,
-              height: Math.random() * 300 + 100,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              x: [0, Math.random() * 40 - 20, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 5 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-
-        {/* Water Drops Pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-10">
-          <pattern
-            id="water-drops"
-            x="0"
-            y="0"
-            width="40"
-            height="40"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle cx="20" cy="20" r="3" fill="white" />
-          </pattern>
-          <rect width="100%" height="100%" fill="url(#water-drops)" />
-        </svg>
-      </div>
-
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex items-center justify-center gap-2 mb-4 sm:mb-6"
-        >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          >
-            <Sparkles className="w-5 sm:w-6 h-5 sm:h-6 text-yellow-300" />
-          </motion.div>
-          <span className="text-white/90 font-semibold tracking-wide uppercase text-xs sm:text-sm">
+      <div className="relative mx-auto max-w-7xl px-4 md:px-6">
+        <Reveal className="max-w-2xl mx-auto text-center">
+          {/* Pastille */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/10 text-aqua-200 text-xs font-semibold mb-6 backdrop-blur-sm">
+            <span className="relative flex w-2 h-2">
+              <span className="absolute inline-flex w-full h-full rounded-full bg-aqua-300 animate-ping opacity-75" />
+              <span className="relative inline-flex w-2 h-2 rounded-full bg-aqua-400" />
+            </span>
             {cta.badge}
-          </span>
-        </motion.div>
+          </div>
 
-        {/* Heading */}
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 sm:mb-8 leading-tight px-2"
-        >
-          {cta.title}{" "}
-          <span className="relative inline-block">
-            <span className="relative z-10">{cta.titleHighlight}</span>
-            <motion.span
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="absolute bottom-1 sm:bottom-2 left-0 w-full h-2 sm:h-3 bg-yellow-300/30 -z-0"
-            ></motion.span>
-          </span>
-        </motion.h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight mb-4">
+            {cta.title}{" "}
+            <span className="relative inline-block">
+              <span className="relative z-10">{cta.titleHighlight}</span>
+              {/* Surlignage bleu clair, à la place du jaune */}
+              <span
+                className="absolute bottom-1 left-0 w-full h-2 sm:h-3 bg-aqua-400/30 -z-0"
+                aria-hidden="true"
+              />
+            </span>
+          </h2>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-2"
-        >
-          {cta.description}
-        </motion.p>
+          <p className="text-white/90 text-base md:text-lg leading-relaxed mb-8">
+            {cta.description}
+          </p>
 
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-2"
-        >
-          <motion.button
-            onClick={handleContactClick}
-            whileHover={{ scale: 1.05, y: -5 }}
-            whileTap={{ scale: 0.95 }}
-            className="group inline-flex items-center justify-center gap-2 sm:gap-3 bg-white text-[#0077BE] px-6 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg shadow-2xl hover:shadow-white/50 transition-all duration-300 whitespace-nowrap"
-          >
-            <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
-            {cta.contactButtonLabel}
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-2 transition-transform" />
-          </motion.button>
+          {/* Boutons d'action */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={handleContactClick}
+              className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-500 to-aqua-500 hover:from-brand-400 hover:to-aqua-400 text-white text-sm font-bold shadow-2xl shadow-brand-500/30 transition-all hover:-translate-y-0.5"
+            >
+              <Phone className="w-4 h-4" />
+              {cta.contactButtonLabel}
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
 
-          <motion.button
-            onClick={handleServicesClick}
-            whileHover={{ scale: 1.05, y: -5 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md border-2 border-white/50 text-white px-6 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg hover:bg-white/20 transition-all duration-300 whitespace-nowrap"
-          >
-            {cta.servicesButtonLabel}
-          </motion.button>
-        </motion.div>
+            <button
+              onClick={handleServicesClick}
+              className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-sm font-semibold border border-white/15 backdrop-blur-sm transition-all hover:-translate-y-0.5"
+            >
+              {cta.servicesButtonLabel}
+            </button>
+          </div>
 
-        {/* Trust Indicators */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="mt-8 sm:mt-12 lg:mt-16 flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8 text-white/80 text-xs sm:text-sm"
-        >
-          {cta.trustIndicators.map((indicator, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span>{indicator}</span>
-            </div>
-          ))}
-        </motion.div>
+          {/* Gages de confiance */}
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mt-8 text-white/90 text-xs">
+            {cta.trustIndicators.map((indicator, index) => (
+              <div key={index} className="flex items-center gap-1.5">
+                <Check className="w-4 h-4 text-aqua-300 shrink-0" aria-hidden="true" />
+                <span>{indicator}</span>
+              </div>
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   );

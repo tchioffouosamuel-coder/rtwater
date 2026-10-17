@@ -319,9 +319,9 @@ export function CheckoutModal() {
   const currentIndex = activeSteps.findIndex(s => s.key === step);
 
   const inputClass = [
-    "w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl bg-white dark:bg-slate-700",
-    "dark:border-slate-600 text-gray-900 dark:text-white text-sm",
-    "focus:outline-none focus:ring-2 focus:ring-[#0077BE] focus:border-transparent transition",
+    "w-full pl-10 pr-4 py-2.5 border border-ink-200 rounded-xl bg-white dark:bg-ink-700",
+    "dark:border-ink-600 text-ink-900 dark:text-white text-sm",
+    "focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent transition",
   ].join(" ");
 
   return (
@@ -342,15 +342,15 @@ export function CheckoutModal() {
             role="dialog"
             aria-modal="true"
             aria-label={tx("Commande", "Checkout")}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg max-h-[92vh] overflow-y-auto bg-white dark:bg-slate-800 rounded-3xl shadow-2xl z-50 flex flex-col"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg max-h-[92vh] overflow-y-auto bg-white dark:bg-ink-800 rounded-3xl shadow-2xl z-50 flex flex-col"
           >
             {/* Gradient top bar */}
-            <div className="h-1.5 w-full bg-gradient-to-r from-[#0077BE] via-[#00A8E8] to-[#00d4ff] rounded-t-3xl flex-shrink-0" />
+            <div className="h-1.5 w-full bg-gradient-to-r from-brand-600 via-aqua-500 to-aqua-400 rounded-t-3xl flex-shrink-0" />
 
             {/* Header */}
-            <div className="px-6 pt-5 pb-4 flex items-start justify-between border-b border-gray-100 dark:border-slate-700 flex-shrink-0">
+            <div className="px-6 pt-5 pb-4 flex items-start justify-between border-b border-ink-100 dark:border-ink-700 flex-shrink-0">
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-xl font-bold text-ink-900 dark:text-white">
                   {step === "info"    && tx("Passer la commande", "Checkout")}
                   {step === "payment" && tx("Paiement Mobile Money", "Mobile Money payment")}
                   {step === "waiting" && tx("En attente de confirmation", "Awaiting confirmation")}
@@ -366,17 +366,17 @@ export function CheckoutModal() {
                       <div key={s.key} className="flex items-center gap-1.5">
                         <div className={[
                           "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300",
-                          done    ? "bg-[#0077BE] text-white"          : "",
-                          current ? "bg-[#0077BE] text-white ring-4 ring-blue-100 dark:ring-blue-900" : "",
-                          !done && !current ? "bg-gray-100 dark:bg-slate-700 text-gray-400" : "",
+                          done    ? "bg-brand-600 text-white"          : "",
+                          current ? "bg-brand-600 text-white ring-4 ring-brand-100 dark:ring-brand-900" : "",
+                          !done && !current ? "bg-ink-100 dark:bg-ink-700 text-ink-400" : "",
                         ].join(" ")}>
                           {done ? <CheckCircle size={14} /> : i + 1}
                         </div>
-                        <span className={`text-xs font-medium hidden sm:block ${current ? "text-[#0077BE]" : "text-gray-400"}`}>
+                        <span className={`text-xs font-medium hidden sm:block ${current ? "text-brand-600" : "text-ink-400"}`}>
                           {s.label}
                         </span>
                         {i < activeSteps.length - 1 && (
-                          <div className={`w-6 h-0.5 rounded-full ${i < currentIndex ? "bg-[#0077BE]" : "bg-gray-200 dark:bg-slate-600"}`} />
+                          <div className={`w-6 h-0.5 rounded-full ${i < currentIndex ? "bg-brand-600" : "bg-ink-200 dark:bg-ink-600"}`} />
                         )}
                       </div>
                     );
@@ -387,7 +387,7 @@ export function CheckoutModal() {
               <button
                 onClick={handleClose}
                 aria-label={tx("Fermer", "Close")}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-xl transition mt-0.5"
+                className="p-2 text-ink-400 hover:text-ink-600 hover:bg-ink-100 dark:hover:bg-ink-700 rounded-xl transition mt-0.5"
               >
                 <X size={20} />
               </button>
@@ -400,20 +400,20 @@ export function CheckoutModal() {
               {step === "info" && (
                 <>
                   {/* Order summary */}
-                  <div className="mb-5 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden">
-                    <div className="bg-gray-50 dark:bg-slate-700/50 px-4 py-3 flex items-center gap-2 border-b border-gray-100 dark:border-slate-700">
-                      <ShoppingBag size={16} className="text-[#0077BE]" />
-                      <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{tx("Résumé", "Summary")}</span>
-                      <span className="ml-auto text-xs text-gray-400">{items.length} {tx(items.length > 1 ? "articles" : "article", items.length > 1 ? "items" : "item")}</span>
+                  <div className="mb-5 rounded-2xl border border-ink-100 dark:border-ink-700 overflow-hidden">
+                    <div className="bg-ink-50 dark:bg-ink-700/50 px-4 py-3 flex items-center gap-2 border-b border-ink-100 dark:border-ink-700">
+                      <ShoppingBag size={16} className="text-brand-600" />
+                      <span className="text-sm font-semibold text-ink-700 dark:text-ink-300">{tx("Résumé", "Summary")}</span>
+                      <span className="ml-auto text-xs text-ink-400">{items.length} {tx(items.length > 1 ? "articles" : "article", items.length > 1 ? "items" : "item")}</span>
                     </div>
                     <div className="px-4 py-3 space-y-2">
                       {items.map(item => (
                         <div key={item.id} className="flex justify-between items-center text-sm">
-                          <span className="text-gray-600 dark:text-gray-400 truncate pr-4">
+                          <span className="text-ink-600 dark:text-ink-400 truncate pr-4">
                             {item.name}
-                            <span className="ml-1 text-gray-400">× {item.quantity}</span>
+                            <span className="ml-1 text-ink-400">× {item.quantity}</span>
                           </span>
-                          <span className="font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+                          <span className="font-semibold text-ink-900 dark:text-white whitespace-nowrap">
                             {Math.round(item.price * item.quantity).toLocaleString(locale)} XAF
                           </span>
                         </div>
@@ -421,8 +421,8 @@ export function CheckoutModal() {
                     </div>
 
                     {/* Detail : sous-total, remise, livraison */}
-                    <div className="px-4 py-3 border-t border-gray-100 dark:border-slate-700 space-y-1.5 text-sm">
-                      <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                    <div className="px-4 py-3 border-t border-ink-100 dark:border-ink-700 space-y-1.5 text-sm">
+                      <div className="flex justify-between text-ink-600 dark:text-ink-400">
                         <span>{tx("Sous-total", "Subtotal")}</span>
                         <span>{Math.round(quote?.subtotal ?? cartTotal).toLocaleString(locale)} XAF</span>
                       </div>
@@ -438,7 +438,7 @@ export function CheckoutModal() {
                       )}
 
                       {selectedZone && (
-                        <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between text-ink-600 dark:text-ink-400">
                           <span className="flex items-center gap-1">
                             <Truck size={12} />
                             {tx("Livraison", "Delivery")}
@@ -452,9 +452,9 @@ export function CheckoutModal() {
                       )}
                     </div>
 
-                    <div className="px-4 py-3 bg-gradient-to-r from-[#0077BE]/5 to-[#00A8E8]/5 border-t border-gray-100 dark:border-slate-700 flex justify-between items-center">
-                      <span className="font-bold text-gray-900 dark:text-white">{tx("Total", "Total")}</span>
-                      <span className="text-xl font-bold text-[#0077BE] dark:text-[#00A8E8]">
+                    <div className="px-4 py-3 bg-gradient-to-r from-brand-600/5 to-aqua-500/5 border-t border-ink-100 dark:border-ink-700 flex justify-between items-center">
+                      <span className="font-bold text-ink-900 dark:text-white">{tx("Total", "Total")}</span>
+                      <span className="text-xl font-bold text-brand-600 dark:text-aqua-500">
                         {quoting ? (
                           <Loader2 size={18} className="animate-spin" />
                         ) : (
@@ -467,7 +467,7 @@ export function CheckoutModal() {
                   {/* Zone de livraison */}
                   {zones.length > 0 && (
                     <div className="mb-5">
-                      <p className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      <p className="mb-2 text-sm font-semibold text-ink-700 dark:text-ink-300">
                         {tx("Zone de livraison", "Delivery zone")}
                       </p>
                       <div className="space-y-2">
@@ -479,8 +479,8 @@ export function CheckoutModal() {
                               key={zone.id}
                               className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition ${
                                 zoneId === zone.id
-                                  ? "border-[#0077BE] bg-[#0077BE]/5"
-                                  : "border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/40"
+                                  ? "border-brand-600 bg-brand-600/5"
+                                  : "border-ink-200 dark:border-ink-700 hover:bg-ink-50 dark:hover:bg-ink-700/40"
                               }`}
                             >
                               <input
@@ -488,25 +488,25 @@ export function CheckoutModal() {
                                 name="shipping_zone"
                                 checked={zoneId === zone.id}
                                 onChange={() => setZoneId(zone.id)}
-                                className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#0077BE] focus:ring-[#0077BE]"
+                                className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600 focus:ring-brand-600"
                               />
                               <span className="min-w-0 flex-1">
                                 <span className="flex flex-wrap items-center gap-2">
-                                  <span className="text-sm font-medium text-gray-900 dark:text-white">{zone.name}</span>
-                                  {zone.delay && <span className="text-xs text-gray-400">&middot; {zone.delay}</span>}
+                                  <span className="text-sm font-medium text-ink-900 dark:text-white">{zone.name}</span>
+                                  {zone.delay && <span className="text-xs text-ink-400">&middot; {zone.delay}</span>}
                                 </span>
                                 {zone.description && (
-                                  <span className="mt-0.5 block text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                                  <span className="mt-0.5 block text-xs leading-relaxed text-ink-500 dark:text-ink-400">
                                     {zone.description}
                                   </span>
                                 )}
                                 {zone.free_above != null && !isFree && (
-                                  <span className="mt-0.5 block text-xs text-[#0077BE]">
+                                  <span className="mt-0.5 block text-xs text-brand-600">
                                     {tx("Offerte dès", "Free from")} {Math.round(zone.free_above).toLocaleString(locale)} XAF
                                   </span>
                                 )}
                               </span>
-                              <span className="flex-shrink-0 text-sm font-semibold text-gray-900 dark:text-white">
+                              <span className="flex-shrink-0 text-sm font-semibold text-ink-900 dark:text-white">
                                 {(zone.fee_for_cart ?? zone.fee) === 0
                                   ? tx("Offerte", "Free")
                                   : `${Math.round(zone.fee_for_cart ?? zone.fee).toLocaleString(locale)} XAF`}
@@ -520,7 +520,7 @@ export function CheckoutModal() {
 
                   {/* Code promo */}
                   <div className="mb-5">
-                    <p className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    <p className="mb-2 text-sm font-semibold text-ink-700 dark:text-ink-300">
                       {tx("Code promo", "Promo code")}
                     </p>
 
@@ -551,13 +551,13 @@ export function CheckoutModal() {
                             placeholder={tx("Votre code", "Your code")}
                             aria-label={tx("Code promo", "Promo code")}
                             aria-invalid={!!codeError}
-                            className="min-w-0 flex-1 rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm uppercase text-gray-900 outline-none transition focus:border-[#0077BE] dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                            className="min-w-0 flex-1 rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm uppercase text-ink-900 outline-none transition focus:border-brand-600 dark:border-ink-700 dark:bg-ink-800 dark:text-white"
                           />
                           <button
                             type="button"
                             onClick={applyCode}
                             disabled={!codeInput.trim() || quoting}
-                            className="flex-shrink-0 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-50 dark:border-slate-700 dark:text-gray-200 dark:hover:bg-slate-700"
+                            className="flex-shrink-0 rounded-xl border border-ink-200 px-4 py-2.5 text-sm font-medium text-ink-700 transition hover:bg-ink-50 disabled:opacity-50 dark:border-ink-700 dark:text-ink-200 dark:hover:bg-ink-700"
                           >
                             {quoting ? <Loader2 size={16} className="animate-spin" /> : tx("Appliquer", "Apply")}
                           </button>
@@ -578,7 +578,7 @@ export function CheckoutModal() {
                   <form onSubmit={handleInfoSubmit} className="space-y-4">
                     {/* Name */}
                     <div className="relative">
-                      <User size={15} className="absolute left-3 top-3 text-gray-400" />
+                      <User size={15} className="absolute left-3 top-3 text-ink-400" />
                       <input type="text" name="name" value={formData.name} onChange={handleInputChange}
                         placeholder={tx("Nom complet *", "Full name *")}
                         aria-label={tx("Nom complet", "Full name")}
@@ -588,7 +588,7 @@ export function CheckoutModal() {
                     </div>
                     {/* Phone */}
                     <div className="relative">
-                      <Phone size={15} className="absolute left-3 top-3 text-gray-400" />
+                      <Phone size={15} className="absolute left-3 top-3 text-ink-400" />
                       <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange}
                         placeholder={tx("Téléphone * (+237 6XX XXX XXX)", "Phone * (+237 6XX XXX XXX)")}
                         aria-label={tx("Téléphone", "Phone")}
@@ -598,7 +598,7 @@ export function CheckoutModal() {
                     </div>
                     {/* Email */}
                     <div className="relative">
-                      <Mail size={15} className="absolute left-3 top-3 text-gray-400" />
+                      <Mail size={15} className="absolute left-3 top-3 text-ink-400" />
                       <input type="email" name="email" value={formData.email} onChange={handleInputChange}
                         placeholder={tx("Email (optionnel, pour la confirmation)", "Email (optional, for confirmation)")}
                         aria-label="Email"
@@ -608,7 +608,7 @@ export function CheckoutModal() {
                     </div>
                     {/* Address */}
                     <div className="relative">
-                      <MapPin size={15} className="absolute left-3 top-3 text-gray-400" />
+                      <MapPin size={15} className="absolute left-3 top-3 text-ink-400" />
                       <textarea name="address" value={formData.address} onChange={handleInputChange}
                         placeholder={tx("Adresse de livraison * (quartier, repère)", "Delivery address * (area, landmark)")}
                         aria-label={tx("Adresse de livraison", "Delivery address")}
@@ -620,7 +620,7 @@ export function CheckoutModal() {
 
                     {/* Payment method */}
                     <div>
-                      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                      <p className="text-xs font-semibold text-ink-500 dark:text-ink-400 uppercase tracking-wider mb-3">
                         {tx("Mode de paiement", "Payment method")}
                       </p>
                       <div className="grid grid-cols-2 gap-3">
@@ -630,18 +630,18 @@ export function CheckoutModal() {
                           className={[
                             "flex flex-col items-start gap-2 p-4 rounded-2xl border-2 text-left transition-all",
                             !payOnDelivery
-                              ? "border-[#0077BE] bg-blue-50 dark:bg-blue-900/20"
-                              : "border-gray-200 dark:border-slate-600 hover:border-gray-300",
+                              ? "border-brand-600 bg-brand-50 dark:bg-brand-900/20"
+                              : "border-ink-200 dark:border-ink-600 hover:border-ink-300",
                           ].join(" ")}
                         >
-                          <div className={`p-2 rounded-xl ${!payOnDelivery ? "bg-[#0077BE]" : "bg-gray-100 dark:bg-slate-700"}`}>
-                            <Smartphone size={18} className={!payOnDelivery ? "text-white" : "text-gray-500"} />
+                          <div className={`p-2 rounded-xl ${!payOnDelivery ? "bg-brand-600" : "bg-ink-100 dark:bg-ink-700"}`}>
+                            <Smartphone size={18} className={!payOnDelivery ? "text-white" : "text-ink-500"} />
                           </div>
                           <div>
-                            <p className={`text-sm font-bold ${!payOnDelivery ? "text-[#0077BE]" : "text-gray-700 dark:text-gray-300"}`}>
+                            <p className={`text-sm font-bold ${!payOnDelivery ? "text-brand-600" : "text-ink-700 dark:text-ink-300"}`}>
                               Mobile Money
                             </p>
-                            <p className="text-xs text-gray-500 mt-0.5">Orange · MTN · Moov · Wave</p>
+                            <p className="text-xs text-ink-500 mt-0.5">Orange · MTN · Moov · Wave</p>
                           </div>
                         </button>
 
@@ -652,17 +652,17 @@ export function CheckoutModal() {
                             "flex flex-col items-start gap-2 p-4 rounded-2xl border-2 text-left transition-all",
                             payOnDelivery
                               ? "border-amber-500 bg-amber-50 dark:bg-amber-900/20"
-                              : "border-gray-200 dark:border-slate-600 hover:border-gray-300",
+                              : "border-ink-200 dark:border-ink-600 hover:border-ink-300",
                           ].join(" ")}
                         >
-                          <div className={`p-2 rounded-xl ${payOnDelivery ? "bg-amber-500" : "bg-gray-100 dark:bg-slate-700"}`}>
-                            <Truck size={18} className={payOnDelivery ? "text-white" : "text-gray-500"} />
+                          <div className={`p-2 rounded-xl ${payOnDelivery ? "bg-amber-500" : "bg-ink-100 dark:bg-ink-700"}`}>
+                            <Truck size={18} className={payOnDelivery ? "text-white" : "text-ink-500"} />
                           </div>
                           <div>
-                            <p className={`text-sm font-bold ${payOnDelivery ? "text-amber-700" : "text-gray-700 dark:text-gray-300"}`}>
+                            <p className={`text-sm font-bold ${payOnDelivery ? "text-amber-700" : "text-ink-700 dark:text-ink-300"}`}>
                               {tx("À la livraison", "On delivery")}
                             </p>
-                            <p className="text-xs text-gray-500 mt-0.5">{tx("Espèces à la réception", "Cash on receipt")}</p>
+                            <p className="text-xs text-ink-500 mt-0.5">{tx("Espèces à la réception", "Cash on receipt")}</p>
                           </div>
                         </button>
                       </div>
@@ -690,7 +690,7 @@ export function CheckoutModal() {
                     <motion.button
                       type="submit" disabled={creatingOrder}
                       whileHover={{ scale: creatingOrder ? 1 : 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="w-full bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white py-3.5 rounded-2xl font-semibold shadow-lg shadow-blue-200/50 hover:shadow-blue-300/60 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full bg-gradient-to-r from-brand-600 to-aqua-500 text-white py-3.5 rounded-2xl font-semibold shadow-lg shadow-brand-200/50 hover:shadow-brand-300/60 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {creatingOrder ? (
                         <><Loader2 className="w-5 h-5 animate-spin" />{tx("Traitement en cours...", "Processing...")}</>
@@ -708,17 +708,17 @@ export function CheckoutModal() {
               {step === "payment" && (
                 <form onSubmit={handlePaymentSubmit} className="space-y-5">
                   {/* Amount banner */}
-                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#0077BE]/10 to-[#00A8E8]/10 border border-[#0077BE]/20 rounded-2xl">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                      <Smartphone size={16} className="text-[#0077BE]" />
+                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-brand-600/10 to-aqua-500/10 border border-brand-600/20 rounded-2xl">
+                    <div className="flex items-center gap-2 text-sm text-ink-600 dark:text-ink-400">
+                      <Smartphone size={16} className="text-brand-600" />
                       {tx("Confirmation USSD sur votre téléphone", "USSD confirmation on your phone")}
                     </div>
-                    <span className="font-bold text-[#0077BE]">{Math.round(orderTotal).toLocaleString(locale)} XAF</span>
+                    <span className="font-bold text-brand-600">{Math.round(orderTotal).toLocaleString(locale)} XAF</span>
                   </div>
 
                   {/* Operator grid */}
                   <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{tx("Opérateur", "Operator")} *</p>
+                    <p className="text-xs font-semibold text-ink-500 uppercase tracking-wider mb-3">{tx("Opérateur", "Operator")} *</p>
                     <div className="grid grid-cols-2 gap-3">
                       {OPERATORS.map(op => {
                         const color = OPERATOR_COLORS[op.id] ?? "#0077BE";
@@ -732,13 +732,13 @@ export function CheckoutModal() {
                               "flex items-center gap-3 p-3.5 rounded-2xl border-2 font-medium transition-all text-left",
                               selected
                                 ? "border-current shadow-md"
-                                : "border-gray-200 dark:border-slate-600 hover:border-gray-300",
+                                : "border-ink-200 dark:border-ink-600 hover:border-ink-300",
                             ].join(" ")}
                             style={selected ? { borderColor: color, backgroundColor: `${color}10` } : {}}
                           >
                             <span className="text-2xl">{op.logo}</span>
                             <div>
-                              <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{op.label}</p>
+                              <p className="text-sm font-semibold text-ink-800 dark:text-ink-200">{op.label}</p>
                               {selected && <p className="text-xs mt-0.5" style={{ color }}>{tx("Sélectionné", "Selected")} ✓</p>}
                             </div>
                           </button>
@@ -749,12 +749,12 @@ export function CheckoutModal() {
 
                   {/* Payment phone */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                    <label className="block text-xs font-semibold text-ink-500 uppercase tracking-wider mb-2">
                       {tx("Numéro Mobile Money", "Mobile Money number")} *
-                      <span className="ml-2 text-gray-400 normal-case font-normal">{tx("(peut différer de votre contact)", "(may differ from your contact)")}</span>
+                      <span className="ml-2 text-ink-400 normal-case font-normal">{tx("(peut différer de votre contact)", "(may differ from your contact)")}</span>
                     </label>
                     <div className="relative">
-                      <Phone size={15} className="absolute left-3 top-3 text-gray-400" />
+                      <Phone size={15} className="absolute left-3 top-3 text-ink-400" />
                       <input
                         type="tel"
                         value={paymentPhone}
@@ -777,14 +777,14 @@ export function CheckoutModal() {
                   <div className="flex gap-3">
                     <button
                       type="button" onClick={() => setStep("info")}
-                      className="flex-1 py-3 border-2 border-gray-200 dark:border-slate-600 rounded-2xl font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition"
+                      className="flex-1 py-3 border-2 border-ink-200 dark:border-ink-600 rounded-2xl font-semibold text-ink-600 dark:text-ink-300 hover:bg-ink-50 dark:hover:bg-ink-700 transition"
                     >
                       {tx("Retour", "Back")}
                     </button>
                     <motion.button
                       type="submit" disabled={initiatingPayment}
                       whileHover={{ scale: initiatingPayment ? 1 : 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="flex-2 flex-1 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white py-3 rounded-2xl font-semibold shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all"
+                      className="flex-2 flex-1 bg-gradient-to-r from-brand-600 to-aqua-500 text-white py-3 rounded-2xl font-semibold shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all"
                     >
                       {initiatingPayment
                         ? <><Loader2 className="w-5 h-5 animate-spin" />{tx("Envoi...", "Sending...")}</>
@@ -803,24 +803,24 @@ export function CheckoutModal() {
                     <motion.div
                       animate={{ scale: [1, 1.6], opacity: [0.4, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
-                      className="absolute inset-0 rounded-full bg-[#0077BE]/30"
+                      className="absolute inset-0 rounded-full bg-brand-600/30"
                     />
                     <motion.div
                       animate={{ scale: [1, 1.35], opacity: [0.5, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut", delay: 0.3 }}
-                      className="absolute inset-0 rounded-full bg-[#0077BE]/20"
+                      className="absolute inset-0 rounded-full bg-brand-600/20"
                     />
-                    <div className="w-24 h-24 bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-full flex items-center justify-center shadow-xl">
+                    <div className="w-24 h-24 bg-gradient-to-br from-brand-600 to-aqua-500 rounded-full flex items-center justify-center shadow-xl">
                       <Smartphone className="w-10 h-10 text-white" />
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">{tx("Validez sur votre téléphone", "Confirm on your phone")}</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                      {tx("Demande envoyée au", "Request sent to")} <strong className="text-gray-700 dark:text-gray-200">{paymentPhone}</strong>
+                    <h3 className="text-lg font-bold text-ink-900 dark:text-white">{tx("Validez sur votre téléphone", "Confirm on your phone")}</h3>
+                    <p className="text-sm text-ink-500 dark:text-ink-400 mt-1">
+                      {tx("Demande envoyée au", "Request sent to")} <strong className="text-ink-700 dark:text-ink-200">{paymentPhone}</strong>
                     </p>
-                    <p className="text-2xl font-bold text-[#0077BE] mt-2">
+                    <p className="text-2xl font-bold text-brand-600 mt-2">
                       {Math.round(orderTotal).toLocaleString(locale)} XAF
                     </p>
                   </div>
@@ -834,14 +834,14 @@ export function CheckoutModal() {
                     </ol>
                   </div>
 
-                  <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
+                  <div className="flex items-center justify-center gap-2 text-xs text-ink-400">
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
                     {tx("En attente de confirmation...", "Waiting for confirmation...")}
                   </div>
 
                   <button
                     onClick={() => { stopPolling(); setStep("payment"); }}
-                    className="text-xs text-gray-400 hover:text-gray-600 underline"
+                    className="text-xs text-ink-400 hover:text-ink-600 underline"
                   >
                     {tx("Annuler et réessayer", "Cancel and retry")}
                   </button>
@@ -865,10 +865,10 @@ export function CheckoutModal() {
                       </motion.div>
 
                       <div>
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                        <h3 className="text-xl font-bold text-ink-900 dark:text-white">
                           {payOnDelivery ? tx("Commande enregistrée !", "Order placed!") : tx("Paiement confirmé !", "Payment confirmed!")}
                         </h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="text-sm text-ink-500 dark:text-ink-400 mt-1">
                           {payOnDelivery
                             ? tx("Notre équipe vous contactera pour la livraison.", "Our team will contact you to arrange delivery.")
                             : tx("Votre commande est en cours de traitement.", "Your order is being processed.")}
@@ -876,9 +876,9 @@ export function CheckoutModal() {
                       </div>
 
                       {/* Order total */}
-                      <div className="p-4 bg-gradient-to-r from-[#0077BE]/5 to-[#00A8E8]/5 border border-[#0077BE]/15 rounded-2xl">
-                        <p className="text-xs text-gray-500 mb-1">{tx("Montant de la commande", "Order amount")}</p>
-                        <p className="text-2xl font-bold text-[#0077BE]">
+                      <div className="p-4 bg-gradient-to-r from-brand-600/5 to-aqua-500/5 border border-brand-600/15 rounded-2xl">
+                        <p className="text-xs text-ink-500 mb-1">{tx("Montant de la commande", "Order amount")}</p>
+                        <p className="text-2xl font-bold text-brand-600">
                           {Math.round(orderTotal).toLocaleString(locale)} <span className="text-lg">XAF</span>
                         </p>
                         {payOnDelivery && (
@@ -889,10 +889,10 @@ export function CheckoutModal() {
                         )}
                       </div>
 
-                      <div className="p-3 bg-gray-50 dark:bg-slate-700 rounded-xl">
-                        <p className="text-xs text-gray-500 mb-0.5">{tx("Référence de commande", "Order reference")}</p>
-                        <p className="text-base font-mono font-bold text-gray-900 dark:text-white">{orderRef ?? `#${orderId}`}</p>
-                        <p className="text-xs text-gray-500 mt-1">
+                      <div className="p-3 bg-ink-50 dark:bg-ink-700 rounded-xl">
+                        <p className="text-xs text-ink-500 mb-0.5">{tx("Référence de commande", "Order reference")}</p>
+                        <p className="text-base font-mono font-bold text-ink-900 dark:text-white">{orderRef ?? `#${orderId}`}</p>
+                        <p className="text-xs text-ink-500 mt-1">
                           {tx("Conservez-la pour suivre votre commande. Une confirmation vous est envoyée par e-mail si vous l'avez indiqué.", "Keep it to track your order. A confirmation is emailed to you if you provided an address.")}
                         </p>
                       </div>
@@ -900,7 +900,7 @@ export function CheckoutModal() {
                       <Link
                         to={`/suivi-commande?ref=${orderRef ?? orderId}`}
                         onClick={handleClose}
-                        className="block text-sm font-semibold text-[#0077BE] dark:text-[#00A8E8] hover:underline"
+                        className="block text-sm font-semibold text-brand-600 dark:text-aqua-500 hover:underline"
                       >
                         {tx("Suivre ma commande", "Track my order")}
                       </Link>
@@ -908,7 +908,7 @@ export function CheckoutModal() {
                       <motion.button
                         whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                         onClick={handleClose}
-                        className="w-full bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white py-3.5 rounded-2xl font-semibold shadow-lg"
+                        className="w-full bg-gradient-to-r from-brand-600 to-aqua-500 text-white py-3.5 rounded-2xl font-semibold shadow-lg"
                       >
                         {tx("Fermer", "Close")}
                       </motion.button>
@@ -918,10 +918,10 @@ export function CheckoutModal() {
                       <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto">
                         <AlertCircle className="w-10 h-10 text-red-500" />
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                      <h3 className="text-xl font-bold text-ink-900 dark:text-white">
                         {doneResult === "timeout" ? tx("Confirmation pas encore reçue", "Confirmation not received yet") : tx("Paiement échoué", "Payment failed")}
                       </h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-ink-500">
                         {doneResult === "timeout"
                           ? tx(`Si vous avez validé sur votre téléphone, la commande ${orderRef ?? ""} sera mise à jour automatiquement. Ne payez pas une deuxième fois : vérifiez d'abord son statut.`, `If you confirmed on your phone, order ${orderRef ?? ""} will update automatically. Do not pay twice: check its status first.`)
                           : tx("Le paiement a été refusé ou annulé. Réessayez ou optez pour le paiement à la livraison.", "The payment was declined or cancelled. Try again or choose cash on delivery.")}
@@ -930,7 +930,7 @@ export function CheckoutModal() {
                         <Link
                           to={`/suivi-commande?ref=${orderRef ?? orderId}`}
                           onClick={handleClose}
-                          className="block text-sm font-semibold text-[#0077BE] hover:underline"
+                          className="block text-sm font-semibold text-brand-600 hover:underline"
                         >
                           {tx("Vérifier le statut de ma commande", "Check my order status")}
                         </Link>
@@ -938,13 +938,13 @@ export function CheckoutModal() {
                       <div className="flex gap-3">
                         <button
                           onClick={() => setStep("payment")}
-                          className="flex-1 py-3 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white rounded-2xl font-semibold"
+                          className="flex-1 py-3 bg-gradient-to-r from-brand-600 to-aqua-500 text-white rounded-2xl font-semibold"
                         >
                           {tx("Réessayer", "Try again")}
                         </button>
                         <button
                           onClick={handleClose}
-                          className="flex-1 py-3 border-2 border-gray-200 rounded-2xl font-medium text-gray-600 hover:bg-gray-50"
+                          className="flex-1 py-3 border-2 border-ink-200 rounded-2xl font-medium text-ink-600 hover:bg-ink-50"
                         >
                           {tx("Fermer", "Close")}
                         </button>

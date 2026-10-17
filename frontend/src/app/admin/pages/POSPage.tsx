@@ -176,7 +176,7 @@ export const POSPage: React.FC = () => {
 
   const statusColor: Record<string, string> = {
     pending:   'bg-amber-100 text-amber-700',
-    paid:      'bg-blue-100 text-blue-700',
+    paid:      'bg-brand-100 text-brand-700',
     shipped:   'bg-purple-100 text-purple-700',
     delivered: 'bg-green-100 text-green-700',
     cancelled: 'bg-red-100 text-red-700',
@@ -203,13 +203,13 @@ export const POSPage: React.FC = () => {
 
       {/* Daily Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <div className="bg-brand-50 border border-brand-200 rounded-xl p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-blue-600 font-medium">Transactions (session)</p>
-              <p className="text-2xl font-bold text-blue-900 mt-2">{sessionCount}</p>
+              <p className="text-sm text-brand-600 font-medium">Transactions (session)</p>
+              <p className="text-2xl font-bold text-brand-900 mt-2">{sessionCount}</p>
             </div>
-            <ShoppingCart size={24} className="text-blue-600" />
+            <ShoppingCart size={24} className="text-brand-600" />
           </div>
         </div>
 
@@ -241,21 +241,21 @@ export const POSPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Products */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
+          <div className="bg-white rounded-xl border border-ink-200 p-6">
             <div className="flex items-center justify-between gap-4 mb-6">
               <div className="flex-1 relative">
-                <Search className="absolute left-4 top-3 text-slate-400" size={18} />
+                <Search className="absolute left-4 top-3 text-ink-400" size={18} />
                 <input
                   type="text"
                   placeholder="Rechercher un produit..."
                   value={searchTerm}
                   onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-                  className="w-full pl-12 pr-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-white"
+                  className="w-full pl-12 pr-4 py-2.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition bg-white"
                 />
               </div>
               <button
                 onClick={handleToggleHistory}
-                className="flex items-center gap-2 px-4 py-2.5 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition font-medium whitespace-nowrap"
+                className="flex items-center gap-2 px-4 py-2.5 bg-ink-600 text-white rounded-lg hover:bg-ink-700 transition font-medium whitespace-nowrap"
               >
                 <Clock size={18} />
                 Historique
@@ -263,14 +263,14 @@ export const POSPage: React.FC = () => {
             </div>
 
             {loadingProducts ? (
-              <div className="flex items-center justify-center py-16 gap-3 text-slate-400">
+              <div className="flex items-center justify-center py-16 gap-3 text-ink-400">
                 <Loader2 size={24} className="animate-spin" />
                 <span>Chargement des produits...</span>
               </div>
             ) : products.length === 0 ? (
               <div className="text-center py-12">
-                <Search size={48} className="mx-auto text-slate-300 mb-4" />
-                <p className="text-slate-500 font-medium">Aucun produit trouvé</p>
+                <Search size={48} className="mx-auto text-ink-300 mb-4" />
+                <p className="text-ink-500 font-medium">Aucun produit trouvé</p>
               </div>
             ) : (
               <>
@@ -278,26 +278,26 @@ export const POSPage: React.FC = () => {
                   {products.map(product => (
                     <div
                       key={product.id}
-                      className="border border-slate-200 rounded-lg p-4 hover:shadow-md hover:border-blue-300 transition cursor-pointer bg-white"
+                      className="border border-ink-200 rounded-lg p-4 hover:shadow-md hover:border-brand-300 transition cursor-pointer bg-white"
                     >
                       <div className="mb-2">
-                        <p className="font-semibold text-slate-900 leading-tight">{product.name}</p>
+                        <p className="font-semibold text-ink-900 leading-tight">{product.name}</p>
                         {product.category && (
                           <p className="text-xs text-amber-600 mt-0.5">📁 {product.category}</p>
                         )}
                       </div>
                       <div className="flex justify-between items-center">
-                        <p className="text-lg font-bold text-blue-600">
+                        <p className="text-lg font-bold text-brand-600">
                           {Number(product.unitPrice).toLocaleString('fr-FR')} XAF
                           {!!product.discount && product.basePrice ? (
-                            <span className="ml-1.5 text-xs font-normal text-slate-400 line-through">
+                            <span className="ml-1.5 text-xs font-normal text-ink-400 line-through">
                               {Number(product.basePrice).toLocaleString('fr-FR')}
                             </span>
                           ) : null}
                         </p>
                         <button
                           onClick={() => handleAddProduct(product)}
-                          className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+                          className="bg-brand-600 text-white p-2 rounded-lg hover:bg-brand-700 transition"
                           title="Ajouter au panier"
                         >
                           <Plus size={18} />
@@ -312,17 +312,17 @@ export const POSPage: React.FC = () => {
                     <button
                       onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                       disabled={pagination.current_page === 1}
-                      className="px-3 py-1 rounded border border-slate-300 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-3 py-1 rounded border border-ink-300 hover:bg-ink-100 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Précédent
                     </button>
-                    <span className="text-sm text-slate-600">
+                    <span className="text-sm text-ink-600">
                       Page {pagination.current_page} / {pagination.last_page} — {pagination.total} produits
                     </span>
                     <button
                       onClick={() => setCurrentPage(p => Math.min(pagination.last_page, p + 1))}
                       disabled={pagination.current_page === pagination.last_page}
-                      className="px-3 py-1 rounded border border-slate-300 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-3 py-1 rounded border border-ink-300 hover:bg-ink-100 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Suivant
                     </button>
@@ -334,36 +334,36 @@ export const POSPage: React.FC = () => {
         </div>
 
         {/* Cart */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6 h-fit sticky top-6">
-          <h3 className="text-lg font-bold text-slate-900 mb-4">Panier</h3>
+        <div className="bg-white rounded-xl border border-ink-200 p-6 h-fit sticky top-6">
+          <h3 className="text-lg font-bold text-ink-900 mb-4">Panier</h3>
 
           {cart.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
-              <ShoppingCart size={32} className="mx-auto text-slate-300 mb-2" />
+            <div className="text-center py-8 text-ink-500">
+              <ShoppingCart size={32} className="mx-auto text-ink-300 mb-2" />
               <p>Panier vide</p>
             </div>
           ) : (
             <div className="space-y-3 mb-6 max-h-80 overflow-y-auto pr-1">
               {cart.map(item => (
-                <div key={item.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <div key={item.id} className="flex items-center gap-3 p-3 bg-ink-50 rounded-lg border border-ink-200">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-900 truncate">{item.name}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-sm font-semibold text-ink-900 truncate">{item.name}</p>
+                    <p className="text-xs text-ink-500">
                       {Number(item.unitPrice).toLocaleString('fr-FR')} XAF × {item.quantity}
                     </p>
                   </div>
                   <div className="flex items-center gap-1 flex-shrink-0">
-                    <div className="flex items-center border border-slate-300 rounded bg-white text-sm">
+                    <div className="flex items-center border border-ink-300 rounded bg-white text-sm">
                       <button
                         onClick={() => updateCart(item.id, item.quantity - 1)}
-                        className="px-2 py-1 hover:bg-slate-100 font-bold text-slate-600"
+                        className="px-2 py-1 hover:bg-ink-100 font-bold text-ink-600"
                       >
                         −
                       </button>
                       <span className="px-2 py-1 font-medium">{item.quantity}</span>
                       <button
                         onClick={() => updateCart(item.id, item.quantity + 1)}
-                        className="px-2 py-1 hover:bg-slate-100 font-bold text-slate-600"
+                        className="px-2 py-1 hover:bg-ink-100 font-bold text-ink-600"
                       >
                         +
                       </button>
@@ -381,18 +381,18 @@ export const POSPage: React.FC = () => {
           )}
 
           {/* Totals */}
-          <div className="border-t border-slate-200 pt-4 space-y-2">
+          <div className="border-t border-ink-200 pt-4 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500">Sous-total HT</span>
-              <span className="font-medium text-slate-900">{subtotal.toLocaleString('fr-FR')} XAF</span>
+              <span className="text-ink-500">Sous-total HT</span>
+              <span className="font-medium text-ink-900">{subtotal.toLocaleString('fr-FR')} XAF</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500">TVA (20%)</span>
-              <span className="font-medium text-slate-900">{tax.toLocaleString('fr-FR')} XAF</span>
+              <span className="text-ink-500">TVA (20%)</span>
+              <span className="font-medium text-ink-900">{tax.toLocaleString('fr-FR')} XAF</span>
             </div>
-            <div className="flex justify-between items-center pt-2 border-t border-slate-200">
-              <span className="font-bold text-slate-900">TOTAL TTC</span>
-              <span className="text-2xl font-bold text-blue-600">{total.toLocaleString('fr-FR')} XAF</span>
+            <div className="flex justify-between items-center pt-2 border-t border-ink-200">
+              <span className="font-bold text-ink-900">TOTAL TTC</span>
+              <span className="text-2xl font-bold text-brand-600">{total.toLocaleString('fr-FR')} XAF</span>
             </div>
           </div>
 
@@ -400,7 +400,7 @@ export const POSPage: React.FC = () => {
             <button
               onClick={() => clearCart()}
               disabled={cart.length === 0}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 transition text-slate-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-ink-300 rounded-lg hover:bg-ink-50 transition text-ink-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <RotateCcw size={16} />
               Vider
@@ -408,7 +408,7 @@ export const POSPage: React.FC = () => {
             <button
               onClick={() => setShowPaymentModal(true)}
               disabled={cart.length === 0}
-              className="flex-1 px-4 py-2.5 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition disabled:bg-slate-400 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2.5 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition disabled:bg-ink-400 disabled:cursor-not-allowed"
             >
               Payer
             </button>
@@ -418,54 +418,54 @@ export const POSPage: React.FC = () => {
 
       {/* Order History */}
       {showHistory && (
-        <div className="mt-6 bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-            <h3 className="text-base font-semibold text-slate-900">Commandes récentes</h3>
+        <div className="mt-6 bg-white rounded-xl border border-ink-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-ink-200 bg-ink-50 flex items-center justify-between">
+            <h3 className="text-base font-semibold text-ink-900">Commandes récentes</h3>
             <button
               onClick={loadHistory}
               disabled={loadingHistory}
-              className="flex items-center gap-1 text-sm text-blue-600 hover:underline disabled:opacity-50"
+              className="flex items-center gap-1 text-sm text-brand-600 hover:underline disabled:opacity-50"
             >
               {loadingHistory ? <Loader2 size={14} className="animate-spin" /> : null}
               Actualiser
             </button>
           </div>
           {loadingHistory ? (
-            <div className="flex items-center justify-center py-12 gap-3 text-slate-400">
+            <div className="flex items-center justify-center py-12 gap-3 text-ink-400">
               <Loader2 size={20} className="animate-spin" />
               <span>Chargement...</span>
             </div>
           ) : recentOrders.length === 0 ? (
             <div className="px-6 py-12 text-center">
-              <Clock size={48} className="mx-auto text-slate-300 mb-4" />
-              <p className="text-slate-500 font-medium">Aucune commande enregistrée</p>
+              <Clock size={48} className="mx-auto text-ink-300 mb-4" />
+              <p className="text-ink-500 font-medium">Aucune commande enregistrée</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200">
+                <thead className="bg-ink-50 border-b border-ink-200">
                   <tr>
-                    <th className="px-6 py-3 text-left font-semibold text-slate-700">#</th>
-                    <th className="px-6 py-3 text-left font-semibold text-slate-700">Client</th>
-                    <th className="px-6 py-3 text-center font-semibold text-slate-700">Statut</th>
-                    <th className="px-6 py-3 text-right font-semibold text-slate-700">Montant</th>
-                    <th className="px-6 py-3 text-left font-semibold text-slate-700">Date</th>
+                    <th className="px-6 py-3 text-left font-semibold text-ink-700">#</th>
+                    <th className="px-6 py-3 text-left font-semibold text-ink-700">Client</th>
+                    <th className="px-6 py-3 text-center font-semibold text-ink-700">Statut</th>
+                    <th className="px-6 py-3 text-right font-semibold text-ink-700">Montant</th>
+                    <th className="px-6 py-3 text-left font-semibold text-ink-700">Date</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-ink-100">
                   {recentOrders.map((order: any) => (
-                    <tr key={order.id} className="hover:bg-slate-50 transition">
-                      <td className="px-6 py-3 font-mono text-blue-600 font-medium">#{order.id}</td>
-                      <td className="px-6 py-3 text-slate-700">{order.user?.name ?? 'Client'}</td>
+                    <tr key={order.id} className="hover:bg-ink-50 transition">
+                      <td className="px-6 py-3 font-mono text-brand-600 font-medium">#{order.id}</td>
+                      <td className="px-6 py-3 text-ink-700">{order.user?.name ?? 'Client'}</td>
                       <td className="px-6 py-3 text-center">
-                        <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${statusColor[order.status] ?? 'bg-slate-100 text-slate-600'}`}>
+                        <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${statusColor[order.status] ?? 'bg-ink-100 text-ink-600'}`}>
                           {statusLabel[order.status] ?? order.status}
                         </span>
                       </td>
-                      <td className="px-6 py-3 text-right font-semibold text-slate-900">
+                      <td className="px-6 py-3 text-right font-semibold text-ink-900">
                         {Number(order.total).toLocaleString('fr-FR')} XAF
                       </td>
-                      <td className="px-6 py-3 text-slate-500">{order.created_at}</td>
+                      <td className="px-6 py-3 text-ink-500">{order.created_at}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -479,11 +479,11 @@ export const POSPage: React.FC = () => {
       {showPaymentModal && (
         <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">Encaissement</h2>
+            <div className="px-6 py-4 border-b border-ink-200 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-ink-900">Encaissement</h2>
               <button
                 onClick={() => !processing && setShowPaymentModal(false)}
-                className="p-1 hover:bg-slate-100 rounded-lg transition"
+                className="p-1 hover:bg-ink-100 rounded-lg transition"
               >
                 <X size={20} />
               </button>
@@ -491,22 +491,22 @@ export const POSPage: React.FC = () => {
 
             <div className="p-6 space-y-5">
               {/* Order summary */}
-              <div className="bg-slate-50 rounded-lg p-4 space-y-1.5 text-sm">
+              <div className="bg-ink-50 rounded-lg p-4 space-y-1.5 text-sm">
                 {cart.map(item => (
-                  <div key={item.id} className="flex justify-between text-slate-600">
+                  <div key={item.id} className="flex justify-between text-ink-600">
                     <span>{item.name} × {item.quantity}</span>
                     <span>{(item.unitPrice * item.quantity).toLocaleString('fr-FR')} XAF</span>
                   </div>
                 ))}
-                <div className="border-t border-slate-200 pt-2 mt-2 flex justify-between font-bold text-slate-900 text-base">
+                <div className="border-t border-ink-200 pt-2 mt-2 flex justify-between font-bold text-ink-900 text-base">
                   <span>Total TTC</span>
-                  <span className="text-blue-600">{total.toLocaleString('fr-FR')} XAF</span>
+                  <span className="text-brand-600">{total.toLocaleString('fr-FR')} XAF</span>
                 </div>
               </div>
 
               {/* Payment methods */}
               <div>
-                <p className="text-sm font-medium text-slate-900 mb-3">Mode de paiement</p>
+                <p className="text-sm font-medium text-ink-900 mb-3">Mode de paiement</p>
                 <div className="space-y-2">
                   {paymentMethods.map((method, index) => (
                     <div key={index} className="flex gap-2">
@@ -517,7 +517,7 @@ export const POSPage: React.FC = () => {
                           m[index] = { ...m[index], type: e.target.value as PaymentMethod['type'] };
                           setPaymentMethods(m);
                         }}
-                        className="flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                        className="flex-1 px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none text-sm"
                       >
                         <option value="cash">Espèces</option>
                         <option value="orange_money">Orange Money</option>
@@ -535,7 +535,7 @@ export const POSPage: React.FC = () => {
                         }}
                         placeholder="Montant"
                         min="0"
-                        className="w-36 px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                        className="w-36 px-3 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none text-sm"
                       />
                       {paymentMethods.length > 1 && (
                         <button
@@ -550,7 +550,7 @@ export const POSPage: React.FC = () => {
                 </div>
                 <button
                   onClick={() => setPaymentMethods(m => [...m, { type: 'cash', amount: 0 }])}
-                  className="mt-2 text-sm text-blue-600 hover:underline"
+                  className="mt-2 text-sm text-brand-600 hover:underline"
                 >
                   + Ajouter un mode de paiement
                 </button>
@@ -571,11 +571,11 @@ export const POSPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex gap-3">
+            <div className="px-6 py-4 border-t border-ink-200 bg-ink-50 flex gap-3">
               <button
                 onClick={() => setShowPaymentModal(false)}
                 disabled={processing}
-                className="flex-1 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100 transition text-slate-900 font-medium disabled:opacity-50"
+                className="flex-1 px-4 py-2 border border-ink-300 rounded-lg hover:bg-ink-100 transition text-ink-900 font-medium disabled:opacity-50"
               >
                 Annuler
               </button>

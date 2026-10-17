@@ -23,7 +23,7 @@ function StarRow({ rating, size = 14 }: { rating: number; size?: number }) {
         <Star
           key={i}
           size={size}
-          className={i <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}
+          className={i <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-ink-300'}
         />
       ))}
     </div>
@@ -93,7 +93,7 @@ export function ReviewsPage() {
     : reviews;
 
   const statCards = [
-    { label: 'Total',       value: counts.total,    color: 'text-slate-700',  bg: 'bg-slate-50',   icon: MessageSquare },
+    { label: 'Total',       value: counts.total,    color: 'text-ink-700',  bg: 'bg-ink-50',   icon: MessageSquare },
     { label: 'En attente',  value: counts.pending,  color: 'text-yellow-700', bg: 'bg-yellow-50',  icon: Clock },
     { label: 'Approuvés',   value: counts.approved, color: 'text-green-700',  bg: 'bg-green-50',   icon: CheckCircle },
     { label: 'Rejetés',     value: counts.rejected, color: 'text-red-700',    bg: 'bg-red-50',     icon: XCircle },
@@ -111,30 +111,30 @@ export function ReviewsPage() {
             <Icon size={20} className={color} />
             <div>
               <p className={`text-2xl font-bold ${color}`}>{value}</p>
-              <p className="text-xs text-slate-500">{label}</p>
+              <p className="text-xs text-ink-500">{label}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4 mb-4 flex flex-wrap gap-3">
+      <div className="bg-white rounded-xl border border-ink-200 p-4 mb-4 flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-48">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
           <input
             type="text"
             placeholder="Rechercher auteur, produit..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+            className="w-full pl-9 pr-3 py-2 text-sm border border-ink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-400"
           />
         </div>
         <div className="flex items-center gap-2">
-          <Filter size={15} className="text-slate-400" />
+          <Filter size={15} className="text-ink-400" />
           <select
             value={statusFilter}
             onChange={e => { setStatusFilter(e.target.value); setPage(1); }}
-            className="text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+            className="text-sm border border-ink-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-400"
           >
             <option value="">Tous les statuts</option>
             <option value="pending">En attente</option>
@@ -145,33 +145,33 @@ export function ReviewsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-ink-200 overflow-hidden">
         {loading ? (
-          <div className="py-20 text-center text-slate-400">
-            <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <div className="py-20 text-center text-ink-400">
+            <div className="w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
             Chargement…
           </div>
         ) : filtered.length === 0 ? (
-          <div className="py-20 text-center text-slate-400">
+          <div className="py-20 text-center text-ink-400">
             <MessageSquare size={40} className="mx-auto mb-3 opacity-30" />
             <p>Aucun avis trouvé</p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-ink-100">
             {filtered.map(review => {
               const isOpen = expanded === review.id;
               const busy   = actionLoading === review.id;
               return (
-                <div key={review.id} className="p-4 hover:bg-slate-50 transition-colors">
+                <div key={review.id} className="p-4 hover:bg-ink-50 transition-colors">
                   <div className="flex items-start gap-3">
                     {/* Avatar */}
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
                       {review.author.charAt(0).toUpperCase()}
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2 mb-1">
-                        <span className="font-semibold text-slate-900 text-sm">{review.author}</span>
+                        <span className="font-semibold text-ink-900 text-sm">{review.author}</span>
                         {review.is_verified_purchase && (
                           <span className="inline-flex items-center gap-1 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium">
                             <CheckCircle size={10} /> Achat vérifié
@@ -183,27 +183,27 @@ export function ReviewsPage() {
                       </div>
 
                       {review.product && (
-                        <p className="text-xs text-slate-500 mb-1.5">
-                          Produit : <span className="font-medium text-slate-700">{review.product.name}</span>
+                        <p className="text-xs text-ink-500 mb-1.5">
+                          Produit : <span className="font-medium text-ink-700">{review.product.name}</span>
                         </p>
                       )}
 
                       <div className="flex items-center gap-2 mb-2">
                         <StarRow rating={review.rating} />
-                        <span className="text-xs text-slate-400">{review.created_at}</span>
+                        <span className="text-xs text-ink-400">{review.created_at}</span>
                       </div>
 
                       {review.title && (
-                        <p className="text-sm font-semibold text-slate-800 mb-1">{review.title}</p>
+                        <p className="text-sm font-semibold text-ink-800 mb-1">{review.title}</p>
                       )}
 
-                      <p className={`text-sm text-slate-600 leading-relaxed ${!isOpen ? 'line-clamp-2' : ''}`}>
+                      <p className={`text-sm text-ink-600 leading-relaxed ${!isOpen ? 'line-clamp-2' : ''}`}>
                         {review.content}
                       </p>
                       {review.content.length > 120 && (
                         <button
                           onClick={() => setExpanded(isOpen ? null : review.id)}
-                          className="text-xs text-blue-600 hover:underline mt-1"
+                          className="text-xs text-brand-600 hover:underline mt-1"
                         >
                           {isOpen ? 'Réduire' : 'Lire la suite'}
                         </button>
@@ -246,7 +246,7 @@ export function ReviewsPage() {
                         onClick={() => handleDelete(review)}
                         disabled={busy}
                         title="Supprimer"
-                        className="p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 transition disabled:opacity-40"
+                        className="p-1.5 rounded-lg text-ink-400 hover:bg-red-50 hover:text-red-500 transition disabled:opacity-40"
                       >
                         <Trash2 size={16} />
                       </button>
@@ -260,22 +260,22 @@ export function ReviewsPage() {
 
         {/* Pagination */}
         {pagination.last_page > 1 && (
-          <div className="px-4 py-3 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-xs text-slate-500">
+          <div className="px-4 py-3 border-t border-ink-100 flex items-center justify-between">
+            <span className="text-xs text-ink-500">
               Page {pagination.current_page} / {pagination.last_page} — {pagination.total} avis
             </span>
             <div className="flex gap-2">
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={pagination.current_page === 1}
-                className="p-1.5 rounded border border-slate-200 hover:bg-slate-50 disabled:opacity-40"
+                className="p-1.5 rounded border border-ink-200 hover:bg-ink-50 disabled:opacity-40"
               >
                 <ChevronLeft size={14} />
               </button>
               <button
                 onClick={() => setPage(p => Math.min(pagination.last_page, p + 1))}
                 disabled={pagination.current_page === pagination.last_page}
-                className="p-1.5 rounded border border-slate-200 hover:bg-slate-50 disabled:opacity-40"
+                className="p-1.5 rounded border border-ink-200 hover:bg-ink-50 disabled:opacity-40"
               >
                 <ChevronRight size={14} />
               </button>

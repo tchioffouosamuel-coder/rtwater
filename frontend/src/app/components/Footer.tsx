@@ -14,9 +14,9 @@ const SOCIAL_ICONS: Record<string, React.ElementType> = {
 };
 
 const SOCIAL_COLORS: Record<string, string> = {
-  facebook: "hover:bg-blue-600",
-  twitter: "hover:bg-sky-500",
-  linkedin: "hover:bg-blue-700",
+  facebook: "hover:bg-brand-600",
+  twitter: "hover:bg-aqua-500",
+  linkedin: "hover:bg-brand-700",
   instagram: "hover:bg-pink-600",
 };
 
@@ -40,7 +40,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-black dark:from-slate-900 dark:to-black text-white relative overflow-hidden transition-colors duration-300">
+    <footer className="relative bg-ink-900 text-white overflow-hidden transition-colors duration-300">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <svg className="w-full h-full" viewBox="0 0 100 100">
@@ -59,7 +59,7 @@ export function Footer() {
       </div>
 
       {/* Gradient Overlay */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0077BE] via-[#00A8E8] to-[#0077BE]"></div>
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-600 via-aqua-500 to-brand-600"></div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -73,7 +73,7 @@ export function Footer() {
             <div className="mb-6">
               <img src="/logo.webp" alt="RT Water Solution" className="h-12 w-auto" />
             </div>
-            <p className="text-gray-400 mb-6 leading-relaxed">
+            <p className="text-ink-400 mb-6 leading-relaxed">
               {footer.tagline}
             </p>
 
@@ -88,7 +88,7 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.6 }}
           >
-            <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-ink-300 bg-clip-text text-transparent">
               {t("footer.services")}
             </h3>
             <ul className="space-y-3">
@@ -102,9 +102,9 @@ export function Footer() {
                 >
                   <button
                     onClick={() => handleNavigation("accueil")}
-                    className="text-gray-400 hover:text-[#00A8E8] transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-ink-400 hover:text-aqua-500 transition-colors duration-300 flex items-center gap-2 group"
                   >
-                    <span className="w-1.5 h-1.5 bg-[#0077BE] rounded-full group-hover:bg-[#00A8E8] transition-colors"></span>
+                    <span className="w-1.5 h-1.5 bg-brand-600 rounded-full group-hover:bg-aqua-500 transition-colors"></span>
                     {service}
                   </button>
                 </motion.li>
@@ -119,7 +119,7 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-ink-300 bg-clip-text text-transparent">
               {t("footer.quickLinks")}
             </h3>
             <ul className="space-y-3">
@@ -133,9 +133,9 @@ export function Footer() {
                 >
                   <button
                     onClick={() => handleNavigation(link.path)}
-                    className="text-gray-400 hover:text-[#00A8E8] transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-ink-400 hover:text-aqua-500 transition-colors duration-300 flex items-center gap-2 group"
                   >
-                    <span className="w-1.5 h-1.5 bg-[#0077BE] rounded-full group-hover:bg-[#00A8E8] transition-colors"></span>
+                    <span className="w-1.5 h-1.5 bg-brand-600 rounded-full group-hover:bg-aqua-500 transition-colors"></span>
                     {link.label}
                   </button>
                 </motion.li>
@@ -150,41 +150,41 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-ink-300 bg-clip-text text-transparent">
               {t("footer.contact")}
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3 group">
-                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#0077BE]/20 transition-colors">
-                  <MapPin className="w-5 h-5 text-[#00A8E8]" />
+                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-brand-600/20 transition-colors">
+                  <MapPin className="w-5 h-5 text-aqua-500" />
                 </div>
                 <div>
-                  <p className="text-gray-400 leading-relaxed">
+                  <p className="text-ink-400 leading-relaxed">
                     {footer.address}
                   </p>
                 </div>
               </li>
               <li className="flex items-start gap-3 group">
-                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#0077BE]/20 transition-colors">
-                  <Phone className="w-5 h-5 text-[#00A8E8]" />
+                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-brand-600/20 transition-colors">
+                  <Phone className="w-5 h-5 text-aqua-500" />
                 </div>
                 <div>
                   <a
                     href={`tel:${footer.phone}`}
-                    className="text-gray-400 hover:text-[#00A8E8] transition-colors"
+                    className="text-ink-400 hover:text-aqua-500 transition-colors"
                   >
                     {footer.phone}
                   </a>
                 </div>
               </li>
               <li className="flex items-start gap-3 group">
-                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#0077BE]/20 transition-colors">
-                  <Mail className="w-5 h-5 text-[#00A8E8]" />
+                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-brand-600/20 transition-colors">
+                  <Mail className="w-5 h-5 text-aqua-500" />
                 </div>
                 <div>
                   <a
                     href={`mailto:${footer.email}`}
-                    className="text-gray-400 hover:text-[#00A8E8] transition-colors"
+                    className="text-ink-400 hover:text-aqua-500 transition-colors"
                   >
                     {footer.email}
                   </a>
@@ -194,11 +194,11 @@ export function Footer() {
 
             {/* Social Media */}
             <div className="mt-8">
-              <p className="text-sm text-gray-400 mb-4">{t("footer.followUs")}</p>
+              <p className="text-sm text-ink-400 mb-4">{t("footer.followUs")}</p>
               <div className="flex gap-3">
                 {footer.socialLinks.map((social) => {
                   const Icon = SOCIAL_ICONS[social.platform] ?? Facebook;
-                  const colorClass = SOCIAL_COLORS[social.platform] ?? "hover:bg-gray-600";
+                  const colorClass = SOCIAL_COLORS[social.platform] ?? "hover:bg-ink-600";
                   return (
                     <motion.a
                       key={social.platform}
@@ -226,19 +226,19 @@ export function Footer() {
           className="border-t border-white/10 dark:border-white/5 pt-8"
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm">
+            <p className="text-ink-400 text-sm">
               © {currentYear} {footer.companyName} {footer.companyTagline}. {t("footer.allRightsReserved")}
             </p>
             <div className="flex gap-6 text-sm">
               <a
                 href="#"
-                className="text-gray-400 hover:text-[#00A8E8] transition-colors duration-300"
+                className="text-ink-400 hover:text-aqua-500 transition-colors duration-300"
               >
                 {t("footer.privacy")}
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-[#00A8E8] transition-colors duration-300"
+                className="text-ink-400 hover:text-aqua-500 transition-colors duration-300"
               >
                 {t("footer.terms")}
               </a>

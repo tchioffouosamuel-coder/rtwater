@@ -98,12 +98,12 @@ function HeroSection({ block }: { block: HeroBlock }) {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">{block.title}</h1>
         {block.subtitle && (
-          <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">{block.subtitle}</p>
+          <p className="text-lg md:text-xl text-brand-100 mb-8 max-w-2xl mx-auto">{block.subtitle}</p>
         )}
         {block.cta_label && block.cta_link && (
           <Link
             to={block.cta_link}
-            className="inline-block px-8 py-3 bg-white font-semibold rounded-full transition hover:bg-blue-50"
+            className="inline-block px-8 py-3 bg-white font-semibold rounded-full transition hover:bg-brand-50"
             style={{ color: '#0077BE' }}
           >
             {block.cta_label}
@@ -119,21 +119,21 @@ function FeaturesSection({ block }: { block: FeaturesBlock }) {
     <section className="py-16 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         {block.title && (
-          <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">{block.title}</h2>
+          <h2 className="text-3xl font-bold text-center text-ink-900 mb-12">{block.title}</h2>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {block.items.map((item, idx) => {
             const IconComponent = iconMap[item.icon] ?? Droplet;
             return (
-              <div key={idx} className="p-6 rounded-xl border border-slate-200 hover:shadow-md transition-shadow">
+              <div key={idx} className="p-6 rounded-xl border border-ink-200 hover:shadow-md transition-shadow">
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
                   style={{ backgroundColor: '#EFF8FF' }}
                 >
                   <IconComponent size={24} style={{ color: '#0077BE' }} />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">{item.description}</p>
+                <h3 className="text-lg font-semibold text-ink-900 mb-2">{item.title}</h3>
+                <p className="text-ink-600 text-sm leading-relaxed">{item.description}</p>
               </div>
             );
           })}
@@ -145,7 +145,7 @@ function FeaturesSection({ block }: { block: FeaturesBlock }) {
 
 function StatsSection({ block }: { block: StatsBlock }) {
   return (
-    <section className="py-16 px-4 bg-gray-50">
+    <section className="py-16 px-4 bg-ink-50">
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-wrap justify-center gap-12">
           {block.items.map((item, idx) => (
@@ -153,7 +153,7 @@ function StatsSection({ block }: { block: StatsBlock }) {
               <p className="text-4xl md:text-5xl font-bold mb-2" style={{ color: '#0077BE' }}>
                 {item.value}
               </p>
-              <p className="text-slate-500 text-sm font-medium uppercase tracking-wide">{item.label}</p>
+              <p className="text-ink-500 text-sm font-medium uppercase tracking-wide">{item.label}</p>
             </div>
           ))}
         </div>
@@ -168,12 +168,12 @@ function SectionBlock_({ block }: { block: SectionBlock }) {
   sectionCount++;
   const isEven = sectionCount % 2 === 0;
   return (
-    <section className={`py-16 px-4 ${isEven ? 'bg-gray-50' : 'bg-white'}`}>
+    <section className={`py-16 px-4 ${isEven ? 'bg-ink-50' : 'bg-white'}`}>
       <div className={`max-w-3xl mx-auto ${block.align === 'center' ? 'text-center' : 'text-left'}`}>
         {block.title && (
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">{block.title}</h2>
+          <h2 className="text-3xl font-bold text-ink-900 mb-6">{block.title}</h2>
         )}
-        <div className="text-slate-600 leading-relaxed whitespace-pre-line">{block.content}</div>
+        <div className="text-ink-600 leading-relaxed whitespace-pre-line">{block.content}</div>
       </div>
     </section>
   );
@@ -188,11 +188,11 @@ function CtaSection({ block }: { block: CtaBlock }) {
       <div className="max-w-3xl mx-auto">
         <h2 className="text-3xl font-bold mb-4">{block.title}</h2>
         {block.subtitle && (
-          <p className="text-blue-100 text-lg mb-8">{block.subtitle}</p>
+          <p className="text-brand-100 text-lg mb-8">{block.subtitle}</p>
         )}
         <Link
           to={block.button_link}
-          className="inline-block px-8 py-3 bg-white font-semibold rounded-full transition hover:bg-blue-50"
+          className="inline-block px-8 py-3 bg-white font-semibold rounded-full transition hover:bg-brand-50"
           style={{ color: '#0077BE' }}
         >
           {block.button_label}
@@ -217,7 +217,7 @@ function ContactInfoSection({ block }: { block: ContactInfoBlock }) {
           {items.map((item, idx) => {
             const IconComponent = item.icon;
             return (
-              <div key={idx} className="flex gap-4 p-6 rounded-xl border border-slate-200 hover:shadow-md transition-shadow">
+              <div key={idx} className="flex gap-4 p-6 rounded-xl border border-ink-200 hover:shadow-md transition-shadow">
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: '#EFF8FF' }}
@@ -225,8 +225,8 @@ function ContactInfoSection({ block }: { block: ContactInfoBlock }) {
                   <IconComponent size={22} style={{ color: '#0077BE' }} />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">{item.label}</p>
-                  <p className="text-slate-800 font-medium">{item.value}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-400 mb-1">{item.label}</p>
+                  <p className="text-ink-800 font-medium">{item.value}</p>
                 </div>
               </div>
             );
@@ -292,7 +292,7 @@ export const DynamicPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-slate-400">
+      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-ink-400">
         <Loader2 size={32} className="animate-spin" style={{ color: '#0077BE' }} />
         <span className="text-lg">Chargement...</span>
       </div>
@@ -303,8 +303,8 @@ export const DynamicPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
         <p className="text-6xl font-bold mb-4" style={{ color: '#0077BE' }}>404</p>
-        <h1 className="text-2xl font-semibold text-slate-900 mb-2">Page introuvable</h1>
-        <p className="text-slate-600 mb-8">La page que vous recherchez n'existe pas ou a été déplacée.</p>
+        <h1 className="text-2xl font-semibold text-ink-900 mb-2">Page introuvable</h1>
+        <p className="text-ink-600 mb-8">La page que vous recherchez n'existe pas ou a été déplacée.</p>
         <Link
           to="/"
           className="px-6 py-2.5 text-white font-medium rounded-full transition hover:opacity-90"

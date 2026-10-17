@@ -1,6 +1,6 @@
 import { Menu, X, Sun, Moon, Globe, ShoppingCart, UserCircle2, Package, LogIn, LogOut, Truck, Heart } from "lucide-react";
 import { useShopMemory } from "../../context/ShopMemoryContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { useTheme } from "../../theme/ThemeContext";
@@ -21,6 +21,15 @@ export function Header() {
   const { header, contact } = useSiteContent();
   const { favorites } = useShopMemory();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Le bandeau ne se détache du contenu qu'une fois le défilement amorcé
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 16);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Menu géré dans le CMS (en français) : en anglais, les rubriques standard sont traduites
   const EN_LABELS: Record<string, string> = {
@@ -49,7 +58,11 @@ export function Header() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-[#0077BE]/10 dark:border-slate-700 transition-colors duration-300"
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-white/95 dark:bg-ink-900/95 backdrop-blur-md shadow-sm border-b border-ink-200/60 dark:border-white/10"
+            : "bg-white/80 dark:bg-ink-900/80 backdrop-blur-md border-b border-transparent"
+        }`}
       >
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
@@ -73,15 +86,15 @@ export function Header() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.08 + 0.3 }}
                   className={`transition-all duration-300 font-medium text-sm relative group ${isActive(item.path)
-                      ? "text-[#0077BE] dark:text-[#00A8E8]"
-                      : "text-gray-600 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8]"
+                      ? "text-brand-600 dark:text-aqua-500"
+                      : "text-ink-600 dark:text-ink-400 hover:text-brand-600 dark:hover:text-aqua-500"
                     }`}
                 >
                   {item.label}
                   <span
-                    className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] transition-all duration-300 ${isActive(item.path)
-                        ? "w-full"
-                        : "w-0 group-hover:w-full"
+                    className={`absolute -bottom-1 left-0 right-0 h-0.5 rounded-full bg-aqua-500 transition-transform duration-300 origin-left ${isActive(item.path)
+                        ? "scale-x-100"
+                        : "scale-x-0 group-hover:scale-x-100"
                       }`}
                   ></span>
                 </motion.button>
@@ -95,11 +108,11 @@ export function Header() {
                 onClick={() => navigate('/favoris')}
                 aria-label={tx("Mes favoris", "My favourites")}
                 title={tx("Mes favoris", "My favourites")}
-                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-300"
+                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-ink-600 dark:text-ink-400 hover:text-red-500 hover:bg-ink-100 dark:hover:bg-ink-700 transition-all duration-300"
               >
                 <Heart className={`w-5 h-5 ${favorites.length ? "fill-red-500 text-red-500" : ""}`} />
                 {favorites.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#0077BE] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                     {favorites.length > 9 ? "9+" : favorites.length}
                   </span>
                 )}
@@ -110,7 +123,7 @@ export function Header() {
                 onClick={openCart}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8] hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-300"
+                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-ink-600 dark:text-ink-400 hover:text-brand-600 dark:hover:text-aqua-500 hover:bg-ink-100 dark:hover:bg-ink-700 transition-all duration-300"
                 title={t("shop.cart")}
                 aria-label={t("shop.cart")}
               >
@@ -127,7 +140,7 @@ export function Header() {
                 onClick={() => setLanguage(language === "fr" ? "en" : "fr")}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8] hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-300"
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-ink-600 dark:text-ink-400 hover:text-brand-600 dark:hover:text-aqua-500 hover:bg-ink-100 dark:hover:bg-ink-700 transition-all duration-300"
                 title={t("common.language")}
               >
                 <Globe className="w-5 h-5" />
@@ -138,7 +151,7 @@ export function Header() {
                 onClick={toggleTheme}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8] hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-300"
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-ink-600 dark:text-ink-400 hover:text-brand-600 dark:hover:text-aqua-500 hover:bg-ink-100 dark:hover:bg-ink-700 transition-all duration-300"
                 title={theme === "light" ? t("common.darkMode") : t("common.lightMode")}
               >
                 {theme === "light" ? (
@@ -149,13 +162,13 @@ export function Header() {
               </motion.button>
 
               {/* Separator */}
-              <div className="h-6 w-px bg-gray-200 dark:bg-slate-700 mx-1" />
+              <div className="h-6 w-px bg-ink-200 dark:bg-ink-700 mx-1" />
               {/* User / Login */}
               {user ? (
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => navigate('/profile')}
-                    className="flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-[#0077BE] dark:hover:text-[#00A8E8] transition-colors"
+                    className="flex items-center gap-1.5 text-sm font-medium text-ink-700 dark:text-ink-200 hover:text-brand-600 dark:hover:text-aqua-500 transition-colors"
                     title={tx("Mon compte", "My account")}
                   >
                     <UserCircle2 className="w-5 h-5" />
@@ -165,7 +178,7 @@ export function Header() {
                     onClick={async () => { await logout(); navigate('/'); }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-3 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-sm"
+                    className="px-3 py-1 rounded-lg bg-ink-100 dark:bg-ink-700 text-sm"
                   >
                     {tx("Déconnexion", "Sign out")}
                   </motion.button>
@@ -175,7 +188,7 @@ export function Header() {
                   onClick={() => navigate('/login', { state: { from: location.pathname } })}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-3 py-1 rounded-lg bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white text-sm"
+                  className="px-3 py-1 rounded-lg bg-gradient-to-r from-brand-600 to-aqua-500 text-white text-sm"
                 >
                   {tx("Connexion", "Sign in")}
                 </motion.button>
@@ -189,11 +202,11 @@ export function Header() {
                 onClick={() => navigate('/favoris')}
                 aria-label={tx("Mes favoris", "My favourites")}
                 title={tx("Mes favoris", "My favourites")}
-                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-300"
+                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-ink-600 dark:text-ink-400 hover:text-red-500 hover:bg-ink-100 dark:hover:bg-ink-700 transition-all duration-300"
               >
                 <Heart className={`w-5 h-5 ${favorites.length ? "fill-red-500 text-red-500" : ""}`} />
                 {favorites.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#0077BE] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                     {favorites.length > 9 ? "9+" : favorites.length}
                   </span>
                 )}
@@ -205,7 +218,7 @@ export function Header() {
                 aria-label={t("shop.cart")}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8] hover:bg-gray-100 dark:hover:bg-slate-700 transition-all duration-300"
+                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-ink-600 dark:text-ink-400 hover:text-brand-600 dark:hover:text-aqua-500 hover:bg-ink-100 dark:hover:bg-ink-700 transition-all duration-300"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
@@ -219,7 +232,7 @@ export function Header() {
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-gray-600 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8] transition-colors"
+                className="text-ink-600 dark:text-ink-400 hover:text-brand-600 dark:hover:text-aqua-500 transition-colors"
               >
                 {mobileMenuOpen ? (
                   <X className="h-6 w-6" />
@@ -251,10 +264,10 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 bottom-0 w-80 bg-white dark:bg-slate-800 shadow-2xl z-50 lg:hidden overflow-y-auto"
+              className="fixed top-0 right-0 bottom-0 w-80 bg-white dark:bg-ink-800 shadow-2xl z-50 lg:hidden overflow-y-auto"
             >
               {/* Sidebar Header */}
-              <div className="bg-gradient-to-br from-[#0077BE] to-[#00A8E8] p-5">
+              <div className="bg-gradient-to-br from-brand-600 to-aqua-500 p-5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex flex-col">
@@ -300,8 +313,8 @@ export function Header() {
                     transition={{ delay: index * 0.08 }}
                     onClick={() => handleNavigation(item.path)}
                     className={`w-full text-left px-4 py-3 rounded-lg font-medium text-sm transition-all ${isActive(item.path)
-                        ? "bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white shadow-md relative"
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+                        ? "bg-gradient-to-r from-brand-600 to-aqua-500 text-white shadow-md relative"
+                        : "text-ink-700 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-700"
                       }`}
                   >
                     {item.label}
@@ -310,42 +323,42 @@ export function Header() {
               </div>
 
               {/* Compte client */}
-              <div className="p-5 space-y-2 border-t border-gray-200 dark:border-slate-700">
+              <div className="p-5 space-y-2 border-t border-ink-200 dark:border-ink-700">
                 {user ? (
                   <>
-                    <button onClick={() => handleNavigation('/profile')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                    <button onClick={() => handleNavigation('/profile')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-ink-700 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-700">
                       <UserCircle2 className="w-4 h-4" /> {tx("Mon compte", "My account")} ({user.name.split(' ')[0]})
                     </button>
-                    <button onClick={() => handleNavigation('/orders')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                    <button onClick={() => handleNavigation('/orders')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-ink-700 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-700">
                       <Package className="w-4 h-4" /> {tx("Mes commandes", "My orders")}
                     </button>
-                    <button onClick={async () => { await logout(); handleNavigation('/'); }} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                    <button onClick={async () => { await logout(); handleNavigation('/'); }} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-ink-700 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-700">
                       <LogOut className="w-4 h-4" /> {tx("Déconnexion", "Sign out")}
                     </button>
                   </>
                 ) : (
                   <>
-                    <button onClick={() => handleNavigation('/login')} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-[#0077BE] to-[#00A8E8]">
+                    <button onClick={() => handleNavigation('/login')} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-brand-600 to-aqua-500">
                       <LogIn className="w-4 h-4" /> {tx("Connexion / Créer un compte", "Sign in / Create account")}
                     </button>
-                    <button onClick={() => handleNavigation('/suivi-commande')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                    <button onClick={() => handleNavigation('/suivi-commande')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-ink-700 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-700">
                       <Truck className="w-4 h-4" /> {tx("Suivre une commande", "Track an order")}
                     </button>
                   </>
                 )}
-                <button onClick={() => handleNavigation('/favoris')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                <button onClick={() => handleNavigation('/favoris')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-ink-700 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-700">
                   <Heart className="w-4 h-4" /> {tx("Mes favoris", "My favourites")}{favorites.length > 0 ? ` (${favorites.length})` : ""}
                 </button>
               </div>
 
               {/* Theme and Language Controls */}
-              <div className="p-5 space-y-2 border-t border-gray-200 dark:border-slate-700">
+              <div className="p-5 space-y-2 border-t border-ink-200 dark:border-ink-700">
                 {/* Language Toggle */}
                 <motion.button
                   onClick={() => setLanguage(language === "fr" ? "en" : "fr")}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600 transition-all text-sm font-medium"
+                  className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-ink-100 dark:bg-ink-700 text-ink-700 dark:text-ink-300 hover:bg-ink-200 dark:hover:bg-ink-600 transition-all text-sm font-medium"
                 >
                   <Globe className="w-4 h-4" />
                   <span>{language.toUpperCase()}</span>
@@ -356,7 +369,7 @@ export function Header() {
                   onClick={toggleTheme}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600 transition-all text-sm font-medium"
+                  className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-ink-100 dark:bg-ink-700 text-ink-700 dark:text-ink-300 hover:bg-ink-200 dark:hover:bg-ink-600 transition-all text-sm font-medium"
                 >
                   {theme === "light" ? (
                     <Moon className="w-4 h-4" />
@@ -368,17 +381,17 @@ export function Header() {
               </div>
 
               {/* Sidebar Footer */}
-              <div className="p-5 border-t border-gray-200 dark:border-slate-700">
-                <div className="text-xs text-gray-600 dark:text-gray-400 text-center space-y-1">
-                  <p className="font-semibold text-gray-900 dark:text-white">
+              <div className="p-5 border-t border-ink-200 dark:border-ink-700">
+                <div className="text-xs text-ink-600 dark:text-ink-400 text-center space-y-1">
+                  <p className="font-semibold text-ink-900 dark:text-white">
                     {t("common.needHelp")}
                   </p>
                   {contact.phone && !/x/i.test(contact.phone) ? (
-                    <a href={`tel:${contact.phone.replace(/\s/g, '')}`} className="text-[#0077BE] dark:text-[#00A8E8] font-medium">
+                    <a href={`tel:${contact.phone.replace(/\s/g, '')}`} className="text-brand-600 dark:text-aqua-500 font-medium">
                       {contact.phone}
                     </a>
                   ) : (
-                    <button onClick={() => handleNavigation('/contact')} className="text-[#0077BE] dark:text-[#00A8E8] font-medium">
+                    <button onClick={() => handleNavigation('/contact')} className="text-brand-600 dark:text-aqua-500 font-medium">
                       {tx("Nous contacter", "Contact us")}
                     </button>
                   )}

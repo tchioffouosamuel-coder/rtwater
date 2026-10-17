@@ -179,42 +179,42 @@ export const DEFAULT_HOME: HomeContent = {
         title: "Purification d'eau",
         description:
           "Systèmes de purification avancés pour une eau potable de qualité supérieure, adaptés à tous vos besoins.",
-        gradient: "from-blue-500 to-cyan-500",
+        gradient: "from-brand-500 to-aqua-400",
       },
       {
         icon: "zap",
         title: "Vente de pompes",
         description:
           "Large gamme de pompes à eau performantes et durables pour tous types d'installations résidentielles et industrielles.",
-        gradient: "from-[#00A8E8] to-[#0095D9]",
+        gradient: "from-aqua-500 to-aqua-600",
       },
       {
         icon: "beaker",
         title: "Désinfectants",
         description:
           "Produits de désinfection professionnels pour garantir la salubrité et la sécurité de votre eau.",
-        gradient: "from-green-500 to-emerald-500",
+        gradient: "from-brand-700 to-aqua-600",
       },
       {
         icon: "drill",
         title: "Forage",
         description:
           "Services de forage professionnel pour l'accès à des sources d'eau souterraines fiables et durables.",
-        gradient: "from-[#0077BE] to-[#00A8E8]",
+        gradient: "from-brand-600 to-aqua-500",
       },
       {
         icon: "waves",
         title: "Piscines",
         description:
           "Installation, entretien et traitement complet de piscines pour une eau cristalline toute l'année.",
-        gradient: "from-cyan-500 to-blue-500",
+        gradient: "from-aqua-400 to-brand-500",
       },
       {
         icon: "wrench",
         title: "Maintenance",
         description:
           "Services de maintenance préventive et corrective pour tous vos équipements de traitement d'eau.",
-        gradient: "from-[#0095D9] to-[#0077BE]",
+        gradient: "from-aqua-600 to-brand-600",
       },
     ],
   },
@@ -283,28 +283,28 @@ export const DEFAULT_ABOUT: AboutContent = {
       title: "Qualité supérieure",
       description:
         "Nous utilisons uniquement des équipements et produits de qualité certifiée pour garantir l'excellence de nos services.",
-      gradient: "from-blue-500 to-cyan-500",
+      gradient: "from-brand-500 to-aqua-400",
     },
     {
       icon: "zap",
       title: "Innovation",
       description:
         "Nous adoptons les technologies les plus récentes pour offrir des solutions modernes et efficaces.",
-      gradient: "from-[#00A8E8] to-[#0095D9]",
+      gradient: "from-aqua-500 to-aqua-600",
     },
     {
       icon: "award",
       title: "Expertise",
       description:
         "Notre équipe de professionnels certifiés possède plus de 15 ans d'expérience dans le domaine.",
-      gradient: "from-[#0077BE] to-[#00A8E8]",
+      gradient: "from-brand-600 to-aqua-500",
     },
     {
       icon: "users",
       title: "Service client",
       description:
         "Nous sommes disponibles 24/7 pour répondre à vos besoins et assurer votre satisfaction.",
-      gradient: "from-green-500 to-emerald-500",
+      gradient: "from-brand-700 to-aqua-600",
     },
   ],
   timelineBadge: "Notre parcours",

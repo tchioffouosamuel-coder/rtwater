@@ -75,14 +75,14 @@ export const AnalyticsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-          <p className="text-gray-500 text-sm mt-0.5">Données réelles — commandes, paiements, produits</p>
+          <h1 className="text-2xl font-bold text-ink-900">Analytics</h1>
+          <p className="text-ink-500 text-sm mt-0.5">Données réelles — commandes, paiements, produits</p>
         </div>
         <div className="flex gap-3">
           <select
             value={period}
             onChange={e => setPeriod(e.target.value as AnalyticsPeriod)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="px-4 py-2 border border-ink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"
           >
             <option value="week">Cette semaine</option>
             <option value="month">Ce mois</option>
@@ -91,7 +91,7 @@ export const AnalyticsPage: React.FC = () => {
           <button
             onClick={handleExport}
             disabled={!trend.length}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-40 text-sm"
+            className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition disabled:opacity-40 text-sm"
           >
             <Download size={16} />
             <span className="hidden sm:inline">Exporter CSV</span>
@@ -101,7 +101,7 @@ export const AnalyticsPage: React.FC = () => {
 
       {loading ? (
         <div className="flex items-center justify-center py-24">
-          <Loader2 className="animate-spin text-blue-500" size={40} />
+          <Loader2 className="animate-spin text-brand-500" size={40} />
         </div>
       ) : error ? (
         <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-6 text-red-700">
@@ -116,7 +116,7 @@ export const AnalyticsPage: React.FC = () => {
               {
                 label: 'Revenu total',
                 value: `${fmt(kpis!.total_revenue)} XAF`,
-                icon: DollarSign, bg: 'bg-blue-100', color: 'text-blue-600',
+                icon: DollarSign, bg: 'bg-brand-100', color: 'text-brand-600',
                 pct: kpis!.revenue_change_pct,
               },
               {
@@ -147,11 +147,11 @@ export const AnalyticsPage: React.FC = () => {
               const Icon = s.icon;
               const up = s.pct !== null && s.pct >= 0;
               return (
-                <div key={i} className="bg-white rounded-xl border border-gray-200 p-4">
+                <div key={i} className="bg-white rounded-xl border border-ink-200 p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">{s.label}</p>
-                      <p className="text-xl font-bold text-gray-900">{s.value}</p>
+                      <p className="text-xs text-ink-500 mb-1">{s.label}</p>
+                      <p className="text-xl font-bold text-ink-900">{s.value}</p>
                     </div>
                     <div className={`${s.bg} p-2.5 rounded-lg`}>
                       <Icon size={20} className={s.color} />
@@ -163,7 +163,7 @@ export const AnalyticsPage: React.FC = () => {
                         ? <><ArrowUpRight   size={13} className="text-green-600" /><span className="text-green-600">+{s.pct}%</span></>
                         : <><ArrowDownRight size={13} className="text-red-600"   /><span className="text-red-600">{s.pct}%</span></>
                       }
-                      <span className="text-gray-400">vs période préc.</span>
+                      <span className="text-ink-400">vs période préc.</span>
                     </div>
                   )}
                 </div>
@@ -173,10 +173,10 @@ export const AnalyticsPage: React.FC = () => {
 
           {/* Revenue area + Pie */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
-              <h3 className="text-base font-semibold text-gray-900 mb-4">Évolution du chiffre d'affaires</h3>
+            <div className="lg:col-span-2 bg-white rounded-xl border border-ink-200 p-6">
+              <h3 className="text-base font-semibold text-ink-900 mb-4">Évolution du chiffre d'affaires</h3>
               {trend.length === 0 ? (
-                <p className="text-sm text-gray-400 text-center py-16">Aucune donnée sur cette période.</p>
+                <p className="text-sm text-ink-400 text-center py-16">Aucune donnée sur cette période.</p>
               ) : (
                 <ResponsiveContainer width="100%" height={280}>
                   <AreaChart data={trend}>
@@ -199,10 +199,10 @@ export const AnalyticsPage: React.FC = () => {
               )}
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h3 className="text-base font-semibold text-gray-900 mb-4">Méthodes de paiement</h3>
+            <div className="bg-white rounded-xl border border-ink-200 p-6">
+              <h3 className="text-base font-semibold text-ink-900 mb-4">Méthodes de paiement</h3>
               {payments.every(p => p.value === 0) ? (
-                <p className="text-sm text-gray-400 text-center py-12">Aucun paiement.</p>
+                <p className="text-sm text-ink-400 text-center py-12">Aucun paiement.</p>
               ) : (
                 <>
                   <ResponsiveContainer width="100%" height={200}>
@@ -223,9 +223,9 @@ export const AnalyticsPage: React.FC = () => {
                       <div key={i} className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
                           <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: m.color ?? COLORS[i % COLORS.length] }} />
-                          <span className="text-gray-600">{m.name}</span>
+                          <span className="text-ink-600">{m.name}</span>
                         </div>
-                        <span className="font-semibold text-gray-900">{m.value}%</span>
+                        <span className="font-semibold text-ink-900">{m.value}%</span>
                       </div>
                     ))}
                   </div>
@@ -236,10 +236,10 @@ export const AnalyticsPage: React.FC = () => {
 
           {/* Orders bar + Customers line + Top products */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h3 className="text-base font-semibold text-gray-900 mb-4">Commandes par période</h3>
+            <div className="bg-white rounded-xl border border-ink-200 p-6">
+              <h3 className="text-base font-semibold text-ink-900 mb-4">Commandes par période</h3>
               {trend.length === 0 ? (
-                <p className="text-sm text-gray-400 text-center py-12">Aucune donnée.</p>
+                <p className="text-sm text-ink-400 text-center py-12">Aucune donnée.</p>
               ) : (
                 <ResponsiveContainer width="100%" height={220}>
                   <BarChart data={trend}>
@@ -253,10 +253,10 @@ export const AnalyticsPage: React.FC = () => {
               )}
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h3 className="text-base font-semibold text-gray-900 mb-4">Revenu journalier</h3>
+            <div className="bg-white rounded-xl border border-ink-200 p-6">
+              <h3 className="text-base font-semibold text-ink-900 mb-4">Revenu journalier</h3>
               {trend.length === 0 ? (
-                <p className="text-sm text-gray-400 text-center py-12">Aucune donnée.</p>
+                <p className="text-sm text-ink-400 text-center py-12">Aucune donnée.</p>
               ) : (
                 <ResponsiveContainer width="100%" height={220}>
                   <LineChart data={trend}>
@@ -274,25 +274,25 @@ export const AnalyticsPage: React.FC = () => {
               )}
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h3 className="text-base font-semibold text-gray-900 mb-4">Top 5 produits</h3>
+            <div className="bg-white rounded-xl border border-ink-200 p-6">
+              <h3 className="text-base font-semibold text-ink-900 mb-4">Top 5 produits</h3>
               {topProducts.length === 0 ? (
-                <p className="text-sm text-gray-400 text-center py-12">Aucune vente.</p>
+                <p className="text-sm text-ink-400 text-center py-12">Aucune vente.</p>
               ) : (
                 <div className="space-y-4">
                   {topProducts.map((p, i) => (
                     <div key={i}>
                       <div className="flex justify-between items-center mb-1">
-                        <p className="text-sm font-medium text-gray-900 truncate pr-2">{p.name}</p>
-                        <span className="text-xs font-semibold text-gray-500 whitespace-nowrap">{p.sales} ventes</span>
+                        <p className="text-sm font-medium text-ink-900 truncate pr-2">{p.name}</p>
+                        <span className="text-xs font-semibold text-ink-500 whitespace-nowrap">{p.sales} ventes</span>
                       </div>
-                      <div className="w-full bg-gray-100 rounded-full h-2">
+                      <div className="w-full bg-ink-100 rounded-full h-2">
                         <div
-                          className="bg-blue-600 h-2 rounded-full transition-all"
+                          className="bg-brand-600 h-2 rounded-full transition-all"
                           style={{ width: `${Math.round((p.sales / maxSales) * 100)}%` }}
                         />
                       </div>
-                      <p className="text-xs text-gray-400 mt-0.5">{fmt(p.revenue)} XAF</p>
+                      <p className="text-xs text-ink-400 mt-0.5">{fmt(p.revenue)} XAF</p>
                     </div>
                   ))}
                 </div>
@@ -301,30 +301,30 @@ export const AnalyticsPage: React.FC = () => {
           </div>
 
           {/* Table */}
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-xl border border-ink-200 overflow-hidden">
             <div className="p-6 border-b">
-              <h3 className="text-base font-semibold text-gray-900">Détail des ventes par produit</h3>
+              <h3 className="text-base font-semibold text-ink-900">Détail des ventes par produit</h3>
             </div>
             {topProducts.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-10">Aucune donnée.</p>
+              <p className="text-sm text-ink-400 text-center py-10">Aucune donnée.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-ink-50">
                     <tr>
-                      <th className="px-6 py-3 text-left font-semibold text-gray-700">#</th>
-                      <th className="px-6 py-3 text-left font-semibold text-gray-700">Produit</th>
-                      <th className="px-6 py-3 text-center font-semibold text-gray-700">Quantité vendue</th>
-                      <th className="px-6 py-3 text-right font-semibold text-gray-700">Revenu</th>
+                      <th className="px-6 py-3 text-left font-semibold text-ink-700">#</th>
+                      <th className="px-6 py-3 text-left font-semibold text-ink-700">Produit</th>
+                      <th className="px-6 py-3 text-center font-semibold text-ink-700">Quantité vendue</th>
+                      <th className="px-6 py-3 text-right font-semibold text-ink-700">Revenu</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-ink-100">
                     {topProducts.map((p, i) => (
-                      <tr key={i} className="hover:bg-gray-50 transition">
-                        <td className="px-6 py-4 text-gray-400 font-medium">{i + 1}</td>
-                        <td className="px-6 py-4 font-medium text-gray-900">{p.name}</td>
-                        <td className="px-6 py-4 text-center text-gray-600">{p.sales}</td>
-                        <td className="px-6 py-4 text-right font-semibold text-gray-900">{fmt(p.revenue)} XAF</td>
+                      <tr key={i} className="hover:bg-ink-50 transition">
+                        <td className="px-6 py-4 text-ink-400 font-medium">{i + 1}</td>
+                        <td className="px-6 py-4 font-medium text-ink-900">{p.name}</td>
+                        <td className="px-6 py-4 text-center text-ink-600">{p.sales}</td>
+                        <td className="px-6 py-4 text-right font-semibold text-ink-900">{fmt(p.revenue)} XAF</td>
                       </tr>
                     ))}
                   </tbody>

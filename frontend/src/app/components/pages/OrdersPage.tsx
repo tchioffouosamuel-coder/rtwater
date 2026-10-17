@@ -63,9 +63,9 @@ export function OrdersPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950">
+    <div className="min-h-screen bg-white dark:bg-ink-950">
       {/* Hero */}
-      <section className="relative py-16 sm:py-24 bg-gradient-to-br from-[#0077BE] to-[#00A8E8]">
+      <section className="relative py-16 sm:py-24 bg-gradient-to-br from-brand-600 to-aqua-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -87,17 +87,17 @@ export function OrdersPage() {
       </section>
 
       {/* Content */}
-      <section className="py-12 sm:py-24 bg-gradient-to-b from-white to-gray-50 dark:from-slate-950 dark:to-slate-900">
+      <section className="py-12 sm:py-24 bg-gradient-to-b from-white to-ink-50 dark:from-ink-950 dark:to-ink-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Not logged in */}
           {!isLoggedIn && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16">
-              <LogIn className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Connexion requise</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">Connectez-vous pour voir vos commandes.</p>
+              <LogIn className="w-16 h-16 text-ink-400 dark:text-ink-600 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-ink-900 dark:text-white mb-2">Connexion requise</h3>
+              <p className="text-ink-600 dark:text-ink-400 mb-6">Connectez-vous pour voir vos commandes.</p>
               <button
                 onClick={() => navigate("/login", { state: { from: "/orders" } })}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-brand-600 to-aqua-500 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
               >
                 <LogIn size={18} />
                 Se connecter
@@ -107,7 +107,7 @@ export function OrdersPage() {
 
           {/* Loading */}
           {isLoggedIn && loading && (
-            <div className="flex items-center justify-center py-16 gap-3 text-gray-400">
+            <div className="flex items-center justify-center py-16 gap-3 text-ink-400">
               <Loader2 size={24} className="animate-spin" />
               <span>Chargement de vos commandes...</span>
             </div>
@@ -116,12 +116,12 @@ export function OrdersPage() {
           {/* Empty */}
           {isLoggedIn && !loading && orders.length === 0 && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16">
-              <Package className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t("orders.noOrders")}</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">{t("orders.noOrdersDescription")}</p>
+              <Package className="w-16 h-16 text-ink-400 dark:text-ink-600 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-ink-900 dark:text-white mb-2">{t("orders.noOrders")}</h3>
+              <p className="text-ink-600 dark:text-ink-400 mb-6">{t("orders.noOrdersDescription")}</p>
               <button
                 onClick={() => navigate("/shop")}
-                className="inline-block bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
+                className="inline-block bg-gradient-to-r from-brand-600 to-aqua-500 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
               >
                 {t("orders.continueShopping")}
               </button>
@@ -131,7 +131,7 @@ export function OrdersPage() {
           {/* Orders list */}
           {isLoggedIn && !loading && orders.length > 0 && (
             <div className="space-y-6">
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-ink-600 dark:text-ink-400 mb-6">
                 {t("orders.totalOrders")} {orders.length}
               </p>
 
@@ -141,21 +141,21 @@ export function OrdersPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.07 }}
-                  className="bg-white dark:bg-slate-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all"
+                  className="bg-white dark:bg-ink-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all"
                 >
                   {/* Order Header */}
-                  <div className="p-6 border-b border-gray-200 dark:border-slate-700">
+                  <div className="p-6 border-b border-ink-200 dark:border-ink-700">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div>
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                        <h3 className="text-lg font-bold text-ink-900 dark:text-white mb-2">
                           {orderReference(order)}
                         </h3>
-                        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="flex items-center gap-4 text-sm text-ink-600 dark:text-ink-400">
                           <div className="flex items-center gap-2">
                             <Calendar size={16} />
                             {order.created_at}
                           </div>
-                          <div className="text-xl font-bold text-[#0077BE] dark:text-[#00A8E8]">
+                          <div className="text-xl font-bold text-brand-600 dark:text-aqua-500">
                             {Math.round(Number(order.total ?? 0)).toLocaleString(locale)} XAF
                           </div>
                         </div>
@@ -167,7 +167,7 @@ export function OrdersPage() {
                         <div className="flex gap-3 text-sm">
                           <Link
                             to={`/suivi-commande?ref=${orderReference(order)}`}
-                            className="inline-flex items-center gap-1 text-[#0077BE] dark:text-[#00A8E8] hover:underline"
+                            className="inline-flex items-center gap-1 text-brand-600 dark:text-aqua-500 hover:underline"
                           >
                             <Truck size={14} /> {tx("Suivre", "Track")}
                           </Link>
@@ -176,7 +176,7 @@ export function OrdersPage() {
                               type="button"
                               onClick={() => handleReceipt(order.id)}
                               disabled={downloading === order.id}
-                              className="inline-flex items-center gap-1 text-[#0077BE] dark:text-[#00A8E8] hover:underline disabled:opacity-60"
+                              className="inline-flex items-center gap-1 text-brand-600 dark:text-aqua-500 hover:underline disabled:opacity-60"
                             >
                               {downloading === order.id ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
                               {tx("Reçu PDF", "PDF receipt")}
@@ -189,23 +189,23 @@ export function OrdersPage() {
 
                   {/* Items */}
                   {order.items?.length > 0 && (
-                    <div className="p-6 border-b border-gray-200 dark:border-slate-700">
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-4">{t("orders.items")}</h4>
+                    <div className="p-6 border-b border-ink-200 dark:border-ink-700">
+                      <h4 className="font-semibold text-ink-900 dark:text-white mb-4">{t("orders.items")}</h4>
                       <div className="space-y-3">
                         {order.items.map(item => (
                           <div
                             key={item.id}
-                            className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg"
+                            className="flex items-center justify-between p-3 bg-ink-50 dark:bg-ink-700 rounded-lg"
                           >
                             <div>
-                              <p className="font-medium text-gray-900 dark:text-white">
+                              <p className="font-medium text-ink-900 dark:text-white">
                                 {item.product?.name ?? tx("Produit supprimé", "Product removed")}
                               </p>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                              <p className="text-sm text-ink-600 dark:text-ink-400">
                                 {t("orders.quantity")}: {item.quantity} × {Number(item.price).toLocaleString(locale)} XAF
                               </p>
                             </div>
-                            <p className="font-semibold text-gray-900 dark:text-white">
+                            <p className="font-semibold text-ink-900 dark:text-white">
                               {(item.price * item.quantity).toLocaleString(locale)} XAF
                             </p>
                           </div>
@@ -216,9 +216,9 @@ export function OrdersPage() {
 
                   {/* Delivery address */}
                   {order.address && (
-                    <div className="p-6 bg-gray-50 dark:bg-slate-700/50">
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-3">{t("orders.deliveryInfo")}</h4>
-                      <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="p-6 bg-ink-50 dark:bg-ink-700/50">
+                      <h4 className="font-semibold text-ink-900 dark:text-white mb-3">{t("orders.deliveryInfo")}</h4>
+                      <div className="flex items-start gap-2 text-sm text-ink-600 dark:text-ink-400">
                         <MapPin size={16} className="mt-0.5 flex-shrink-0" />
                         <span>{order.address}</span>
                       </div>

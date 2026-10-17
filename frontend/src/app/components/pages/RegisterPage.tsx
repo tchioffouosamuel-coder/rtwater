@@ -102,7 +102,7 @@ export const RegisterPage: React.FC = () => {
   return (
     <div className="min-h-screen flex">
       {/* ── Left brand panel ── */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#004d8a] via-[#0077BE] to-[#00A8E8] flex-col items-center justify-center p-12">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-brand-800 via-brand-600 to-aqua-500 flex-col items-center justify-center p-12">
         {bubbles.map((b, i) => <Bubble key={i} {...b} />)}
 
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -167,9 +167,9 @@ export const RegisterPage: React.FC = () => {
       </div>
 
       {/* ── Right form panel ── */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 bg-gradient-to-br from-gray-50 to-blue-50/40 dark:from-slate-950 dark:to-slate-900 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-72 h-72 bg-[#00A8E8]/5 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-56 h-56 bg-[#0077BE]/5 rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 bg-gradient-to-br from-ink-50 to-brand-50/40 dark:from-ink-950 dark:to-ink-900 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-72 h-72 bg-aqua-500/5 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-56 h-56 bg-brand-600/5 rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -186,7 +186,7 @@ export const RegisterPage: React.FC = () => {
           <div className="hidden lg:block mb-6">
             <Link
               to="/login"
-              className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-[#0077BE] dark:hover:text-[#00A8E8] transition-colors group"
+              className="inline-flex items-center gap-1.5 text-sm text-ink-500 dark:text-ink-400 hover:text-brand-600 dark:hover:text-aqua-500 transition-colors group"
             >
               <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
               {tx("Déjà un compte ? Se connecter", "Already have an account? Sign in")}
@@ -194,12 +194,12 @@ export const RegisterPage: React.FC = () => {
           </div>
 
           {/* Card */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-gray-200/60 dark:shadow-black/30 border border-gray-100 dark:border-slate-700 p-8 sm:p-10">
+          <div className="bg-white dark:bg-ink-800 rounded-2xl shadow-xl shadow-ink-200/60 dark:shadow-black/30 border border-ink-100 dark:border-ink-700 p-8 sm:p-10">
             <div className="mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold text-ink-900 dark:text-white">
                 {tx("Créer un compte", "Create an account")}
               </h2>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1.5">
+              <p className="text-ink-500 dark:text-ink-400 text-sm mt-1.5">
                 {tx("Rejoignez RT Water Solution en quelques secondes", "Join RT Water Solution in seconds")}
               </p>
             </div>
@@ -224,13 +224,13 @@ export const RegisterPage: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Full name */}
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
+                <label className="block text-sm font-semibold text-ink-700 dark:text-ink-200">
                   {tx("Nom complet", "Full name")}
                 </label>
                 <div className="relative group">
                   <User
                     size={17}
-                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#0077BE] transition-colors"
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-600 transition-colors"
                   />
                   <input
                     type="text"
@@ -239,20 +239,20 @@ export const RegisterPage: React.FC = () => {
                     value={name}
                     onChange={e => setName(e.target.value)}
                     placeholder="Jean Dupont"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0077BE]/25 focus:border-[#0077BE] dark:focus:border-[#00A8E8] transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-ink-200 dark:border-ink-600 bg-ink-50 dark:bg-ink-700 text-ink-900 dark:text-white placeholder-ink-400 dark:placeholder-ink-500 focus:outline-none focus:ring-2 focus:ring-brand-600/25 focus:border-brand-600 dark:focus:border-aqua-500 transition-all text-sm"
                   />
                 </div>
               </div>
 
               {/* Email */}
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
+                <label className="block text-sm font-semibold text-ink-700 dark:text-ink-200">
                   {tx("Adresse email", "Email address")}
                 </label>
                 <div className="relative group">
                   <Mail
                     size={17}
-                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#0077BE] transition-colors"
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-600 transition-colors"
                   />
                   <input
                     type="email"
@@ -261,20 +261,20 @@ export const RegisterPage: React.FC = () => {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder={tx("votre@email.com", "you@email.com")}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0077BE]/25 focus:border-[#0077BE] dark:focus:border-[#00A8E8] transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-ink-200 dark:border-ink-600 bg-ink-50 dark:bg-ink-700 text-ink-900 dark:text-white placeholder-ink-400 dark:placeholder-ink-500 focus:outline-none focus:ring-2 focus:ring-brand-600/25 focus:border-brand-600 dark:focus:border-aqua-500 transition-all text-sm"
                   />
                 </div>
               </div>
 
               {/* Password */}
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
+                <label className="block text-sm font-semibold text-ink-700 dark:text-ink-200">
                   {tx("Mot de passe", "Password")}
                 </label>
                 <div className="relative group">
                   <Lock
                     size={17}
-                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#0077BE] transition-colors"
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-600 transition-colors"
                   />
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -283,12 +283,12 @@ export const RegisterPage: React.FC = () => {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0077BE]/25 focus:border-[#0077BE] dark:focus:border-[#00A8E8] transition-all text-sm"
+                    className="w-full pl-10 pr-11 py-3 rounded-xl border border-ink-200 dark:border-ink-600 bg-ink-50 dark:bg-ink-700 text-ink-900 dark:text-white placeholder-ink-400 dark:placeholder-ink-500 focus:outline-none focus:ring-2 focus:ring-brand-600/25 focus:border-brand-600 dark:focus:border-aqua-500 transition-all text-sm"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-0.5"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-600 dark:hover:text-ink-300 transition-colors p-0.5"
                     tabIndex={-1}
                   >
                     {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
@@ -303,25 +303,25 @@ export const RegisterPage: React.FC = () => {
                         <div
                           key={i}
                           className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                            i < passwordStrength.level ? passwordStrength.color : 'bg-gray-200 dark:bg-slate-600'
+                            i < passwordStrength.level ? passwordStrength.color : 'bg-ink-200 dark:bg-ink-600'
                           }`}
                         />
                       ))}
                     </div>
-                    <p className="text-xs text-gray-400 dark:text-gray-500">{passwordStrength.label}</p>
+                    <p className="text-xs text-ink-400 dark:text-ink-500">{passwordStrength.label}</p>
                   </div>
                 )}
               </div>
 
               {/* Confirm password */}
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200">
+                <label className="block text-sm font-semibold text-ink-700 dark:text-ink-200">
                   {tx("Confirmer le mot de passe", "Confirm password")}
                 </label>
                 <div className="relative group">
                   <Lock
                     size={17}
-                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#0077BE] transition-colors"
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400 group-focus-within:text-brand-600 transition-colors"
                   />
                   <input
                     type={showConfirm ? 'text' : 'password'}
@@ -330,16 +330,16 @@ export const RegisterPage: React.FC = () => {
                     value={confirmPassword}
                     onChange={e => setConfirm(e.target.value)}
                     placeholder="••••••••"
-                    className={`w-full pl-10 pr-11 py-3 rounded-xl border bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-all text-sm ${
+                    className={`w-full pl-10 pr-11 py-3 rounded-xl border bg-ink-50 dark:bg-ink-700 text-ink-900 dark:text-white placeholder-ink-400 dark:placeholder-ink-500 focus:outline-none focus:ring-2 transition-all text-sm ${
                       confirmPassword && password !== confirmPassword
                         ? 'border-red-300 dark:border-red-700 focus:ring-red-200/40 focus:border-red-400'
-                        : 'border-gray-200 dark:border-slate-600 focus:ring-[#0077BE]/25 focus:border-[#0077BE] dark:focus:border-[#00A8E8]'
+                        : 'border-ink-200 dark:border-ink-600 focus:ring-brand-600/25 focus:border-brand-600 dark:focus:border-aqua-500'
                     }`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-0.5"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-600 dark:hover:text-ink-300 transition-colors p-0.5"
                     tabIndex={-1}
                   >
                     {showConfirm ? <EyeOff size={17} /> : <Eye size={17} />}
@@ -356,7 +356,7 @@ export const RegisterPage: React.FC = () => {
                 disabled={isLoading}
                 whileHover={{ scale: isLoading ? 1 : 1.015 }}
                 whileTap={{ scale: isLoading ? 1 : 0.985 }}
-                className="w-full py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-[#0077BE] to-[#00A8E8] hover:from-[#005f9e] hover:to-[#0095D9] shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 text-sm mt-2"
+                className="w-full py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-brand-600 to-aqua-500 hover:from-brand-700 hover:to-aqua-600 shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 text-sm mt-2"
               >
                 {isLoading ? (
                   <>
@@ -379,15 +379,15 @@ export const RegisterPage: React.FC = () => {
             {/* Divider + login */}
             <div className="mt-7">
               <div className="relative flex items-center gap-3">
-                <div className="flex-1 h-px bg-gray-200 dark:bg-slate-700" />
-                <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">{tx("Déjà inscrit ?", "Already registered?")}</span>
-                <div className="flex-1 h-px bg-gray-200 dark:bg-slate-700" />
+                <div className="flex-1 h-px bg-ink-200 dark:bg-ink-700" />
+                <span className="text-xs text-ink-400 dark:text-ink-500 font-medium">{tx("Déjà inscrit ?", "Already registered?")}</span>
+                <div className="flex-1 h-px bg-ink-200 dark:bg-ink-700" />
               </div>
 
               <div className="mt-5">
                 <Link
                   to="/login"
-                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:border-[#0077BE] dark:hover:border-[#00A8E8] hover:text-[#0077BE] dark:hover:text-[#00A8E8] hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-all"
+                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-ink-200 dark:border-ink-600 text-ink-700 dark:text-ink-300 text-sm font-semibold hover:border-brand-600 dark:hover:border-aqua-500 hover:text-brand-600 dark:hover:text-aqua-500 hover:bg-brand-50/50 dark:hover:bg-brand-900/10 transition-all"
                 >
                   {tx("Se connecter à mon compte", "Sign in to my account")}
                 </Link>
@@ -396,11 +396,11 @@ export const RegisterPage: React.FC = () => {
           </div>
 
           {/* Footer note */}
-          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-6">
+          <p className="text-center text-xs text-ink-400 dark:text-ink-500 mt-6">
             {tx("En créant un compte, vous acceptez nos", "By creating an account, you accept our")}{' '}
-            <Link to="/pages/conditions-generales" className="text-[#0077BE] dark:text-[#00A8E8] hover:underline">{tx("conditions générales", "terms and conditions")}</Link>
+            <Link to="/pages/conditions-generales" className="text-brand-600 dark:text-aqua-500 hover:underline">{tx("conditions générales", "terms and conditions")}</Link>
             {' '}{tx("et notre", "and our")}{' '}
-            <Link to="/pages/politique-de-confidentialite" className="text-[#0077BE] dark:text-[#00A8E8] hover:underline">{tx("politique de confidentialité", "privacy policy")}</Link>.
+            <Link to="/pages/politique-de-confidentialite" className="text-brand-600 dark:text-aqua-500 hover:underline">{tx("politique de confidentialité", "privacy policy")}</Link>.
           </p>
         </motion.div>
       </div>

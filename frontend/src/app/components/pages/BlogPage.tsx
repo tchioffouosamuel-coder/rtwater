@@ -45,9 +45,9 @@ export function BlogPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950">
+    <div className="min-h-screen bg-white dark:bg-ink-950">
       {/* Hero */}
-      <section className="py-20 sm:py-28 bg-gradient-to-br from-[#0077BE] to-[#00A8E8]">
+      <section className="py-20 sm:py-28 bg-gradient-to-br from-brand-600 to-aqua-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
@@ -68,7 +68,7 @@ export function BlogPage() {
       <section className="py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading && (
-            <div className="flex items-center justify-center py-16 gap-3 text-gray-400">
+            <div className="flex items-center justify-center py-16 gap-3 text-ink-400">
               <Loader2 size={24} className="animate-spin" />
               <span>Chargement des articles...</span>
             </div>
@@ -76,8 +76,8 @@ export function BlogPage() {
 
           {!loading && posts.length === 0 && (
             <div className="text-center py-16">
-              <Rss size={48} className="mx-auto text-gray-300 mb-4" />
-              <p className="text-gray-500 text-lg">Aucun article publié pour le moment.</p>
+              <Rss size={48} className="mx-auto text-ink-300 mb-4" />
+              <p className="text-ink-500 text-lg">Aucun article publié pour le moment.</p>
             </div>
           )}
 
@@ -91,17 +91,17 @@ export function BlogPage() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.06 }}
                   onClick={() => navigate(`/blog/${post.slug}`)}
-                  className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl border border-gray-100 dark:border-slate-700 cursor-pointer group transition-all hover:-translate-y-1"
+                  className="bg-white dark:bg-ink-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl border border-ink-100 dark:border-ink-700 cursor-pointer group transition-all hover:-translate-y-1"
                 >
                   {post.image_url ? (
                     <img src={post.image_url} alt={post.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
-                    <div className="w-full h-48 bg-gradient-to-br from-[#0077BE]/20 to-[#00A8E8]/20 flex items-center justify-center">
-                      <Rss size={40} className="text-[#0077BE]/40" />
+                    <div className="w-full h-48 bg-gradient-to-br from-brand-600/20 to-aqua-500/20 flex items-center justify-center">
+                      <Rss size={40} className="text-brand-600/40" />
                     </div>
                   )}
                   <div className="p-6">
-                    <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 mb-3">
+                    <div className="flex items-center gap-4 text-xs text-ink-500 dark:text-ink-400 mb-3">
                       {post.published_at && (
                         <span className="flex items-center gap-1">
                           <Calendar size={12} />
@@ -115,13 +115,13 @@ export function BlogPage() {
                         </span>
                       )}
                     </div>
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-[#0077BE] dark:group-hover:text-[#00A8E8] transition-colors line-clamp-2">
+                    <h2 className="text-lg font-bold text-ink-900 dark:text-white mb-2 group-hover:text-brand-600 dark:group-hover:text-aqua-500 transition-colors line-clamp-2">
                       {post.title}
                     </h2>
                     {post.excerpt && (
-                      <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">{post.excerpt}</p>
+                      <p className="text-ink-600 dark:text-ink-400 text-sm line-clamp-3">{post.excerpt}</p>
                     )}
-                    <span className="inline-block mt-4 text-sm font-semibold text-[#0077BE] dark:text-[#00A8E8] group-hover:underline">
+                    <span className="inline-block mt-4 text-sm font-semibold text-brand-600 dark:text-aqua-500 group-hover:underline">
                       Lire la suite →
                     </span>
                   </div>
@@ -173,7 +173,7 @@ export function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center gap-3 text-gray-400">
+      <div className="min-h-screen flex items-center justify-center gap-3 text-ink-400">
         <Loader2 size={24} className="animate-spin" />
         <span>Chargement de l'article...</span>
       </div>
@@ -183,8 +183,8 @@ export function BlogPostPage() {
   if (notFound || !post) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p className="text-gray-500 text-lg">Article introuvable.</p>
-        <button onClick={() => navigate("/blog")} className="text-[#0077BE] hover:underline font-semibold">
+        <p className="text-ink-500 text-lg">Article introuvable.</p>
+        <button onClick={() => navigate("/blog")} className="text-brand-600 hover:underline font-semibold">
           ← Retour au blog
         </button>
       </div>
@@ -192,7 +192,7 @@ export function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950">
+    <div className="min-h-screen bg-white dark:bg-ink-950">
       {/* Hero image */}
       {post.image_url && (
         <div className="w-full h-64 sm:h-96 overflow-hidden">
@@ -203,13 +203,13 @@ export function BlogPostPage() {
       <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
         <button
           onClick={() => navigate("/blog")}
-          className="inline-flex items-center gap-2 text-gray-500 hover:text-[#0077BE] mb-8 transition-colors text-sm font-medium"
+          className="inline-flex items-center gap-2 text-ink-500 hover:text-brand-600 mb-8 transition-colors text-sm font-medium"
         >
           <ArrowLeft size={16} />
           Retour au blog
         </button>
 
-        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <div className="flex items-center gap-4 text-sm text-ink-500 dark:text-ink-400 mb-4">
           {post.published_at && (
             <span className="flex items-center gap-1">
               <Calendar size={14} />
@@ -224,12 +224,12 @@ export function BlogPostPage() {
           )}
         </div>
 
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-ink-900 dark:text-white mb-8 leading-tight">
           {post.title}
         </h1>
 
         <div
-          className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-gray-900 prose-a:text-[#0077BE]"
+          className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-ink-900 prose-a:text-brand-600"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>

@@ -45,24 +45,24 @@ export function CookieBanner() {
           aria-labelledby="cookie-banner-title"
           className="fixed inset-x-0 bottom-0 z-50 p-3 sm:p-4"
         >
-          <div className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-2xl backdrop-blur dark:border-slate-700 dark:bg-slate-900/95 sm:p-5">
+          <div className="mx-auto max-w-4xl rounded-2xl border border-ink-200 bg-white/95 p-4 shadow-2xl backdrop-blur dark:border-ink-700 dark:bg-ink-900/95 sm:p-5">
             <div className="flex items-start gap-3">
-              <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#0077BE]/10 text-[#0077BE]">
+              <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-brand-600/10 text-brand-600">
                 <Cookie size={18} />
               </span>
 
               <div className="min-w-0 flex-1">
-                <h2 id="cookie-banner-title" className="text-sm font-semibold text-slate-900 dark:text-white">
+                <h2 id="cookie-banner-title" className="text-sm font-semibold text-ink-900 dark:text-white">
                   {tx("Mesure d'audience", "Analytics")}
                 </h2>
-                <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                <p className="mt-1 text-xs leading-relaxed text-ink-600 dark:text-ink-300">
                   {tx(
                     "Nous souhaitons mesurer la fréquentation du site pour l'améliorer. Les cookies nécessaires au panier et à votre session restent actifs dans tous les cas.",
                     "We would like to measure site traffic in order to improve it. Cookies required for your cart and session stay active either way.",
                   )}{" "}
                   <Link
                     to="/pages/politique-de-confidentialite"
-                    className="font-medium text-[#0077BE] underline hover:no-underline"
+                    className="font-medium text-brand-600 underline hover:no-underline"
                   >
                     {tx("En savoir plus", "Learn more")}
                   </Link>
@@ -71,13 +71,13 @@ export function CookieBanner() {
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     onClick={() => decide("granted")}
-                    className="rounded-lg bg-gradient-to-r from-[#0077BE] to-[#00A8E8] px-4 py-2 text-xs font-semibold text-white transition hover:shadow-lg"
+                    className="rounded-lg bg-gradient-to-r from-brand-600 to-aqua-500 px-4 py-2 text-xs font-semibold text-white transition hover:shadow-lg"
                   >
                     {tx("Accepter", "Accept")}
                   </button>
                   <button
                     onClick={() => decide("denied")}
-                    className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                    className="rounded-lg border border-ink-200 bg-white px-4 py-2 text-xs font-medium text-ink-700 transition hover:bg-ink-50 dark:border-ink-600 dark:bg-ink-800 dark:text-ink-200 dark:hover:bg-ink-700"
                   >
                     {tx("Refuser", "Decline")}
                   </button>
@@ -88,7 +88,7 @@ export function CookieBanner() {
               <button
                 onClick={() => decide("denied")}
                 aria-label={tx("Fermer et refuser", "Close and decline")}
-                className="flex-shrink-0 text-slate-400 transition hover:text-slate-600 dark:hover:text-slate-200"
+                className="flex-shrink-0 text-ink-400 transition hover:text-ink-600 dark:hover:text-ink-200"
               >
                 <X size={18} />
               </button>

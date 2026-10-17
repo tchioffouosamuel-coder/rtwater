@@ -259,9 +259,9 @@ export const ProductsPage: React.FC = () => {
     >
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 p-4">
-          <p className="text-sm text-blue-600 font-medium">Total produits</p>
-          <p className="text-2xl font-bold text-blue-900 mt-2">{stats.total}</p>
+        <div className="bg-gradient-to-br from-brand-50 to-brand-100 rounded-xl border border-brand-200 p-4">
+          <p className="text-sm text-brand-600 font-medium">Total produits</p>
+          <p className="text-2xl font-bold text-brand-900 mt-2">{stats.total}</p>
         </div>
         <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl border border-red-200 p-4">
           <p className="text-sm text-red-600 font-medium">Rupture de stock</p>
@@ -282,18 +282,18 @@ export const ProductsPage: React.FC = () => {
       {/* Header Actions */}
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="flex-1 relative">
-          <Search className="absolute left-4 top-3 text-slate-400" size={18} />
+          <Search className="absolute left-4 top-3 text-ink-400" size={18} />
           <input
             type="text"
             placeholder="Rechercher un produit..."
             value={searchTerm}
             onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-            className="w-full pl-12 pr-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-white"
+            className="w-full pl-12 pr-4 py-2.5 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition bg-white"
           />
         </div>
         <button
           onClick={() => navigate('/admin/products/import')}
-          className="flex items-center gap-2 border border-slate-200 bg-white text-slate-700 px-6 py-2.5 rounded-lg hover:bg-slate-50 transition font-medium whitespace-nowrap"
+          className="flex items-center gap-2 border border-ink-200 bg-white text-ink-700 px-6 py-2.5 rounded-lg hover:bg-ink-50 transition font-medium whitespace-nowrap"
           title="Importer un catalogue Excel avec rattachement automatique des images"
         >
           <FileSpreadsheet size={18} />
@@ -301,7 +301,7 @@ export const ProductsPage: React.FC = () => {
         </button>
         <button
           onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition font-medium whitespace-nowrap"
+          className="flex items-center gap-2 bg-brand-600 text-white px-6 py-2.5 rounded-lg hover:bg-brand-700 transition font-medium whitespace-nowrap"
         >
           <Plus size={18} />
           Ajouter produit
@@ -309,33 +309,33 @@ export const ProductsPage: React.FC = () => {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-ink-200 overflow-hidden">
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="py-16 text-center text-slate-400 text-sm">Chargement...</div>
+            <div className="py-16 text-center text-ink-400 text-sm">Chargement...</div>
           ) : (
             <table className="w-full">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">Produit</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-slate-900">Prix de vente</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-slate-900">Stock</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-slate-900">Valeur stock</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-slate-900">Statut</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-slate-900">Actions</th>
+                <tr className="bg-ink-50 border-b border-ink-200">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-ink-900">Produit</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-ink-900">Prix de vente</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-ink-900">Stock</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-ink-900">Valeur stock</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-ink-900">Statut</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-ink-900">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-ink-200">
                 {paginatedProducts.map((product) => {
                   const isCritical = product.stock === 0;
                   const isLow = product.stock > 0 && product.stock <= 5;
 
                   return (
-                    <tr key={product.id} className={`hover:bg-slate-50 transition-colors ${isCritical ? 'bg-red-50' : isLow ? 'bg-amber-50' : ''}`}>
+                    <tr key={product.id} className={`hover:bg-ink-50 transition-colors ${isCritical ? 'bg-red-50' : isLow ? 'bg-amber-50' : ''}`}>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           {product.image_url ? (
-                            <img src={product.image_url} alt={product.name} className="w-10 h-10 object-cover rounded-lg border border-slate-200" />
+                            <img src={product.image_url} alt={product.name} className="w-10 h-10 object-cover rounded-lg border border-ink-200" />
                           ) : product.awaiting_image ? (
                             <span
                               title={`Photo attendue : ${product.awaiting_image}`}
@@ -345,19 +345,19 @@ export const ProductsPage: React.FC = () => {
                             </span>
                           ) : null}
                           <div>
-                            <p className="text-sm font-medium text-slate-900">{product.name}</p>
+                            <p className="text-sm font-medium text-ink-900">{product.name}</p>
                             {product.awaiting_image && (
                               <p className="text-xs text-amber-600">
                                 Photo attendue : <code>{product.awaiting_image}</code>
                               </p>
                             )}
                             {product.category && (
-                              <p className="text-xs text-slate-400">{product.category.name ?? product.category}</p>
+                              <p className="text-xs text-ink-400">{product.category.name ?? product.category}</p>
                             )}
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-slate-900 text-right">
+                      <td className="px-6 py-4 text-sm font-semibold text-ink-900 text-right">
                         {Number(product.price).toLocaleString('fr-FR')} XAF
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -370,12 +370,12 @@ export const ProductsPage: React.FC = () => {
                           {product.stock}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-slate-900 text-right">
+                      <td className="px-6 py-4 text-sm font-semibold text-ink-900 text-right">
                         {(product.price * product.stock).toLocaleString('fr-FR')} XAF
                       </td>
                       <td className="px-6 py-4 text-center">
                         <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                          product.is_available ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
+                          product.is_available ? 'bg-green-100 text-green-700' : 'bg-ink-100 text-ink-500'
                         }`}>
                           {product.is_available ? 'Disponible' : 'Indisponible'}
                         </span>
@@ -384,7 +384,7 @@ export const ProductsPage: React.FC = () => {
                         <div className="flex justify-center gap-2">
                           <button
                             onClick={() => handleOpenModal(product)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                            className="p-2 text-brand-600 hover:bg-brand-50 rounded-lg transition"
                           >
                             <Edit2 size={16} />
                           </button>
@@ -407,18 +407,18 @@ export const ProductsPage: React.FC = () => {
         {/* Empty State */}
         {!loading && filteredProducts.length === 0 && (
           <div className="px-6 py-12 text-center">
-            <p className="text-slate-500 font-medium">Aucun produit trouvé</p>
+            <p className="text-ink-500 font-medium">Aucun produit trouvé</p>
           </div>
         )}
 
         {/* Table Footer */}
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-sm text-slate-600">
+        <div className="px-6 py-4 bg-ink-50 border-t border-ink-200 flex items-center justify-between text-sm text-ink-600">
           <p>Total : {pagination ? pagination.total : filteredProducts.length} produits</p>
           <div className="flex gap-2">
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1 rounded border border-slate-300 hover:bg-slate-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 rounded border border-ink-300 hover:bg-ink-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Précédent
             </button>
@@ -430,7 +430,7 @@ export const ProductsPage: React.FC = () => {
                     key={page}
                     onClick={() => setCurrentPage(page)}
                     className={`px-3 py-1 rounded ${
-                      currentPage === page ? 'bg-blue-600 text-white' : 'border border-slate-300 hover:bg-slate-100'
+                      currentPage === page ? 'bg-brand-600 text-white' : 'border border-ink-300 hover:bg-ink-100'
                     } transition`}
                   >
                     {page}
@@ -441,7 +441,7 @@ export const ProductsPage: React.FC = () => {
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="px-3 py-1 rounded border border-slate-300 hover:bg-slate-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 rounded border border-ink-300 hover:bg-ink-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Suivant
             </button>
@@ -453,22 +453,22 @@ export const ProductsPage: React.FC = () => {
       {showModal && (
         <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 px-6 py-4 border-b border-slate-200 bg-white flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-slate-900">
+            <div className="sticky top-0 px-6 py-4 border-b border-ink-200 bg-white flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-ink-900">
                 {editingId ? 'Modifier le produit' : 'Ajouter un produit'}
               </h3>
-              <button onClick={handleCloseModal} className="p-1 hover:bg-slate-100 rounded-lg transition">
+              <button onClick={handleCloseModal} className="p-1 hover:bg-ink-100 rounded-lg transition">
                 <X size={20} />
               </button>
             </div>
 
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Catégorie</label>
+                <label className="block text-sm font-medium text-ink-900 mb-2">Catégorie</label>
                 <select
                   value={formData.category_id}
                   onChange={(e) => setFormData(p => ({ ...p, category_id: e.target.value }))}
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white text-slate-900"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none bg-white text-ink-900"
                 >
                   <option value="">— Sans catégorie —</option>
                   {categories.map(cat => (
@@ -478,18 +478,18 @@ export const ProductsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Nom du produit *</label>
+                <label className="block text-sm font-medium text-ink-900 mb-2">Nom du produit *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
                   placeholder="Nom du produit"
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-slate-900"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none text-ink-900"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Prix de vente (XAF) *</label>
+                <label className="block text-sm font-medium text-ink-900 mb-2">Prix de vente (XAF) *</label>
                 <input
                   type="number"
                   value={formData.price}
@@ -497,18 +497,18 @@ export const ProductsPage: React.FC = () => {
                   placeholder="0"
                   step="1"
                   min="0"
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
                 />
               </div>
 
               {/* Promotion — alimente les badges « -X % » et la section
                   « Offres du moment » de la boutique */}
-              <div className="rounded-lg border border-slate-200 p-4 space-y-3">
-                <p className="text-sm font-medium text-slate-900">Promotion</p>
+              <div className="rounded-lg border border-ink-200 p-4 space-y-3">
+                <p className="text-sm font-medium text-ink-900">Promotion</p>
 
                 <div className="grid grid-cols-2 gap-3">
                   <label className="block">
-                    <span className="block text-xs font-medium text-slate-600 mb-1">Remise (%)</span>
+                    <span className="block text-xs font-medium text-ink-600 mb-1">Remise (%)</span>
                     <input
                       type="number"
                       value={formData.discount}
@@ -518,17 +518,17 @@ export const ProductsPage: React.FC = () => {
                       }))}
                       min="0"
                       max="100"
-                      className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
                     />
                   </label>
 
                   <label className="block">
-                    <span className="block text-xs font-medium text-slate-600 mb-1">Fin de promotion</span>
+                    <span className="block text-xs font-medium text-ink-600 mb-1">Fin de promotion</span>
                     <input
                       type="datetime-local"
                       value={formData.discount_ends_at}
                       onChange={(e) => setFormData(p => ({ ...p, discount_ends_at: e.target.value }))}
-                      className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none text-sm"
                     />
                   </label>
                 </div>
@@ -545,28 +545,28 @@ export const ProductsPage: React.FC = () => {
                       : ', sans date de fin.'}
                   </p>
                 ) : (
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-ink-400">
                     0 % : aucune promotion. Le produit se vend au prix de vente.
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Description</label>
+                <label className="block text-sm font-medium text-ink-900 mb-2">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData(p => ({ ...p, description: e.target.value }))}
                   placeholder="Description du produit"
                   rows={3}
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none resize-none"
                 />
               </div>
 
               {/* Fiche technique — texte, image ou PDF */}
-              <div className="rounded-lg border border-slate-200 p-4 space-y-3">
+              <div className="rounded-lg border border-ink-200 p-4 space-y-3">
                 <div>
-                  <p className="text-sm font-medium text-slate-900">Fiche technique</p>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="text-sm font-medium text-ink-900">Fiche technique</p>
+                  <p className="mt-0.5 text-xs text-ink-500">
                     Caractéristiques détaillées, affichées sous la description sur la fiche produit.
                   </p>
                 </div>
@@ -588,8 +588,8 @@ export const ProductsPage: React.FC = () => {
                       }}
                       className={`rounded-lg border px-2 py-2 text-xs font-medium transition ${
                         formData.datasheet_type === value
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                          ? 'border-brand-500 bg-brand-50 text-brand-700'
+                          : 'border-ink-200 text-ink-600 hover:bg-ink-50'
                       }`}
                     >
                       {label}
@@ -599,16 +599,16 @@ export const ProductsPage: React.FC = () => {
 
                 {formData.datasheet_type === 'text' && (
                   <label className="block">
-                    <span className="block text-xs font-medium text-slate-600 mb-1">Caractéristiques</span>
+                    <span className="block text-xs font-medium text-ink-600 mb-1">Caractéristiques</span>
                     <textarea
                       value={formData.datasheet_text}
                       onChange={(e) => setFormData(p => ({ ...p, datasheet_text: e.target.value }))}
                       rows={6}
                       maxLength={20000}
                       placeholder={'Débit : 10 L/min\nPression : 2 à 6 bar\nFiltration : 5 µm\nGarantie : 2 ans'}
-                      className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm leading-relaxed"
+                      className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none text-sm leading-relaxed"
                     />
-                    <span className="mt-1 block text-xs text-slate-400">
+                    <span className="mt-1 block text-xs text-ink-400">
                       Une caractéristique par ligne. {formData.datasheet_text.length} / 20 000 caractères.
                     </span>
                   </label>
@@ -620,7 +620,7 @@ export const ProductsPage: React.FC = () => {
                       type="file"
                       accept={formData.datasheet_type === 'pdf' ? 'application/pdf' : 'image/jpeg,image/png,image/webp'}
                       onChange={(e) => setDatasheetFile(e.target.files?.[0] ?? null)}
-                      className="w-full text-xs text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-xs file:font-medium file:text-slate-700"
+                      className="w-full text-xs text-ink-600 file:mr-3 file:rounded-lg file:border-0 file:bg-ink-100 file:px-3 file:py-2 file:text-xs file:font-medium file:text-ink-700"
                     />
 
                     {datasheetFile ? (
@@ -628,20 +628,20 @@ export const ProductsPage: React.FC = () => {
                         Nouveau fichier : {datasheetFile.name} ({(datasheetFile.size / 1024 / 1024).toFixed(1)} Mo)
                       </p>
                     ) : datasheetExisting?.url ? (
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-ink-500">
                         Fiche actuelle :{' '}
                         <a
                           href={datasheetExisting.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-blue-600 underline hover:no-underline"
+                          className="text-brand-600 underline hover:no-underline"
                         >
                           {datasheetExisting.filename || 'voir le fichier'}
                         </a>
                         {' '}— conservée si vous n'en téléversez pas d'autre.
                       </p>
                     ) : (
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-ink-400">
                         {formData.datasheet_type === 'pdf'
                           ? 'PDF du fabricant, 10 Mo maximum.'
                           : 'JPG, PNG ou WebP — 10 Mo maximum. Le tableau reste lisible : la réduction est moins forte que pour un visuel produit.'}
@@ -658,13 +658,13 @@ export const ProductsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Quantité en stock</label>
+                <label className="block text-sm font-medium text-ink-900 mb-2">Quantité en stock</label>
                 <input
                   type="number"
                   value={formData.stock}
                   onChange={(e) => setFormData(p => ({ ...p, stock: parseInt(e.target.value) || 0 }))}
                   min="0"
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border border-ink-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
                 />
               </div>
 
@@ -674,15 +674,15 @@ export const ProductsPage: React.FC = () => {
                   id="is_available"
                   checked={formData.is_available}
                   onChange={(e) => setFormData(p => ({ ...p, is_available: e.target.checked }))}
-                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="w-4 h-4 rounded border-ink-300 text-brand-600 focus:ring-brand-500"
                 />
-                <label htmlFor="is_available" className="text-sm font-medium text-slate-900">
+                <label htmlFor="is_available" className="text-sm font-medium text-ink-900">
                   Produit disponible à la vente
                 </label>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Image produit</label>
+                <label className="block text-sm font-medium text-ink-900 mb-2">Image produit</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -691,27 +691,27 @@ export const ProductsPage: React.FC = () => {
                     setImageFile(file);
                     if (file) setImagePreview(URL.createObjectURL(file));
                   }}
-                  className="w-full text-sm text-slate-700"
+                  className="w-full text-sm text-ink-700"
                 />
                 {imagePreview && (
-                  <div className="mt-3 rounded-lg overflow-hidden border border-slate-200">
+                  <div className="mt-3 rounded-lg overflow-hidden border border-ink-200">
                     <img src={imagePreview} alt="Prévisualisation" className="w-full h-40 object-cover" />
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="sticky bottom-0 px-6 py-4 border-t border-slate-200 bg-slate-50 flex gap-3">
+            <div className="sticky bottom-0 px-6 py-4 border-t border-ink-200 bg-ink-50 flex gap-3">
               <button
                 onClick={handleCloseModal}
-                className="flex-1 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100 transition text-slate-900 font-medium"
+                className="flex-1 px-4 py-2 border border-ink-300 rounded-lg hover:bg-ink-100 transition text-ink-900 font-medium"
               >
                 Annuler
               </button>
               <button
                 onClick={handleSaveProduct}
                 disabled={saveLoading}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-white font-medium disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 rounded-lg transition text-white font-medium disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Save size={16} />
                 {saveLoading ? 'Enregistrement...' : 'Enregistrer'}
@@ -725,12 +725,12 @@ export const ProductsPage: React.FC = () => {
       {deleteConfirm && (
         <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-sm w-full">
-            <div className="px-6 py-4 border-b border-slate-200">
-              <h3 className="text-lg font-semibold text-slate-900">Confirmer la suppression</h3>
+            <div className="px-6 py-4 border-b border-ink-200">
+              <h3 className="text-lg font-semibold text-ink-900">Confirmer la suppression</h3>
             </div>
 
             <div className="p-6">
-              <p className="text-slate-600 mb-4">
+              <p className="text-ink-600 mb-4">
                 Êtes-vous sûr de vouloir supprimer ce produit ? Cette action est irréversible.
               </p>
               <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
@@ -738,10 +738,10 @@ export const ProductsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex gap-3">
+            <div className="px-6 py-4 border-t border-ink-200 bg-ink-50 flex gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100 transition text-slate-900 font-medium"
+                className="flex-1 px-4 py-2 border border-ink-300 rounded-lg hover:bg-ink-100 transition text-ink-900 font-medium"
               >
                 Annuler
               </button>

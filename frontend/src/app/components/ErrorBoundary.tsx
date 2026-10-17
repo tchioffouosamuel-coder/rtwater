@@ -43,8 +43,8 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="w-14 h-14 mx-auto mb-5 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-2xl">
             !
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{en ? "Something went wrong on this page" : "Cette page a rencontré un problème"}</h1>
-          <p className="text-gray-500 dark:text-gray-400 mb-8">
+          <h1 className="text-2xl font-bold text-ink-900 dark:text-white mb-2">{en ? "Something went wrong on this page" : "Cette page a rencontré un problème"}</h1>
+          <p className="text-ink-500 dark:text-ink-400 mb-8">
             {en
               ? "Your cart is safe. Reload the page or go back home. If the problem persists, contact us."
               : "Votre panier est conservé. Rechargez la page ou revenez à l'accueil. Si le problème persiste, contactez-nous."}
@@ -52,11 +52,11 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="flex flex-wrap justify-center gap-3">
             <button
               onClick={() => window.location.reload()}
-              className="px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-[#0077BE] to-[#00A8E8]"
+              className="px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-brand-600 to-aqua-500"
             >
               {en ? "Reload page" : "Recharger la page"}
             </button>
-            <a href="/" className="px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-200">
+            <a href="/" className="px-6 py-3 rounded-xl font-semibold border-2 border-ink-200 dark:border-ink-600 text-ink-700 dark:text-ink-200">
               {en ? "Back to home" : "Retour à l'accueil"}
             </a>
           </div>

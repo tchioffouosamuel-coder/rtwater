@@ -1,161 +1,120 @@
 import { Award, Users, CheckCircle } from "lucide-react";
-import { motion } from "motion/react";
-import { useState } from "react";
-import { useTheme } from "../../theme/ThemeContext";
+import { useEffect, useRef, useState } from "react";
 import { useSiteContent } from "../../context/SiteContentContext";
+import { Reveal } from "./Reveal";
+import { SectionBadge } from "./ui/section";
 
+/**
+ * Compteur qui s'incrémente lorsqu'il devient visible.
+ * Respecte « prefers-reduced-motion » en affichant directement la valeur finale.
+ */
 function Counter({ value, suffix }: { value: number; suffix: string }) {
   const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setCount(value);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting || started.current) return;
+          started.current = true;
+          observer.unobserve(entry.target);
+
+          const duration = 1600;
+          const start = performance.now();
+          const tick = (now: number) => {
+            // Décélération en fin de course, plus naturelle qu'un pas constant
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCount(Math.round(value * eased));
+            if (progress < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        });
+      },
+      { threshold: 0.4 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [value]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      onViewportEnter={() => {
-        let start = 0;
-        const duration = 2000;
-        const increment = value / (duration / 16);
-
-        const timer = setInterval(() => {
-          start += increment;
-          if (start >= value) {
-            setCount(value);
-            clearInterval(timer);
-          } else {
-            setCount(Math.floor(start));
-          }
-        }, 16);
-
-        return () => clearInterval(timer);
-      }}
-      className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-[#0077BE] to-[#00A8E8] bg-clip-text text-transparent"
-    >
-      {count}{suffix}
-    </motion.div>
+    <div ref={ref} className="text-4xl md:text-5xl font-bold gradient-text tabular-nums">
+      {count}
+      {suffix}
+    </div>
   );
 }
 
 const STAT_ICONS = [Award, Users, CheckCircle];
-const STAT_COLORS = [
-  "from-[#00A8E8] to-[#0095D9]",
-  "from-blue-500 to-cyan-500",
-  "from-green-500 to-emerald-500",
+const STAT_GRADIENTS = [
+  "from-brand-500 to-brand-600",
+  "from-aqua-500 to-aqua-600",
+  "from-brand-600 to-aqua-500",
 ];
 
 export function TrustSection() {
   const { home } = useSiteContent();
   const { trust } = home;
-  const { theme } = useTheme();
 
   return (
-    <section className="py-16 sm:py-24 bg-white dark:bg-slate-900 transition-colors duration-300 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <svg className="w-full h-full" viewBox="0 0 100 100">
-          <pattern
-            id="trust-pattern"
-            x="0"
-            y="0"
-            width="10"
-            height="10"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle cx="5" cy="5" r="1" fill="#0077BE" />
-          </pattern>
-          <rect width="100" height="100" fill="url(#trust-pattern)" />
-        </svg>
-      </div>
+    <section className="relative py-20 md:py-28 bg-white dark:bg-ink-900 overflow-hidden transition-colors duration-300">
+      <div className="absolute inset-0 bg-dots dark:bg-dots-dark opacity-30 pointer-events-none" />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16 sm:mb-20"
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="inline-block mb-4"
-          >
-            <span className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg border border-white/20">
+      <div className="relative mx-auto max-w-7xl px-4 md:px-6">
+        {/* En-tête de section */}
+        <Reveal className="mb-14">
+          <div className="text-center max-w-3xl mx-auto">
+            <SectionBadge tone="aqua" className="mb-3">
               {trust.sectionSubtitle}
-            </span>
-          </motion.div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 leading-tight">
-            {trust.sectionTitle}{" "}
-            <span className="bg-gradient-to-r from-[#0077BE] to-[#00A8E8] bg-clip-text text-transparent">
-              {trust.sectionTitleHighlight}
-            </span>
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed px-2">
-            {trust.sectionDescription}
-          </p>
-        </motion.div>
+            </SectionBadge>
+            <h2 className="text-3xl md:text-4xl font-bold text-ink-900 dark:text-white tracking-tight mb-3">
+              {trust.sectionTitle}{" "}
+              <span className="gradient-text">{trust.sectionTitleHighlight}</span>
+            </h2>
+            <p className="text-ink-500 dark:text-ink-300 text-base leading-relaxed">
+              {trust.sectionDescription}
+            </p>
+          </div>
+        </Reveal>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
+        {/* Chiffres clés */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {trust.stats.map((stat, index) => {
             const Icon = STAT_ICONS[index % STAT_ICONS.length];
-            const color = STAT_COLORS[index % STAT_COLORS.length];
+            const gradient = STAT_GRADIENTS[index % STAT_GRADIENTS.length];
             const value = parseInt(stat.value, 10) || 0;
 
             return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2, duration: 0.6 }}
-                whileHover={{ y: -10 }}
-                className="relative group"
-              >
-                <div className="text-center p-6 sm:p-8 lg:p-10 rounded-3xl bg-gradient-to-br from-gray-50 dark:from-slate-800 to-white dark:to-slate-700 shadow-lg dark:shadow-xl dark:shadow-black/20 hover:shadow-2xl dark:hover:shadow-2xl dark:hover:shadow-black/30 transition-all duration-500 border border-gray-100 dark:border-slate-700 overflow-hidden">
-                  {/* Gradient Background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
-
-                  {/* Icon */}
-                  <motion.div
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.6 }}
-                    className="flex justify-center mb-6"
+              <Reveal key={stat.label ?? index} delay={(index % 3) * 80}>
+                <div className="group h-full p-6 md:p-8 rounded-2xl bg-white dark:bg-ink-950 border border-ink-200 dark:border-white/10 hover:border-brand-300 dark:hover:border-brand-400/40 hover:shadow-xl hover:shadow-brand-500/5 transition-all duration-300 hover:-translate-y-1">
+                  <div
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}
                   >
-                    <div className={`relative w-20 h-20 bg-gradient-to-br ${color} rounded-2xl flex items-center justify-center shadow-2xl`}>
-                      <Icon className="w-10 h-10 text-white" />
+                    <Icon size={24} strokeWidth={1.8} className="text-white" aria-hidden="true" />
+                  </div>
 
-                      {/* Pulse Effect */}
-                      <motion.div
-                        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className={`absolute inset-0 bg-gradient-to-br ${color} rounded-2xl`}
-                      ></motion.div>
-                    </div>
-                  </motion.div>
-
-                  {/* Counter */}
                   <Counter value={value} suffix={stat.suffix} />
 
-                  {/* Label */}
-                  <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 mt-4">
+                  <div className="font-bold text-ink-900 dark:text-white mt-3 mb-1.5">
                     {stat.label}
                   </div>
-                  <div className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{stat.description}</div>
-
-                  {/* Decorative Line */}
-                  <motion.div
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.2 + 0.5, duration: 0.8 }}
-                    className={`mt-4 sm:mt-6 h-1 w-16 sm:w-20 mx-auto bg-gradient-to-r ${color} rounded-full`}
-                  ></motion.div>
+                  <p className="text-sm text-ink-500 dark:text-ink-400 leading-relaxed">
+                    {stat.description}
+                  </p>
                 </div>
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>

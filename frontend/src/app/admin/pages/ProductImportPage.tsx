@@ -221,13 +221,13 @@ export const ProductImportPage: React.FC = () => {
       ]}
     >
       {/* Les deux temps de l'import */}
-      <div className="mb-6 flex gap-2 border-b border-slate-200">
+      <div className="mb-6 flex gap-2 border-b border-ink-200">
         <button
           onClick={() => setMode('catalogue')}
           className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition ${
             mode === 'catalogue'
-              ? 'border-blue-600 text-blue-700'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-brand-600 text-brand-700'
+              : 'border-transparent text-ink-500 hover:text-ink-800'
           }`}
         >
           <FileSpreadsheet size={16} />
@@ -237,8 +237,8 @@ export const ProductImportPage: React.FC = () => {
           onClick={() => setMode('images')}
           className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition ${
             mode === 'images'
-              ? 'border-blue-600 text-blue-700'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-brand-600 text-brand-700'
+              : 'border-transparent text-ink-500 hover:text-ink-800'
           }`}
         >
           <ImageIcon size={16} />
@@ -281,7 +281,7 @@ export const ProductImportPage: React.FC = () => {
               onDrop={handleDrop}
               onClick={() => sheetInput.current?.click()}
               className={`cursor-pointer rounded-xl border-2 border-dashed p-10 text-center transition ${
-                dragging ? 'border-blue-500 bg-blue-50' : 'border-slate-300 bg-white hover:border-blue-400 hover:bg-slate-50'
+                dragging ? 'border-brand-500 bg-brand-50' : 'border-ink-300 bg-white hover:border-brand-400 hover:bg-ink-50'
               }`}
             >
               <input
@@ -292,11 +292,11 @@ export const ProductImportPage: React.FC = () => {
                 className="hidden"
                 onChange={(e) => { if (e.target.files) acceptFiles(e.target.files); e.target.value = ''; }}
               />
-              <Upload size={36} className="mx-auto text-blue-500" />
-              <p className="mt-4 text-sm font-semibold text-slate-900">
+              <Upload size={36} className="mx-auto text-brand-500" />
+              <p className="mt-4 text-sm font-semibold text-ink-900">
                 Glissez votre fichier Excel ici, avec vos images
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-ink-500">
                 .xlsx, .xls ou .csv — et une archive .zip ou des images isolées (jpg, png, webp)
               </p>
             </div>
@@ -333,14 +333,14 @@ export const ProductImportPage: React.FC = () => {
               <button
                 onClick={handleAnalyze}
                 disabled={!sheet || analyzing}
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                className="flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-2.5 font-medium text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-ink-300"
               >
                 {analyzing ? <Loader2 size={18} className="animate-spin" /> : <ArrowRight size={18} />}
                 {analyzing ? 'Analyse du fichier…' : "Analyser le fichier"}
               </button>
               <button
                 onClick={handleTemplate}
-                className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-slate-50"
+                className="flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-6 py-2.5 font-medium text-ink-700 transition hover:bg-ink-50"
               >
                 <Download size={18} />
                 Télécharger le modèle
@@ -349,15 +349,15 @@ export const ProductImportPage: React.FC = () => {
           </div>
 
           {/* Mode d'emploi du référencement automatique */}
-          <aside className="rounded-xl border border-blue-100 bg-blue-50/60 p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-blue-900">
+          <aside className="rounded-xl border border-brand-100 bg-brand-50/60 p-5">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-brand-900">
               <ImageIcon size={16} />
               Référencement automatique des images
             </h3>
-            <p className="mt-3 text-xs leading-relaxed text-blue-800">
+            <p className="mt-3 text-xs leading-relaxed text-brand-800">
               Trois façons de rattacher une image à un produit, dans cet ordre :
             </p>
-            <ol className="mt-3 space-y-3 text-xs leading-relaxed text-blue-800">
+            <ol className="mt-3 space-y-3 text-xs leading-relaxed text-brand-800">
               <li>
                 <span className="font-semibold">Colonne « image » = nom de fichier.</span> Le fichier
                 est cherché dans l'archive ZIP ou les images téléversées.
@@ -373,7 +373,7 @@ export const ProductImportPage: React.FC = () => {
                 Les suffixes <code className="rounded bg-white/70 px-1">-1</code> / <code className="rounded bg-white/70 px-1">_1</code> sont acceptés.
               </li>
             </ol>
-            <p className="mt-4 border-t border-blue-200 pt-3 text-xs text-blue-700">
+            <p className="mt-4 border-t border-brand-200 pt-3 text-xs text-brand-700">
               Toutes les images sont redimensionnées et converties en WebP : les fiches produit restent
               rapides même en 3G.
             </p>
@@ -394,23 +394,23 @@ export const ProductImportPage: React.FC = () => {
 
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Correspondance des colonnes */}
-            <div className="rounded-xl border border-slate-200 bg-white p-5">
-              <h3 className="text-sm font-semibold text-slate-900">Colonnes reconnues</h3>
-              <p className="mt-1 text-xs text-slate-500">{preview.filename}</p>
+            <div className="rounded-xl border border-ink-200 bg-white p-5">
+              <h3 className="text-sm font-semibold text-ink-900">Colonnes reconnues</h3>
+              <p className="mt-1 text-xs text-ink-500">{preview.filename}</p>
               <ul className="mt-4 space-y-2">
                 {Object.keys(preview.mapping).map(field => (
                   <li key={field} className="flex items-center gap-2 text-xs">
                     <CheckCircle2 size={14} className="flex-shrink-0 text-green-600" />
-                    <span className="text-slate-700">{FIELD_LABELS[field] ?? field}</span>
+                    <span className="text-ink-700">{FIELD_LABELS[field] ?? field}</span>
                   </li>
                 ))}
               </ul>
               {preview.unmapped.length > 0 && (
                 <>
-                  <p className="mt-4 text-xs font-semibold text-slate-500">Colonnes ignorées</p>
+                  <p className="mt-4 text-xs font-semibold text-ink-500">Colonnes ignorées</p>
                   <ul className="mt-2 space-y-1">
                     {preview.unmapped.map(label => (
-                      <li key={label} className="text-xs text-slate-400">— {label}</li>
+                      <li key={label} className="text-xs text-ink-400">— {label}</li>
                     ))}
                   </ul>
                 </>
@@ -418,8 +418,8 @@ export const ProductImportPage: React.FC = () => {
             </div>
 
             {/* Options */}
-            <div className="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
-              <h3 className="text-sm font-semibold text-slate-900">Options d'import</h3>
+            <div className="rounded-xl border border-ink-200 bg-white p-5 lg:col-span-2">
+              <h3 className="text-sm font-semibold text-ink-900">Options d'import</h3>
               <div className="mt-4 space-y-3">
                 <Toggle
                   checked={options.update_existing}
@@ -461,8 +461,8 @@ export const ProductImportPage: React.FC = () => {
           </div>
 
           {/* Détail ligne par ligne */}
-          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-            <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 bg-slate-50 px-4 py-3">
+          <div className="overflow-hidden rounded-xl border border-ink-200 bg-white">
+            <div className="flex flex-wrap items-center gap-2 border-b border-ink-200 bg-ink-50 px-4 py-3">
               {([
                 ['all', `Toutes (${preview.summary.total})`],
                 ['create', `Créations (${preview.summary.create})`],
@@ -473,7 +473,7 @@ export const ProductImportPage: React.FC = () => {
                   key={key}
                   onClick={() => setRowFilter(key)}
                   className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                    rowFilter === key ? 'bg-blue-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-100'
+                    rowFilter === key ? 'bg-brand-600 text-white' : 'bg-white text-ink-600 hover:bg-ink-100'
                   }`}
                 >
                   {label}
@@ -483,8 +483,8 @@ export const ProductImportPage: React.FC = () => {
 
             <div className="max-h-[28rem] overflow-auto">
               <table className="w-full">
-                <thead className="sticky top-0 bg-slate-50">
-                  <tr className="border-b border-slate-200 text-left text-xs font-semibold text-slate-600">
+                <thead className="sticky top-0 bg-ink-50">
+                  <tr className="border-b border-ink-200 text-left text-xs font-semibold text-ink-600">
                     <th className="px-4 py-3">Ligne</th>
                     <th className="px-4 py-3">Produit</th>
                     <th className="px-4 py-3">Catégorie</th>
@@ -494,13 +494,13 @@ export const ProductImportPage: React.FC = () => {
                     <th className="px-4 py-3">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-ink-100">
                   {filteredRows.map(row => (
-                    <tr key={row.line} className={row.action === 'error' ? 'bg-red-50/60' : 'hover:bg-slate-50'}>
-                      <td className="px-4 py-3 text-xs text-slate-400">{row.line}</td>
+                    <tr key={row.line} className={row.action === 'error' ? 'bg-red-50/60' : 'hover:bg-ink-50'}>
+                      <td className="px-4 py-3 text-xs text-ink-400">{row.line}</td>
                       <td className="px-4 py-3">
-                        <p className="text-sm font-medium text-slate-900">{row.product.name || <em className="text-red-600">nom manquant</em>}</p>
-                        {row.product.sku && <p className="text-xs text-slate-400">{row.product.sku}</p>}
+                        <p className="text-sm font-medium text-ink-900">{row.product.name || <em className="text-red-600">nom manquant</em>}</p>
+                        {row.product.sku && <p className="text-xs text-ink-400">{row.product.sku}</p>}
                         {row.errors.length > 0 && (
                           <ul className="mt-1 space-y-0.5">
                             {row.errors.map((msg, i) => (
@@ -510,17 +510,17 @@ export const ProductImportPage: React.FC = () => {
                         )}
                       </td>
                       <td className="px-4 py-3 text-xs">
-                        {row.category.status === 'none' && <span className="text-slate-400">—</span>}
-                        {row.category.status === 'known' && <span className="text-slate-600">{row.category.name}</span>}
+                        {row.category.status === 'none' && <span className="text-ink-400">—</span>}
+                        {row.category.status === 'known' && <span className="text-ink-600">{row.category.name}</span>}
                         {row.category.status === 'new' && (
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 font-medium text-amber-700">
                             {row.category.name} · nouvelle
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm text-slate-900">{xaf(row.product.price)}</td>
-                      <td className="px-4 py-3 text-center text-sm text-slate-700">
-                        {row.product.stock ?? <span className="text-slate-300">inchangé</span>}
+                      <td className="px-4 py-3 text-right text-sm text-ink-900">{xaf(row.product.price)}</td>
+                      <td className="px-4 py-3 text-center text-sm text-ink-700">
+                        {row.product.stock ?? <span className="text-ink-300">inchangé</span>}
                       </td>
                       <td className="px-4 py-3">
                         <ImageBadge source={row.image.source} ref_={row.image.ref} />
@@ -532,7 +532,7 @@ export const ProductImportPage: React.FC = () => {
                   ))}
                   {filteredRows.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-400">
+                      <td colSpan={7} className="px-4 py-12 text-center text-sm text-ink-400">
                         Aucune ligne dans cette catégorie.
                       </td>
                     </tr>
@@ -546,7 +546,7 @@ export const ProductImportPage: React.FC = () => {
             <button
               onClick={handleCommit}
               disabled={committing || importable === 0}
-              className="flex items-center gap-2 rounded-lg bg-green-600 px-6 py-2.5 font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+              className="flex items-center gap-2 rounded-lg bg-green-600 px-6 py-2.5 font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-ink-300"
             >
               {committing ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
               {committing ? 'Import en cours…' : `Importer ${importable} produit(s)`}
@@ -554,13 +554,13 @@ export const ProductImportPage: React.FC = () => {
             <button
               onClick={handleCancelPreview}
               disabled={committing}
-              className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-6 py-2.5 font-medium text-ink-700 transition hover:bg-ink-50 disabled:opacity-50"
             >
               <ArrowLeft size={18} />
               Changer de fichier
             </button>
             {preview.summary.error > 0 && (
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-ink-500">
                 Les {preview.summary.error} ligne(s) en erreur seront ignorées — corrigez-les et relancez un import.
               </p>
             )}
@@ -592,10 +592,10 @@ export const ProductImportPage: React.FC = () => {
                   {result.errors.length} ligne(s) non importée(s)
                 </p>
               </div>
-              <ul className="max-h-72 divide-y divide-slate-100 overflow-y-auto">
+              <ul className="max-h-72 divide-y divide-ink-100 overflow-y-auto">
                 {result.errors.map((err, i) => (
                   <li key={i} className="px-4 py-3">
-                    <p className="text-sm font-medium text-slate-900">
+                    <p className="text-sm font-medium text-ink-900">
                       Ligne {err.line}{err.name ? ` — ${err.name}` : ''}
                     </p>
                     <ul className="mt-1 space-y-0.5">
@@ -612,14 +612,14 @@ export const ProductImportPage: React.FC = () => {
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => navigate('/admin/products')}
-              className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition hover:bg-blue-700"
+              className="flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-2.5 font-medium text-white transition hover:bg-brand-700"
             >
               <Package size={18} />
               Voir le catalogue
             </button>
             <button
               onClick={resetAll}
-              className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-slate-50"
+              className="flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-6 py-2.5 font-medium text-ink-700 transition hover:bg-ink-50"
             >
               <RefreshCw size={18} />
               Importer un autre fichier
@@ -632,32 +632,32 @@ export const ProductImportPage: React.FC = () => {
       )}
 
       {/* ══ JOURNAL DES IMPORTS ══ */}
-      <div className="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="mt-8 overflow-hidden rounded-xl border border-ink-200 bg-white">
         <button
           onClick={() => setShowHistory(v => !v)}
-          className="flex w-full items-center justify-between px-5 py-4 text-left transition hover:bg-slate-50"
+          className="flex w-full items-center justify-between px-5 py-4 text-left transition hover:bg-ink-50"
         >
-          <span className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-            <History size={16} className="text-slate-400" />
+          <span className="flex items-center gap-2 text-sm font-semibold text-ink-900">
+            <History size={16} className="text-ink-400" />
             Historique des imports
             {history.length > 0 && (
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+              <span className="rounded-full bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-600">
                 {history.length}
               </span>
             )}
           </span>
-          <ArrowRight size={16} className={`text-slate-400 transition-transform ${showHistory ? 'rotate-90' : ''}`} />
+          <ArrowRight size={16} className={`text-ink-400 transition-transform ${showHistory ? 'rotate-90' : ''}`} />
         </button>
 
         {showHistory && (
-          <div className="border-t border-slate-200">
+          <div className="border-t border-ink-200">
             {history.length === 0 ? (
-              <p className="px-5 py-8 text-center text-sm text-slate-400">Aucun import enregistré.</p>
+              <p className="px-5 py-8 text-center text-sm text-ink-400">Aucun import enregistré.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-slate-50">
-                    <tr className="text-left text-xs font-semibold text-slate-600">
+                  <thead className="bg-ink-50">
+                    <tr className="text-left text-xs font-semibold text-ink-600">
                       <th className="px-5 py-3">Fichier</th>
                       <th className="px-5 py-3">Par</th>
                       <th className="px-5 py-3 text-center">Créés</th>
@@ -667,16 +667,16 @@ export const ProductImportPage: React.FC = () => {
                       <th className="px-5 py-3">Date</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-ink-100">
                     {history.map(record => (
-                      <tr key={record.id} className="hover:bg-slate-50">
-                        <td className="px-5 py-3 text-sm text-slate-900">{record.filename}</td>
-                        <td className="px-5 py-3 text-xs text-slate-500">{record.user ?? '—'}</td>
+                      <tr key={record.id} className="hover:bg-ink-50">
+                        <td className="px-5 py-3 text-sm text-ink-900">{record.filename}</td>
+                        <td className="px-5 py-3 text-xs text-ink-500">{record.user ?? '—'}</td>
                         <td className="px-5 py-3 text-center text-sm font-medium text-green-700">{record.created_count}</td>
-                        <td className="px-5 py-3 text-center text-sm font-medium text-blue-700">{record.updated_count}</td>
+                        <td className="px-5 py-3 text-center text-sm font-medium text-brand-700">{record.updated_count}</td>
                         <td className="px-5 py-3 text-center text-sm font-medium text-red-700">{record.failed_count}</td>
                         <td className="px-5 py-3 text-center text-sm text-violet-700">{record.images_count}</td>
-                        <td className="px-5 py-3 text-xs text-slate-500">
+                        <td className="px-5 py-3 text-xs text-ink-500">
                           {record.created_at ? new Date(record.created_at).toLocaleString('fr-FR') : '—'}
                         </td>
                       </tr>
@@ -712,17 +712,17 @@ const Stepper: React.FC<{ step: Step }> = ({ step }) => {
             <span
               className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
                 i < current ? 'bg-green-100 text-green-700'
-                  : i === current ? 'bg-blue-600 text-white'
-                  : 'bg-slate-100 text-slate-400'
+                  : i === current ? 'bg-brand-600 text-white'
+                  : 'bg-ink-100 text-ink-400'
               }`}
             >
               {i < current ? '✓' : i + 1}
             </span>
-            <span className={`whitespace-nowrap text-sm ${i === current ? 'font-semibold text-slate-900' : 'text-slate-400'}`}>
+            <span className={`whitespace-nowrap text-sm ${i === current ? 'font-semibold text-ink-900' : 'text-ink-400'}`}>
               {s.label}
             </span>
           </div>
-          {i < steps.length - 1 && <div className="h-px min-w-6 flex-1 bg-slate-200" />}
+          {i < steps.length - 1 && <div className="h-px min-w-6 flex-1 bg-ink-200" />}
         </React.Fragment>
       ))}
     </div>
@@ -730,9 +730,9 @@ const Stepper: React.FC<{ step: Step }> = ({ step }) => {
 };
 
 const TONES = {
-  slate: 'from-slate-50 to-slate-100 border-slate-200 text-slate-600 text-slate-900',
+  slate: 'from-ink-50 to-ink-100 border-ink-200 text-ink-600 text-ink-900',
   green: 'from-green-50 to-green-100 border-green-200 text-green-600 text-green-900',
-  blue: 'from-blue-50 to-blue-100 border-blue-200 text-blue-600 text-blue-900',
+  blue: 'from-brand-50 to-brand-100 border-brand-200 text-brand-600 text-brand-900',
   red: 'from-red-50 to-red-100 border-red-200 text-red-600 text-red-900',
   violet: 'from-violet-50 to-violet-100 border-violet-200 text-violet-600 text-violet-900',
 } as const;
@@ -754,13 +754,13 @@ const FileChip: React.FC<{
   subtitle: string;
   onRemove: () => void;
 }> = ({ icon, title, subtitle, onRemove }) => (
-  <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3">
+  <div className="flex items-center gap-3 rounded-lg border border-ink-200 bg-white px-4 py-3">
     <span className="flex-shrink-0">{icon}</span>
     <div className="min-w-0 flex-1">
-      <p className="truncate text-sm font-medium text-slate-900">{title}</p>
-      <p className="truncate text-xs text-slate-500">{subtitle}</p>
+      <p className="truncate text-sm font-medium text-ink-900">{title}</p>
+      <p className="truncate text-xs text-ink-500">{subtitle}</p>
     </div>
-    <button onClick={(e) => { e.stopPropagation(); onRemove(); }} className="flex-shrink-0 text-slate-400 hover:text-red-600">
+    <button onClick={(e) => { e.stopPropagation(); onRemove(); }} className="flex-shrink-0 text-ink-400 hover:text-red-600">
       <Trash2 size={16} />
     </button>
   </div>
@@ -772,27 +772,27 @@ const Toggle: React.FC<{
   label: string;
   hint: string;
 }> = ({ checked, onChange, label, hint }) => (
-  <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-100 p-3 transition hover:bg-slate-50">
+  <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-ink-100 p-3 transition hover:bg-ink-50">
     <input
       type="checkbox"
       checked={checked}
       onChange={(e) => onChange(e.target.checked)}
-      className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+      className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-ink-300 text-brand-600 focus:ring-brand-500"
     />
     <span className="min-w-0">
-      <span className="block text-sm font-medium text-slate-900">{label}</span>
-      <span className="mt-0.5 block text-xs text-slate-500">{hint}</span>
+      <span className="block text-sm font-medium text-ink-900">{label}</span>
+      <span className="mt-0.5 block text-xs text-ink-500">{hint}</span>
     </span>
   </label>
 );
 
 const ImageBadge: React.FC<{ source: ImportRow['image']['source']; ref_: string | null }> = ({ source, ref_ }) => {
   if (source === 'none') {
-    return <span className="text-xs text-slate-300">—</span>;
+    return <span className="text-xs text-ink-300">—</span>;
   }
 
   const icon = source === 'url' ? <Link2 size={12} /> : <ImageIcon size={12} />;
-  const tone = source === 'url' ? 'bg-sky-100 text-sky-700' : 'bg-violet-100 text-violet-700';
+  const tone = source === 'url' ? 'bg-aqua-100 text-aqua-700' : 'bg-violet-100 text-violet-700';
 
   return (
     <span
@@ -820,13 +820,13 @@ const ActionBadge: React.FC<{
 
   if (action === 'update') {
     return skipped ? (
-      <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
+      <span className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-500">
         Ignorée
       </span>
     ) : (
       <span
         title={existing ? `Remplace « ${existing.name} » (stock actuel : ${existing.stock})` : undefined}
-        className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700"
+        className="inline-flex items-center gap-1 rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700"
       >
         <RefreshCw size={12} /> Mise à jour
       </span>

@@ -180,16 +180,16 @@ export const ServicesPage: React.FC = () => {
     >
       <div className="mb-6 flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-3 text-slate-400" size={18} />
+          <Search className="absolute left-4 top-3 text-ink-400" size={18} />
           <input
             type="search" value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher une prestation…"
-            className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-12 pr-4 outline-none transition focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-ink-200 bg-white py-2.5 pl-12 pr-4 outline-none transition focus:ring-2 focus:ring-brand-500"
           />
         </div>
         <button
           onClick={() => openForm()}
-          className="flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition hover:bg-blue-700"
+          className="flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-brand-600 px-6 py-2.5 font-medium text-white transition hover:bg-brand-700"
         >
           <Plus size={18} />
           Nouvelle prestation
@@ -197,23 +197,23 @@ export const ServicesPage: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="rounded-xl border border-slate-200 bg-white py-16 text-center text-sm text-slate-400">
+        <div className="rounded-xl border border-ink-200 bg-white py-16 text-center text-sm text-ink-400">
           <Loader2 size={20} className="mx-auto mb-2 animate-spin" />
           Chargement…
         </div>
       ) : visible.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white px-6 py-16 text-center">
-          <Wrench size={32} className="mx-auto text-slate-300" />
-          <p className="mt-3 text-sm font-medium text-slate-900">
+        <div className="rounded-xl border border-ink-200 bg-white px-6 py-16 text-center">
+          <Wrench size={32} className="mx-auto text-ink-300" />
+          <p className="mt-3 text-sm font-medium text-ink-900">
             {search ? 'Aucune prestation ne correspond' : 'Aucune prestation'}
           </p>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-ink-500">
             Installation, maintenance, forage, analyse d'eau : décrivez ici ce que vous proposez.
           </p>
           {!search && (
             <button
               onClick={() => openForm()}
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-brand-700"
             >
               <Plus size={16} />
               Créer la première
@@ -223,43 +223,43 @@ export const ServicesPage: React.FC = () => {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map(service => (
-            <article key={service.id} className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white">
-              <div className="relative aspect-video bg-slate-100">
+            <article key={service.id} className="flex flex-col overflow-hidden rounded-xl border border-ink-200 bg-white">
+              <div className="relative aspect-video bg-ink-100">
                 {service.image_url ? (
                   <img src={service.image_url} alt={service.name} className="h-full w-full object-cover" />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-slate-300">
+                  <div className="flex h-full items-center justify-center text-ink-300">
                     <ImageIcon size={28} />
                   </div>
                 )}
                 {!service.is_available && (
-                  <span className="absolute left-2 top-2 rounded-full bg-slate-900/70 px-2 py-0.5 text-[11px] font-medium text-white">
+                  <span className="absolute left-2 top-2 rounded-full bg-ink-900/70 px-2 py-0.5 text-[11px] font-medium text-white">
                     Masquée
                   </span>
                 )}
               </div>
 
               <div className="flex flex-1 flex-col p-4">
-                <h3 className="text-sm font-semibold text-slate-900">{service.name}</h3>
+                <h3 className="text-sm font-semibold text-ink-900">{service.name}</h3>
                 {service.category && (
-                  <p className="mt-0.5 text-xs text-slate-400">{service.category.name}</p>
+                  <p className="mt-0.5 text-xs text-ink-400">{service.category.name}</p>
                 )}
                 {service.description && (
-                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-slate-600">{service.description}</p>
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-ink-600">{service.description}</p>
                 )}
 
-                <div className="mt-3 flex items-center gap-3 text-xs text-slate-500">
-                  <span className="font-semibold text-slate-900">{xaf(service.price)}</span>
+                <div className="mt-3 flex items-center gap-3 text-xs text-ink-500">
+                  <span className="font-semibold text-ink-900">{xaf(service.price)}</span>
                   <span className="flex items-center gap-1">
                     <Clock size={12} />
                     {formatDuration(service.duration_minutes)}
                   </span>
                 </div>
 
-                <div className="mt-4 flex gap-2 border-t border-slate-100 pt-3">
+                <div className="mt-4 flex gap-2 border-t border-ink-100 pt-3">
                   <button
                     onClick={() => openForm(service)}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-blue-600 transition hover:bg-blue-50"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-brand-600 transition hover:bg-brand-50"
                   >
                     <Edit2 size={14} />
                     Modifier
@@ -281,14 +281,14 @@ export const ServicesPage: React.FC = () => {
       {/* Formulaire */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-900/40" onClick={() => setShowForm(false)} aria-hidden />
+          <div className="absolute inset-0 bg-ink-900/40" onClick={() => setShowForm(false)} aria-hidden />
 
           <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white shadow-2xl">
-            <div className="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
-              <h2 className="text-base font-semibold text-slate-900">
+            <div className="sticky top-0 flex items-center justify-between border-b border-ink-200 bg-white px-6 py-4">
+              <h2 className="text-base font-semibold text-ink-900">
                 {form.id ? 'Modifier la prestation' : 'Nouvelle prestation'}
               </h2>
-              <button onClick={() => setShowForm(false)} aria-label="Fermer" className="text-slate-400 hover:text-slate-700">
+              <button onClick={() => setShowForm(false)} aria-label="Fermer" className="text-ink-400 hover:text-ink-700">
                 <X size={20} />
               </button>
             </div>
@@ -302,53 +302,53 @@ export const ServicesPage: React.FC = () => {
               )}
 
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Nom *</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Nom *</span>
                 <input
                   type="text" value={form.name} autoFocus
                   onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
                   placeholder="Installation d'une fontaine à eau"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
 
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Description</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Description</span>
                 <textarea
                   rows={3} value={form.description}
                   onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))}
                   placeholder="Ce que comprend la prestation, ce qui en est exclu…"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block">
-                  <span className="mb-1.5 block text-sm font-medium text-slate-700">Tarif (XAF) *</span>
+                  <span className="mb-1.5 block text-sm font-medium text-ink-700">Tarif (XAF) *</span>
                   <input
                     type="number" min={0} value={form.price}
                     onChange={(e) => setForm(f => ({ ...f, price: e.target.value }))}
-                    className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                   />
                 </label>
                 <label className="block">
-                  <span className="mb-1.5 block text-sm font-medium text-slate-700">Durée (minutes)</span>
+                  <span className="mb-1.5 block text-sm font-medium text-ink-700">Durée (minutes)</span>
                   <input
                     type="number" min={0} step={15} value={form.duration_minutes}
                     onChange={(e) => setForm(f => ({ ...f, duration_minutes: e.target.value }))}
-                    className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                   />
-                  <span className="mt-1 block text-xs text-slate-400">
+                  <span className="mt-1 block text-xs text-ink-400">
                     {formatDuration(Number(form.duration_minutes) || 0)} — sert au calendrier des réservations.
                   </span>
                 </label>
               </div>
 
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Catégorie</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Catégorie</span>
                 <select
                   value={form.category_id}
                   onChange={(e) => setForm(f => ({ ...f, category_id: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 >
                   <option value="">Sans catégorie</option>
                   {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -361,13 +361,13 @@ export const ServicesPage: React.FC = () => {
               </label>
 
               <div>
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Visuel</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Visuel</span>
                 <div className="flex items-center gap-3">
-                  <div className="h-16 w-24 flex-shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+                  <div className="h-16 w-24 flex-shrink-0 overflow-hidden rounded-lg border border-ink-200 bg-ink-50">
                     {imagePreview ? (
                       <img src={imagePreview} alt="" className="h-full w-full object-cover" />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-slate-300">
+                      <div className="flex h-full items-center justify-center text-ink-300">
                         <ImageIcon size={18} />
                       </div>
                     )}
@@ -375,37 +375,37 @@ export const ServicesPage: React.FC = () => {
                   <input
                     type="file" accept="image/*"
                     onChange={(e) => pickImage(e.target.files?.[0] ?? null)}
-                    className="text-xs text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-xs file:font-medium file:text-slate-700"
+                    className="text-xs text-ink-600 file:mr-3 file:rounded-lg file:border-0 file:bg-ink-100 file:px-3 file:py-2 file:text-xs file:font-medium file:text-ink-700"
                   />
                 </div>
               </div>
 
-              <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-100 p-3 transition hover:bg-slate-50">
+              <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-ink-100 p-3 transition hover:bg-ink-50">
                 <input
                   type="checkbox" checked={form.is_available}
                   onChange={(e) => setForm(f => ({ ...f, is_available: e.target.checked }))}
-                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="mt-0.5 h-4 w-4 rounded border-ink-300 text-brand-600 focus:ring-brand-500"
                 />
                 <span>
-                  <span className="block text-sm font-medium text-slate-900">Visible sur le site</span>
-                  <span className="mt-0.5 block text-xs text-slate-500">
+                  <span className="block text-sm font-medium text-ink-900">Visible sur le site</span>
+                  <span className="mt-0.5 block text-xs text-ink-500">
                     Décoché, la prestation reste enregistrée mais n'est plus proposée aux visiteurs.
                   </span>
                 </span>
               </label>
             </div>
 
-            <div className="sticky bottom-0 flex justify-end gap-3 border-t border-slate-200 bg-white px-6 py-4">
+            <div className="sticky bottom-0 flex justify-end gap-3 border-t border-ink-200 bg-white px-6 py-4">
               <button
                 onClick={() => setShowForm(false)}
-                className="rounded-lg border border-slate-200 px-5 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                className="rounded-lg border border-ink-200 px-5 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-50"
               >
                 Annuler
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-slate-300"
+                className="flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-brand-700 disabled:bg-ink-300"
               >
                 {saving && <Loader2 size={16} className="animate-spin" />}
                 {form.id ? 'Enregistrer' : 'Créer'}
@@ -417,16 +417,16 @@ export const ServicesPage: React.FC = () => {
 
       {deleting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-900/40" onClick={() => setDeleting(null)} aria-hidden />
+          <div className="absolute inset-0 bg-ink-900/40" onClick={() => setDeleting(null)} aria-hidden />
           <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-            <h2 className="text-base font-semibold text-slate-900">Supprimer « {deleting.name} » ?</h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <h2 className="text-base font-semibold text-ink-900">Supprimer « {deleting.name} » ?</h2>
+            <p className="mt-2 text-sm text-ink-600">
               Les réservations déjà enregistrées pour cette prestation seront conservées.
             </p>
             <div className="mt-5 flex justify-end gap-3">
               <button
                 onClick={() => setDeleting(null)}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                className="rounded-lg border border-ink-200 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-50"
               >
                 Annuler
               </button>

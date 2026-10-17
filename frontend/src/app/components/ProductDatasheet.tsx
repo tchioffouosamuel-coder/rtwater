@@ -17,9 +17,9 @@ export function ProductDatasheet({ datasheet }: { datasheet: Datasheet | null })
   if (!datasheet) return null;
 
   return (
-    <section className="mt-10 border-t border-gray-200 pt-8 dark:border-slate-700">
-      <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white">
-        <FileText className="h-5 w-5 text-[#0077BE]" />
+    <section className="mt-10 border-t border-ink-200 pt-8 dark:border-ink-700">
+      <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-ink-900 dark:text-white">
+        <FileText className="h-5 w-5 text-brand-600" />
         {tx("Fiche technique", "Technical datasheet")}
       </h2>
 
@@ -56,7 +56,7 @@ function DatasheetText({ text }: { text: string | null }) {
 
   if (!asTable) {
     return (
-      <div className="space-y-2 leading-relaxed text-gray-700 dark:text-gray-300">
+      <div className="space-y-2 leading-relaxed text-ink-700 dark:text-ink-300">
         {lines.map((line, i) => (
           <p key={i}>{line}</p>
         ))}
@@ -65,22 +65,22 @@ function DatasheetText({ text }: { text: string | null }) {
   }
 
   return (
-    <dl className="overflow-hidden rounded-xl border border-gray-200 dark:border-slate-700">
+    <dl className="overflow-hidden rounded-xl border border-ink-200 dark:border-ink-700">
       {rows.map((row, i) =>
         row ? (
           <div
             key={i}
-            className="flex flex-col gap-0.5 border-b border-gray-100 px-4 py-2.5 last:border-0 even:bg-gray-50/60 dark:border-slate-700/60 dark:even:bg-slate-800/40 sm:flex-row sm:gap-4"
+            className="flex flex-col gap-0.5 border-b border-ink-100 px-4 py-2.5 last:border-0 even:bg-ink-50/60 dark:border-ink-700/60 dark:even:bg-ink-800/40 sm:flex-row sm:gap-4"
           >
-            <dt className="text-sm font-medium text-gray-500 sm:w-2/5 sm:flex-shrink-0 dark:text-gray-400">
+            <dt className="text-sm font-medium text-ink-500 sm:w-2/5 sm:flex-shrink-0 dark:text-ink-400">
               {row.label}
             </dt>
-            <dd className="text-sm text-gray-900 dark:text-gray-100">{row.value}</dd>
+            <dd className="text-sm text-ink-900 dark:text-ink-100">{row.value}</dd>
           </div>
         ) : (
           <p
             key={i}
-            className="border-b border-gray-100 px-4 py-2.5 text-sm text-gray-700 last:border-0 dark:border-slate-700/60 dark:text-gray-300"
+            className="border-b border-ink-100 px-4 py-2.5 text-sm text-ink-700 last:border-0 dark:border-ink-700/60 dark:text-ink-300"
           >
             {lines[i]}
           </p>
@@ -107,7 +107,7 @@ function DatasheetImage({ datasheet }: { datasheet: Datasheet }) {
         type="button"
         onClick={() => setZoomed(true)}
         aria-label={label}
-        className="group relative block w-full overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-800"
+        className="group relative block w-full overflow-hidden rounded-xl border border-ink-200 bg-white dark:border-ink-700 dark:bg-ink-800"
       >
         <img
           src={datasheet.url}
@@ -124,7 +124,7 @@ function DatasheetImage({ datasheet }: { datasheet: Datasheet }) {
       <a
         href={datasheet.url}
         download={datasheet.filename ?? undefined}
-        className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-[#0077BE] hover:underline dark:text-[#00A8E8]"
+        className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:underline dark:text-aqua-500"
       >
         <Download size={14} />
         {tx("Télécharger l'image", "Download the image")}
@@ -174,15 +174,15 @@ function DatasheetPdf({ datasheet }: { datasheet: Datasheet }) {
   const filename = datasheet.filename ?? tx("fiche-technique.pdf", "datasheet.pdf");
 
   return (
-    <div className="rounded-xl border border-gray-200 dark:border-slate-700">
+    <div className="rounded-xl border border-ink-200 dark:border-ink-700">
       <div className="flex flex-wrap items-center gap-3 p-4">
         <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400">
           <FileText size={20} />
         </span>
 
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-gray-900 dark:text-white">{filename}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="truncate text-sm font-medium text-ink-900 dark:text-white">{filename}</p>
+          <p className="text-xs text-ink-500 dark:text-ink-400">
             {tx("Document PDF", "PDF document")}
           </p>
         </div>
@@ -191,7 +191,7 @@ function DatasheetPdf({ datasheet }: { datasheet: Datasheet }) {
           <button
             type="button"
             onClick={() => setShowPreview((v) => !v)}
-            className="rounded-lg border border-gray-200 px-3 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50 dark:border-slate-600 dark:text-gray-200 dark:hover:bg-slate-700"
+            className="rounded-lg border border-ink-200 px-3 py-2 text-xs font-medium text-ink-700 transition hover:bg-ink-50 dark:border-ink-600 dark:text-ink-200 dark:hover:bg-ink-700"
           >
             {showPreview ? tx("Masquer", "Hide") : tx("Aperçu", "Preview")}
           </button>
@@ -199,7 +199,7 @@ function DatasheetPdf({ datasheet }: { datasheet: Datasheet }) {
           <a
             href={datasheet.url}
             download={datasheet.filename ?? undefined}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#0077BE] to-[#00A8E8] px-3 py-2 text-xs font-semibold text-white transition hover:shadow-lg"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-brand-600 to-aqua-500 px-3 py-2 text-xs font-semibold text-white transition hover:shadow-lg"
           >
             <Download size={14} />
             {tx("Télécharger", "Download")}
@@ -208,7 +208,7 @@ function DatasheetPdf({ datasheet }: { datasheet: Datasheet }) {
       </div>
 
       {showPreview && (
-        <div className="border-t border-gray-200 dark:border-slate-700">
+        <div className="border-t border-ink-200 dark:border-ink-700">
           <object
             data={datasheet.url}
             type="application/pdf"
@@ -217,8 +217,8 @@ function DatasheetPdf({ datasheet }: { datasheet: Datasheet }) {
           >
             {/* Repli : navigateurs sans lecteur PDF intégré, mobiles compris */}
             <div className="flex flex-col items-center gap-3 p-8 text-center">
-              <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <Loader2 className="h-5 w-5 animate-spin text-ink-400" />
+              <p className="text-sm text-ink-600 dark:text-ink-400">
                 {tx(
                   "Votre navigateur n'affiche pas les PDF directement.",
                   "Your browser cannot display PDFs inline.",
@@ -228,7 +228,7 @@ function DatasheetPdf({ datasheet }: { datasheet: Datasheet }) {
                 href={datasheet.url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-[#0077BE] hover:underline dark:text-[#00A8E8]"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:underline dark:text-aqua-500"
               >
                 <ExternalLink size={14} />
                 {tx("Ouvrir dans un nouvel onglet", "Open in a new tab")}

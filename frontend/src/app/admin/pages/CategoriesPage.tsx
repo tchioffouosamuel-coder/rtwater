@@ -17,7 +17,7 @@ import {
  */
 
 const TYPE_META: Record<CategoryType, { label: string; icon: React.ElementType; tone: string }> = {
-  product: { label: 'Produits', icon: Package, tone: 'bg-blue-100 text-blue-700' },
+  product: { label: 'Produits', icon: Package, tone: 'bg-brand-100 text-brand-700' },
   service: { label: 'Services', icon: Wrench, tone: 'bg-violet-100 text-violet-700' },
 };
 
@@ -132,11 +132,11 @@ export const CategoriesPage: React.FC = () => {
     >
       <div className="mb-6 flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-3 text-slate-400" size={18} />
+          <Search className="absolute left-4 top-3 text-ink-400" size={18} />
           <input
             type="search" value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher une catégorie…"
-            className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-12 pr-4 outline-none transition focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-ink-200 bg-white py-2.5 pl-12 pr-4 outline-none transition focus:ring-2 focus:ring-brand-500"
           />
         </div>
 
@@ -147,7 +147,7 @@ export const CategoriesPage: React.FC = () => {
                 key={key}
                 onClick={() => setTypeFilter(key as CategoryType | 'all')}
                 className={`whitespace-nowrap rounded-lg px-3 py-2.5 text-xs font-medium transition ${
-                  typeFilter === key ? 'bg-blue-600 text-white' : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                  typeFilter === key ? 'bg-brand-600 text-white' : 'border border-ink-200 bg-white text-ink-600 hover:bg-ink-50'
                 }`}
               >
                 {label}
@@ -158,32 +158,32 @@ export const CategoriesPage: React.FC = () => {
 
         <button
           onClick={() => openForm()}
-          className="flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition hover:bg-blue-700"
+          className="flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-brand-600 px-6 py-2.5 font-medium text-white transition hover:bg-brand-700"
         >
           <Plus size={18} />
           Nouvelle catégorie
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-ink-200 bg-white">
         {loading ? (
-          <div className="py-16 text-center text-sm text-slate-400">
+          <div className="py-16 text-center text-sm text-ink-400">
             <Loader2 size={20} className="mx-auto mb-2 animate-spin" />
             Chargement…
           </div>
         ) : visible.length === 0 ? (
           <div className="px-6 py-16 text-center">
-            <FolderTree size={32} className="mx-auto text-slate-300" />
-            <p className="mt-3 text-sm font-medium text-slate-900">
+            <FolderTree size={32} className="mx-auto text-ink-300" />
+            <p className="mt-3 text-sm font-medium text-ink-900">
               {search || typeFilter !== 'all' ? 'Aucune catégorie dans cette sélection' : 'Aucune catégorie'}
             </p>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-ink-500">
               Les catégories organisent la boutique et servent de filtres aux visiteurs.
             </p>
             {!search && typeFilter === 'all' && (
               <button
                 onClick={() => openForm()}
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-brand-700"
               >
                 <Plus size={16} />
                 Créer la première
@@ -193,8 +193,8 @@ export const CategoriesPage: React.FC = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50">
-                <tr className="border-b border-slate-200 text-left text-sm font-semibold text-slate-900">
+              <thead className="bg-ink-50">
+                <tr className="border-b border-ink-200 text-left text-sm font-semibold text-ink-900">
                   <th className="px-6 py-4">Catégorie</th>
                   <th className="px-6 py-4">Type</th>
                   <th className="px-6 py-4 text-center">Articles</th>
@@ -202,7 +202,7 @@ export const CategoriesPage: React.FC = () => {
                   <th className="px-6 py-4 text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-ink-200">
                 {visible.map(category => {
                   const meta = TYPE_META[category.type];
                   const Icon = meta.icon;
@@ -211,8 +211,8 @@ export const CategoriesPage: React.FC = () => {
                     : category.services_count ?? 0;
 
                   return (
-                    <tr key={category.id} className="transition-colors hover:bg-slate-50">
-                      <td className="px-6 py-4 text-sm font-medium text-slate-900">{category.name}</td>
+                    <tr key={category.id} className="transition-colors hover:bg-ink-50">
+                      <td className="px-6 py-4 text-sm font-medium text-ink-900">{category.name}</td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${meta.tone}`}>
                           <Icon size={12} />
@@ -221,20 +221,20 @@ export const CategoriesPage: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 text-center">
                         <span className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
-                          count > 0 ? 'bg-slate-100 text-slate-700' : 'bg-slate-50 text-slate-400'
+                          count > 0 ? 'bg-ink-100 text-ink-700' : 'bg-ink-50 text-ink-400'
                         }`}>
                           {count}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <code className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500">/{category.slug}</code>
+                        <code className="rounded bg-ink-100 px-2 py-0.5 text-xs text-ink-500">/{category.slug}</code>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex justify-center gap-2">
                           <button
                             onClick={() => openForm(category)}
                             aria-label={`Modifier ${category.name}`}
-                            className="rounded-lg p-1.5 text-blue-600 transition hover:bg-blue-50"
+                            className="rounded-lg p-1.5 text-brand-600 transition hover:bg-brand-50"
                           >
                             <Edit2 size={16} />
                           </button>
@@ -259,14 +259,14 @@ export const CategoriesPage: React.FC = () => {
       {/* Formulaire */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-900/40" onClick={() => setShowForm(false)} aria-hidden />
+          <div className="absolute inset-0 bg-ink-900/40" onClick={() => setShowForm(false)} aria-hidden />
 
           <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-              <h2 className="text-base font-semibold text-slate-900">
+            <div className="flex items-center justify-between border-b border-ink-200 px-6 py-4">
+              <h2 className="text-base font-semibold text-ink-900">
                 {form.id ? 'Modifier la catégorie' : 'Nouvelle catégorie'}
               </h2>
-              <button onClick={() => setShowForm(false)} aria-label="Fermer" className="text-slate-400 hover:text-slate-700">
+              <button onClick={() => setShowForm(false)} aria-label="Fermer" className="text-ink-400 hover:text-ink-700">
                 <X size={20} />
               </button>
             </div>
@@ -280,23 +280,23 @@ export const CategoriesPage: React.FC = () => {
               )}
 
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Nom</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Nom</span>
                 <input
                   type="text" value={form.name} autoFocus
                   onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleSave(); }}
                   placeholder="Bouteilles, Fontaines, Entretien…"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
                 {form.name.trim() && !form.id && (
-                  <span className="mt-1 block text-xs text-slate-400">
-                    Adresse : <code className="rounded bg-slate-100 px-1">/{slugify(form.name)}</code>
+                  <span className="mt-1 block text-xs text-ink-400">
+                    Adresse : <code className="rounded bg-ink-100 px-1">/{slugify(form.name)}</code>
                   </span>
                 )}
               </label>
 
               <div>
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Type</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Type</span>
                 <div className="grid grid-cols-2 gap-2">
                   {(['product', 'service'] as CategoryType[]).map(type => {
                     const meta = TYPE_META[type];
@@ -307,8 +307,8 @@ export const CategoriesPage: React.FC = () => {
                         onClick={() => setForm(f => ({ ...f, type }))}
                         className={`flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition ${
                           form.type === type
-                            ? 'border-blue-500 bg-blue-50 text-blue-700'
-                            : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                            ? 'border-brand-500 bg-brand-50 text-brand-700'
+                            : 'border-ink-200 text-ink-600 hover:bg-ink-50'
                         }`}
                       >
                         <Icon size={16} />
@@ -318,23 +318,23 @@ export const CategoriesPage: React.FC = () => {
                     );
                   })}
                 </div>
-                <p className="mt-1.5 text-xs text-slate-400">
+                <p className="mt-1.5 text-xs text-ink-400">
                   Une catégorie de produits apparaît dans la boutique, une catégorie de services dans les prestations.
                 </p>
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 border-t border-slate-200 px-6 py-4">
+            <div className="flex justify-end gap-3 border-t border-ink-200 px-6 py-4">
               <button
                 onClick={() => setShowForm(false)}
-                className="rounded-lg border border-slate-200 px-5 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                className="rounded-lg border border-ink-200 px-5 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-50"
               >
                 Annuler
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-slate-300"
+                className="flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-brand-700 disabled:bg-ink-300"
               >
                 {saving && <Loader2 size={16} className="animate-spin" />}
                 {form.id ? 'Enregistrer' : 'Créer'}
@@ -347,17 +347,17 @@ export const CategoriesPage: React.FC = () => {
       {/* Confirmation de suppression */}
       {deleting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-900/40" onClick={() => setDeleting(null)} aria-hidden />
+          <div className="absolute inset-0 bg-ink-900/40" onClick={() => setDeleting(null)} aria-hidden />
 
           <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-            <h2 className="text-base font-semibold text-slate-900">Supprimer « {deleting.name} » ?</h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <h2 className="text-base font-semibold text-ink-900">Supprimer « {deleting.name} » ?</h2>
+            <p className="mt-2 text-sm text-ink-600">
               Cette action est définitive. Si la catégorie contient encore des articles, la suppression sera refusée.
             </p>
             <div className="mt-5 flex justify-end gap-3">
               <button
                 onClick={() => setDeleting(null)}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                className="rounded-lg border border-ink-200 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-50"
               >
                 Annuler
               </button>

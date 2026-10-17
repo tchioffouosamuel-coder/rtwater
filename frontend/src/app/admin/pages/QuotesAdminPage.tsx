@@ -29,7 +29,7 @@ interface ApiQuote {
 
 const QUOTE_STATUS: Record<string, { label: string; classes: string }> = {
   new:         { label: "Nouvelle",     classes: "bg-amber-100 text-amber-800 border border-amber-200" },
-  in_progress: { label: "En cours",     classes: "bg-blue-100 text-blue-800 border border-blue-200" },
+  in_progress: { label: "En cours",     classes: "bg-brand-100 text-brand-800 border border-brand-200" },
   quoted:      { label: "Devisée",      classes: "bg-purple-100 text-purple-800 border border-purple-200" },
   converted:   { label: "Convertie",    classes: "bg-emerald-100 text-emerald-800 border border-emerald-200" },
   rejected:    { label: "Rejetée",      classes: "bg-red-100 text-red-700 border border-red-200" },
@@ -133,7 +133,7 @@ export const QuotesAdminPage: React.FC = () => {
       {/* Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {/* Total */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-2xl p-5 text-white shadow-lg shadow-[#0077BE]/20">
+        <div className="relative overflow-hidden bg-gradient-to-br from-brand-600 to-aqua-500 rounded-2xl p-5 text-white shadow-lg shadow-brand-600/20">
           <div className="flex items-center justify-between mb-3">
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
               <FileQuestion size={20} />
@@ -157,7 +157,7 @@ export const QuotesAdminPage: React.FC = () => {
         </div>
 
         {/* En cours */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl p-5 text-white shadow-lg shadow-blue-500/20">
+        <div className="relative overflow-hidden bg-gradient-to-br from-brand-500 to-aqua-500 rounded-2xl p-5 text-white shadow-lg shadow-brand-500/20">
           <div className="flex items-center justify-between mb-3">
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
               <Clock size={20} />
@@ -182,17 +182,17 @@ export const QuotesAdminPage: React.FC = () => {
       </div>
 
       {/* Status Tabs + Search */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm mb-6">
+      <div className="bg-white rounded-2xl border border-ink-100 shadow-sm mb-6">
         {/* Tabs */}
-        <div className="flex overflow-x-auto border-b border-slate-100">
+        <div className="flex overflow-x-auto border-b border-ink-100">
           {STATUS_TABS.map(tab => (
             <button
               key={tab.value}
               onClick={() => { setStatusFilter(tab.value); setCurrentPage(1); }}
               className={`flex-shrink-0 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                 statusFilter === tab.value
-                  ? "border-[#0077BE] text-[#0077BE]"
-                  : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                  ? "border-brand-600 text-brand-600"
+                  : "border-transparent text-ink-500 hover:text-ink-700 hover:border-ink-300"
               }`}
             >
               {tab.label}
@@ -203,18 +203,18 @@ export const QuotesAdminPage: React.FC = () => {
         {/* Search + Refresh */}
         <div className="flex gap-3 p-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" size={16} />
             <input
               type="text"
               placeholder="Rechercher par nom, email..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE]/30 focus:border-[#0077BE] text-sm"
+              className="w-full pl-9 pr-4 py-2.5 border border-ink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-600/30 focus:border-brand-600 text-sm"
             />
           </div>
           <button
             onClick={loadQuotes}
-            className="px-4 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 text-sm font-medium flex items-center gap-2 text-slate-600 transition"
+            className="px-4 py-2.5 border border-ink-200 rounded-xl hover:bg-ink-50 text-sm font-medium flex items-center gap-2 text-ink-600 transition"
           >
             <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
             Actualiser
@@ -223,50 +223,50 @@ export const QuotesAdminPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">#ID</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Client</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Service demandé</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Date</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Statut</th>
-                <th className="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide">Actions</th>
+              <tr className="bg-ink-50 border-b border-ink-100">
+                <th className="px-5 py-3 text-left text-xs font-semibold text-ink-500 uppercase tracking-wide">#ID</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold text-ink-500 uppercase tracking-wide">Client</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold text-ink-500 uppercase tracking-wide">Service demandé</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold text-ink-500 uppercase tracking-wide">Date</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold text-ink-500 uppercase tracking-wide">Statut</th>
+                <th className="px-5 py-3 text-center text-xs font-semibold text-ink-500 uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-ink-50">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-slate-400">
-                    <div className="w-8 h-8 border-2 border-[#0077BE] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                  <td colSpan={6} className="px-5 py-12 text-center text-ink-400">
+                    <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                     Chargement...
                   </td>
                 </tr>
               ) : quotes.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-5 py-12 text-center">
-                    <FileQuestion size={36} className="mx-auto text-slate-200 mb-3" />
-                    <p className="text-slate-400 font-medium">Aucune demande de devis</p>
-                    <p className="text-slate-300 text-sm mt-1">Essayez de modifier les filtres</p>
+                    <FileQuestion size={36} className="mx-auto text-ink-200 mb-3" />
+                    <p className="text-ink-400 font-medium">Aucune demande de devis</p>
+                    <p className="text-ink-300 text-sm mt-1">Essayez de modifier les filtres</p>
                   </td>
                 </tr>
               ) : quotes.map(quote => {
-                const statusCfg = QUOTE_STATUS[quote.status] ?? { label: quote.status, classes: "bg-slate-100 text-slate-600 border border-slate-200" };
+                const statusCfg = QUOTE_STATUS[quote.status] ?? { label: quote.status, classes: "bg-ink-100 text-ink-600 border border-ink-200" };
                 return (
-                  <tr key={quote.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-5 py-3.5 text-sm font-bold text-[#0077BE]">
+                  <tr key={quote.id} className="hover:bg-ink-50/50 transition-colors">
+                    <td className="px-5 py-3.5 text-sm font-bold text-brand-600">
                       #{String(quote.id).padStart(4, "0")}
                     </td>
                     <td className="px-5 py-3.5 text-sm">
-                      <div className="font-medium text-slate-900">{quote.name}</div>
-                      <div className="text-xs text-slate-400 mt-0.5">{quote.email}</div>
+                      <div className="font-medium text-ink-900">{quote.name}</div>
+                      <div className="text-xs text-ink-400 mt-0.5">{quote.email}</div>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-slate-600">
-                      {quote.solution_type ?? <span className="text-slate-300">—</span>}
+                    <td className="px-5 py-3.5 text-sm text-ink-600">
+                      {quote.solution_type ?? <span className="text-ink-300">—</span>}
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-slate-500">
+                    <td className="px-5 py-3.5 text-sm text-ink-500">
                       {new Date(quote.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
                     <td className="px-5 py-3.5">
@@ -277,7 +277,7 @@ export const QuotesAdminPage: React.FC = () => {
                     <td className="px-5 py-3.5 text-center">
                       <button
                         onClick={() => openModal(quote)}
-                        className="p-1.5 text-slate-400 hover:text-[#0077BE] hover:bg-[#0077BE]/10 rounded-lg transition"
+                        className="p-1.5 text-ink-400 hover:text-brand-600 hover:bg-brand-600/10 rounded-lg transition"
                         title="Voir / Modifier"
                       >
                         <Eye size={16} />
@@ -292,20 +292,20 @@ export const QuotesAdminPage: React.FC = () => {
 
         {/* Pagination */}
         {pagination && pagination.last_page > 1 && (
-          <div className="px-5 py-3.5 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-sm text-slate-500">
-            <span>Page <strong className="text-slate-700">{pagination.current_page}</strong> / {pagination.last_page} — {pagination.total} demandes</span>
+          <div className="px-5 py-3.5 border-t border-ink-100 bg-ink-50/50 flex items-center justify-between text-sm text-ink-500">
+            <span>Page <strong className="text-ink-700">{pagination.current_page}</strong> / {pagination.last_page} — {pagination.total} demandes</span>
             <div className="flex gap-2">
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40 transition text-xs font-medium"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-ink-200 hover:bg-white disabled:opacity-40 transition text-xs font-medium"
               >
                 <ChevronLeft size={14} /> Précédent
               </button>
               <button
                 onClick={() => setCurrentPage(p => Math.min(pagination.last_page, p + 1))}
                 disabled={currentPage === pagination.last_page}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40 transition text-xs font-medium"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-ink-200 hover:bg-white disabled:opacity-40 transition text-xs font-medium"
               >
                 Suivant <ChevronRight size={14} />
               </button>
@@ -319,21 +319,21 @@ export const QuotesAdminPage: React.FC = () => {
         <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+            <div className="sticky top-0 bg-white border-b border-ink-100 px-6 py-4 flex items-center justify-between rounded-t-2xl">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#0077BE] to-[#00A8E8] rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-brand-600 to-aqua-500 rounded-xl flex items-center justify-center">
                   <FileQuestion size={18} className="text-white" />
                 </div>
                 <div>
-                  <h2 className="font-bold text-slate-900">Demande #{String(selectedQuote.id).padStart(4, "0")}</h2>
-                  <p className="text-xs text-slate-400">
+                  <h2 className="font-bold text-ink-900">Demande #{String(selectedQuote.id).padStart(4, "0")}</h2>
+                  <p className="text-xs text-ink-400">
                     {new Date(selectedQuote.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedQuote(null)}
-                className="p-2 hover:bg-slate-100 rounded-xl transition text-slate-400 hover:text-slate-700"
+                className="p-2 hover:bg-ink-100 rounded-xl transition text-ink-400 hover:text-ink-700"
               >
                 <X size={18} />
               </button>
@@ -342,96 +342,96 @@ export const QuotesAdminPage: React.FC = () => {
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Left: Client Info (read-only) */}
               <div className="space-y-4">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Informations client</p>
+                <p className="text-xs font-semibold text-ink-400 uppercase tracking-wide mb-2">Informations client</p>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <User size={15} className="text-slate-500" />
+                  <div className="w-8 h-8 bg-ink-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <User size={15} className="text-ink-500" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-400 mb-0.5">Nom</p>
-                    <p className="font-semibold text-slate-900">{selectedQuote.name}</p>
-                    {selectedQuote.company && <p className="text-xs text-slate-400 mt-0.5">{selectedQuote.company}</p>}
+                    <p className="text-xs text-ink-400 mb-0.5">Nom</p>
+                    <p className="font-semibold text-ink-900">{selectedQuote.name}</p>
+                    {selectedQuote.company && <p className="text-xs text-ink-400 mt-0.5">{selectedQuote.company}</p>}
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Mail size={15} className="text-slate-500" />
+                  <div className="w-8 h-8 bg-ink-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Mail size={15} className="text-ink-500" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-400 mb-0.5">Email</p>
-                    <p className="font-medium text-slate-900">{selectedQuote.email}</p>
+                    <p className="text-xs text-ink-400 mb-0.5">Email</p>
+                    <p className="font-medium text-ink-900">{selectedQuote.email}</p>
                   </div>
                 </div>
 
                 {selectedQuote.phone && (
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Phone size={15} className="text-slate-500" />
+                    <div className="w-8 h-8 bg-ink-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Phone size={15} className="text-ink-500" />
                     </div>
                     <div>
-                      <p className="text-xs text-slate-400 mb-0.5">Téléphone</p>
-                      <p className="font-medium text-slate-900">{selectedQuote.phone}</p>
+                      <p className="text-xs text-ink-400 mb-0.5">Téléphone</p>
+                      <p className="font-medium text-ink-900">{selectedQuote.phone}</p>
                     </div>
                   </div>
                 )}
 
                 {selectedQuote.location && (
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <MapPin size={15} className="text-slate-500" />
+                    <div className="w-8 h-8 bg-ink-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <MapPin size={15} className="text-ink-500" />
                     </div>
                     <div>
-                      <p className="text-xs text-slate-400 mb-0.5">Localisation</p>
-                      <p className="font-medium text-slate-900">{selectedQuote.location}</p>
+                      <p className="text-xs text-ink-400 mb-0.5">Localisation</p>
+                      <p className="font-medium text-ink-900">{selectedQuote.location}</p>
                     </div>
                   </div>
                 )}
 
                 {selectedQuote.solution_type && (
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Tag size={15} className="text-slate-500" />
+                    <div className="w-8 h-8 bg-ink-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Tag size={15} className="text-ink-500" />
                     </div>
                     <div>
-                      <p className="text-xs text-slate-400 mb-0.5">Type de solution</p>
-                      <p className="font-medium text-slate-900">{selectedQuote.solution_type}</p>
+                      <p className="text-xs text-ink-400 mb-0.5">Type de solution</p>
+                      <p className="font-medium text-ink-900">{selectedQuote.solution_type}</p>
                     </div>
                   </div>
                 )}
 
                 {selectedQuote.description && (
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <FileText size={15} className="text-slate-500" />
+                    <div className="w-8 h-8 bg-ink-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <FileText size={15} className="text-ink-500" />
                     </div>
                     <div>
-                      <p className="text-xs text-slate-400 mb-0.5">Description</p>
-                      <p className="text-sm text-slate-700 leading-relaxed">{selectedQuote.description}</p>
+                      <p className="text-xs text-ink-400 mb-0.5">Description</p>
+                      <p className="text-sm text-ink-700 leading-relaxed">{selectedQuote.description}</p>
                     </div>
                   </div>
                 )}
 
                 {selectedQuote.assigned_to && (
-                  <div className="mt-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
-                    <p className="text-xs text-blue-500 mb-0.5">Assigné à</p>
-                    <p className="font-medium text-blue-900">{selectedQuote.assigned_to.name}</p>
+                  <div className="mt-4 p-3 bg-brand-50 rounded-xl border border-brand-100">
+                    <p className="text-xs text-brand-500 mb-0.5">Assigné à</p>
+                    <p className="font-medium text-brand-900">{selectedQuote.assigned_to.name}</p>
                   </div>
                 )}
               </div>
 
               {/* Right: Admin Actions */}
               <div className="space-y-5">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Actions admin</p>
+                <p className="text-xs font-semibold text-ink-400 uppercase tracking-wide mb-2">Actions admin</p>
 
                 {/* Status Select */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Statut</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1.5">Statut</label>
                   <select
                     value={editStatus}
                     onChange={e => setEditStatus(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE]/30 focus:border-[#0077BE] text-sm bg-white"
+                    className="w-full px-3 py-2.5 border border-ink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-600/30 focus:border-brand-600 text-sm bg-white"
                   >
                     {Object.entries(QUOTE_STATUS).map(([value, cfg]) => (
                       <option key={value} value={value}>{cfg.label}</option>
@@ -441,7 +441,7 @@ export const QuotesAdminPage: React.FC = () => {
 
                 {/* Preview of selected status */}
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400">Statut sélectionné :</span>
+                  <span className="text-xs text-ink-400">Statut sélectionné :</span>
                   <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${QUOTE_STATUS[editStatus]?.classes ?? ""}`}>
                     {QUOTE_STATUS[editStatus]?.label ?? editStatus}
                   </span>
@@ -449,13 +449,13 @@ export const QuotesAdminPage: React.FC = () => {
 
                 {/* Internal Notes */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Notes internes</label>
+                  <label className="block text-sm font-medium text-ink-700 mb-1.5">Notes internes</label>
                   <textarea
                     value={editNotes}
                     onChange={e => setEditNotes(e.target.value)}
                     rows={5}
                     placeholder="Ajouter des notes internes (non visibles par le client)..."
-                    className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0077BE]/30 focus:border-[#0077BE] text-sm resize-none"
+                    className="w-full px-3 py-2.5 border border-ink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-600/30 focus:border-brand-600 text-sm resize-none"
                   />
                 </div>
 
@@ -463,7 +463,7 @@ export const QuotesAdminPage: React.FC = () => {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="w-full px-4 py-3 bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white rounded-xl hover:opacity-90 transition font-semibold text-sm flex items-center justify-center gap-2 shadow-md shadow-[#0077BE]/20 disabled:opacity-60"
+                  className="w-full px-4 py-3 bg-gradient-to-r from-brand-600 to-aqua-500 text-white rounded-xl hover:opacity-90 transition font-semibold text-sm flex items-center justify-center gap-2 shadow-md shadow-brand-600/20 disabled:opacity-60"
                 >
                   {saving ? (
                     <>
@@ -480,7 +480,7 @@ export const QuotesAdminPage: React.FC = () => {
 
                 <button
                   onClick={() => setSelectedQuote(null)}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition font-medium text-sm text-slate-600"
+                  className="w-full px-4 py-2.5 border border-ink-200 rounded-xl hover:bg-ink-50 transition font-medium text-sm text-ink-600"
                 >
                   Annuler
                 </button>

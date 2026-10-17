@@ -22,14 +22,14 @@ const TABS: { key: Tab; fr: string; en: string; icon: React.ElementType }[] = [
 ];
 
 const inputClass =
-  "w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0077BE]/25 focus:border-[#0077BE] text-sm";
+  "w-full px-4 py-3 rounded-xl border border-ink-200 dark:border-ink-600 bg-ink-50 dark:bg-ink-700 text-ink-900 dark:text-white placeholder-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-600/25 focus:border-brand-600 text-sm";
 const primaryButton =
-  "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-[#0077BE] to-[#00A8E8] disabled:opacity-70 text-sm";
+  "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-brand-600 to-aqua-500 disabled:opacity-70 text-sm";
 
 function Field({ id, label, error, children }: { id: string; label: string; error?: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="block text-sm font-semibold text-gray-700 dark:text-gray-200">{label}</label>
+      <label htmlFor={id} className="block text-sm font-semibold text-ink-700 dark:text-ink-200">{label}</label>
       {children}
       {error && <p className="text-xs text-red-600 dark:text-red-400">{error}</p>}
     </div>
@@ -70,7 +70,7 @@ function InfosTab() {
 
   return (
     <form onSubmit={submit} className="space-y-5 max-w-xl">
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-ink-500 dark:text-ink-400">
         {tx(
           "Ces informations pré-remplissent vos prochaines commandes et nous permettent de vous joindre pour la livraison.",
           "These details pre-fill your next orders and let us reach you for delivery."
@@ -140,9 +140,9 @@ function SecurityTab() {
       <button type="submit" disabled={saving} className={primaryButton}>
         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />} {tx("Changer le mot de passe", "Change password")}
       </button>
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-ink-500 dark:text-ink-400">
         {tx("Mot de passe oublié ?", "Forgot your password?")}{" "}
-        <Link to="/forgot-password" className="text-[#0077BE] hover:underline">{tx("Recevoir un lien par e-mail", "Get a link by email")}</Link>
+        <Link to="/forgot-password" className="text-brand-600 hover:underline">{tx("Recevoir un lien par e-mail", "Get a link by email")}</Link>
       </p>
     </form>
   );
@@ -151,12 +151,12 @@ function SecurityTab() {
 function ListState({ loading, empty, emptyText, cta }: { loading: boolean; empty: boolean; emptyText: string; cta: React.ReactNode }) {
   const { tx } = useI18n();
   if (loading) {
-    return <div className="flex items-center gap-2 text-gray-400 py-10"><Loader2 className="w-5 h-5 animate-spin" /> {tx("Chargement…", "Loading…")}</div>;
+    return <div className="flex items-center gap-2 text-ink-400 py-10"><Loader2 className="w-5 h-5 animate-spin" /> {tx("Chargement…", "Loading…")}</div>;
   }
   if (empty) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 dark:text-gray-400 mb-5">{emptyText}</p>
+        <p className="text-ink-500 dark:text-ink-400 mb-5">{emptyText}</p>
         {cta}
       </div>
     );
@@ -179,21 +179,21 @@ function OrdersTab() {
         cta={<Link to="/shop" className={primaryButton}>{tx("Découvrir la boutique", "Browse the shop")}</Link>} />
       {!loading && orders.length > 0 && (
         <>
-          <ul className="divide-y divide-gray-100 dark:divide-slate-700">
+          <ul className="divide-y divide-ink-100 dark:divide-ink-700">
             {orders.slice(0, 5).map((o) => (
               <li key={o.id} className="py-4 flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="font-semibold text-gray-900 dark:text-white">{orderReference(o)}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{o.created_at} · {Math.round(Number(o.total ?? 0)).toLocaleString(locale)} XAF</p>
+                  <p className="font-semibold text-ink-900 dark:text-white">{orderReference(o)}</p>
+                  <p className="text-sm text-ink-500 dark:text-ink-400">{o.created_at} · {Math.round(Number(o.total ?? 0)).toLocaleString(locale)} XAF</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusColor(o.status)}`}>{statusLabel(o.status, language)}</span>
-                  <Link to={`/suivi-commande?ref=${orderReference(o)}`} className="text-sm text-[#0077BE] hover:underline">{tx("Suivre", "Track")}</Link>
+                  <Link to={`/suivi-commande?ref=${orderReference(o)}`} className="text-sm text-brand-600 hover:underline">{tx("Suivre", "Track")}</Link>
                 </div>
               </li>
             ))}
           </ul>
-          <Link to="/orders" className="inline-block mt-4 text-sm font-semibold text-[#0077BE] hover:underline">
+          <Link to="/orders" className="inline-block mt-4 text-sm font-semibold text-brand-600 hover:underline">
             {tx("Voir le détail de toutes mes commandes", "See details of all my orders")}
           </Link>
         </>
@@ -217,16 +217,16 @@ function QuotesTab() {
         emptyText={tx("Aucune demande de devis associée à votre adresse e-mail.", "No quote requests linked to your email address.")}
         cta={<Link to="/devis" className={primaryButton}>{tx("Demander un devis gratuit", "Request a free quote")}</Link>} />
       {!loading && quotes.length > 0 && (
-        <ul className="divide-y divide-gray-100 dark:divide-slate-700">
+        <ul className="divide-y divide-ink-100 dark:divide-ink-700">
           {quotes.map((q) => (
             <li key={q.id} className="py-4 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="font-semibold text-gray-900 dark:text-white">{q.solution_type || tx("Demande de devis", "Quote request")}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="font-semibold text-ink-900 dark:text-white">{q.solution_type || tx("Demande de devis", "Quote request")}</p>
+                <p className="text-sm text-ink-500 dark:text-ink-400">
                   {q.created_at}{q.location ? ` · ${q.location}` : ""}{q.volume_m3 ? ` · ${q.volume_m3} m³` : ""}
                 </p>
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-800 dark:bg-brand-900/30 dark:text-brand-200">
                 {quoteStatusLabel(q.status, language)}
               </span>
             </li>
@@ -263,28 +263,28 @@ export const ProfilePage: React.FC = () => {
   useSeo({ title: tx("Mon compte", "My account"), path: "/profile", noindex: true });
 
   if (isLoading && !user) {
-    return <div className="min-h-[60vh] flex items-center justify-center text-gray-400"><Loader2 className="w-6 h-6 animate-spin" /></div>;
+    return <div className="min-h-[60vh] flex items-center justify-center text-ink-400"><Loader2 className="w-6 h-6 animate-spin" /></div>;
   }
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
 
   const initials = user.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 sm:py-12">
+    <div className="min-h-screen bg-ink-50 dark:bg-ink-900 py-8 sm:py-12">
       <div className="max-w-5xl mx-auto px-4">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#0077BE] to-[#00A8E8] text-white font-bold text-lg flex items-center justify-center">
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-600 to-aqua-500 text-white font-bold text-lg flex items-center justify-center">
               {initials}
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{tx("Bonjour", "Hello")} {user.name.split(" ")[0]}</h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <h1 className="text-2xl font-bold text-ink-900 dark:text-white">{tx("Bonjour", "Hello")} {user.name.split(" ")[0]}</h1>
+              <p className="text-sm text-ink-500 dark:text-ink-400">
                 {user.email}{user.createdAt ? ` · ${tx("client depuis le", "customer since")} ${user.createdAt}` : ""}
               </p>
             </div>
           </div>
-          <button onClick={logout} className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-red-600">
+          <button onClick={logout} className="inline-flex items-center gap-2 text-sm text-ink-600 dark:text-ink-300 hover:text-red-600">
             <LogOut className="w-4 h-4" /> {tx("Se déconnecter", "Sign out")}
           </button>
         </div>
@@ -298,8 +298,8 @@ export const ProfilePage: React.FC = () => {
                 aria-current={tab === key ? "page" : undefined}
                 className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
                   tab === key
-                    ? "bg-white dark:bg-slate-800 text-[#0077BE] dark:text-[#00A8E8] shadow-sm"
-                    : "text-gray-600 dark:text-gray-300 hover:bg-white/60 dark:hover:bg-slate-800/60"
+                    ? "bg-white dark:bg-ink-800 text-brand-600 dark:text-aqua-500 shadow-sm"
+                    : "text-ink-600 dark:text-ink-300 hover:bg-white/60 dark:hover:bg-ink-800/60"
                 }`}
               >
                 <Icon className="w-4 h-4" /> {language === "en" ? en : fr}
@@ -307,8 +307,8 @@ export const ProfilePage: React.FC = () => {
             ))}
           </nav>
 
-          <section className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 sm:p-8">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-5">{(() => { const t = TABS.find((x) => x.key === tab)!; return language === "en" ? t.en : t.fr; })()}</h2>
+          <section className="bg-white dark:bg-ink-800 rounded-2xl shadow-sm border border-ink-100 dark:border-ink-700 p-5 sm:p-8">
+            <h2 className="text-lg font-bold text-ink-900 dark:text-white mb-5">{(() => { const t = TABS.find((x) => x.key === tab)!; return language === "en" ? t.en : t.fr; })()}</h2>
             {tab === "infos" && <InfosTab />}
             {tab === "orders" && <OrdersTab />}
             {tab === "favorites" && <FavoritesTab />}

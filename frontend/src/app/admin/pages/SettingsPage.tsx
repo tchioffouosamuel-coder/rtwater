@@ -90,7 +90,7 @@ export const SettingsPage: React.FC = () => {
       <AdminLayout title="Paramètres">
         <div className="py-12 text-center">
           <p className="font-semibold text-red-600">Accès refusé</p>
-          <p className="mt-1 text-sm text-slate-500">Seul un administrateur peut modifier les réglages.</p>
+          <p className="mt-1 text-sm text-ink-500">Seul un administrateur peut modifier les réglages.</p>
         </div>
       </AdminLayout>
     );
@@ -102,7 +102,7 @@ export const SettingsPage: React.FC = () => {
       breadcrumbs={[{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Paramètres' }]}
     >
       {loading ? (
-        <div className="py-20 text-center text-sm text-slate-400">
+        <div className="py-20 text-center text-sm text-ink-400">
           <Loader2 size={20} className="mx-auto mb-2 animate-spin" />
           Chargement des réglages…
         </div>
@@ -115,7 +115,7 @@ export const SettingsPage: React.FC = () => {
       ) : (
         <>
           <div className="mb-6 overflow-x-auto">
-            <div className="flex gap-2 border-b border-slate-200">
+            <div className="flex gap-2 border-b border-ink-200">
               {TABS.map(tab => {
                 const Icon = tab.icon;
                 return (
@@ -124,8 +124,8 @@ export const SettingsPage: React.FC = () => {
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition ${
                       activeTab === tab.id
-                        ? 'border-blue-600 text-blue-700'
-                        : 'border-transparent text-slate-500 hover:text-slate-800'
+                        ? 'border-brand-600 text-brand-700'
+                        : 'border-transparent text-ink-500 hover:text-ink-800'
                     }`}
                   >
                     <Icon size={16} />
@@ -136,7 +136,7 @@ export const SettingsPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-6">
+          <div className="rounded-xl border border-ink-200 bg-white p-6">
             {activeTab === 'general' && (
               <Section
                 title="Identité de l'entreprise"
@@ -225,7 +225,7 @@ export const SettingsPage: React.FC = () => {
                   hint="Décoché, la taxe est ajoutée au moment du paiement."
                 />
 
-                <p className="pt-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                <p className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-400">
                   Moyens de paiement proposés au client
                 </p>
                 <Toggle
@@ -312,11 +312,11 @@ export const SettingsPage: React.FC = () => {
               </Section>
             )}
 
-            <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-slate-200 pt-6">
+            <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-ink-200 pt-6">
               <button
                 onClick={handleSave}
                 disabled={saving || !dirty}
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                className="flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-2.5 font-medium text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-ink-300"
               >
                 {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
                 {saving ? 'Enregistrement…' : 'Enregistrer'}
@@ -345,14 +345,14 @@ const inputClass = (error?: string[]) =>
   `w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:ring-2 ${
     error
       ? 'border-red-300 bg-red-50 focus:ring-red-400'
-      : 'border-slate-200 bg-white focus:border-transparent focus:ring-blue-500'
+      : 'border-ink-200 bg-white focus:border-transparent focus:ring-brand-500'
   }`;
 
 const Section: React.FC<{ title: string; hint?: string; children: React.ReactNode }> = ({ title, hint, children }) => (
   <div className="space-y-5">
     <div>
-      <h2 className="text-base font-semibold text-slate-900">{title}</h2>
-      {hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
+      <h2 className="text-base font-semibold text-ink-900">{title}</h2>
+      {hint && <p className="mt-1 text-xs text-ink-500">{hint}</p>}
     </div>
     {children}
   </div>
@@ -365,10 +365,10 @@ const Field: React.FC<{
   children: React.ReactNode;
 }> = ({ label, hint, error, children }) => (
   <label className="block">
-    <span className="mb-1.5 block text-sm font-medium text-slate-700">{label}</span>
+    <span className="mb-1.5 block text-sm font-medium text-ink-700">{label}</span>
     {children}
     {error?.[0] && <span className="mt-1 block text-xs text-red-600">{error[0]}</span>}
-    {!error && hint && <span className="mt-1 block text-xs text-slate-400">{hint}</span>}
+    {!error && hint && <span className="mt-1 block text-xs text-ink-400">{hint}</span>}
   </label>
 );
 
@@ -378,15 +378,15 @@ const Toggle: React.FC<{
   label: string;
   hint: string;
 }> = ({ checked, onChange, label, hint }) => (
-  <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-100 p-3 transition hover:bg-slate-50">
+  <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-ink-100 p-3 transition hover:bg-ink-50">
     <input
       type="checkbox" checked={checked}
       onChange={(e) => onChange(e.target.checked)}
-      className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+      className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-ink-300 text-brand-600 focus:ring-brand-500"
     />
     <span className="min-w-0">
-      <span className="block text-sm font-medium text-slate-900">{label}</span>
-      {hint && <span className="mt-0.5 block text-xs text-slate-500">{hint}</span>}
+      <span className="block text-sm font-medium text-ink-900">{label}</span>
+      {hint && <span className="mt-0.5 block text-xs text-ink-500">{hint}</span>}
     </span>
   </label>
 );

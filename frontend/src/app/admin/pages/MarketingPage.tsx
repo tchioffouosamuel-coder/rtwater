@@ -23,10 +23,10 @@ const xaf = (value: number) => `${Math.round(value).toLocaleString('fr-FR')} XAF
 
 const STATE_META: Record<DiscountState, { label: string; tone: string }> = {
   running:   { label: 'En cours',  tone: 'bg-green-100 text-green-700' },
-  scheduled: { label: 'Programmé', tone: 'bg-blue-100 text-blue-700' },
-  expired:   { label: 'Expiré',    tone: 'bg-slate-100 text-slate-500' },
+  scheduled: { label: 'Programmé', tone: 'bg-brand-100 text-brand-700' },
+  expired:   { label: 'Expiré',    tone: 'bg-ink-100 text-ink-500' },
   exhausted: { label: 'Épuisé',    tone: 'bg-amber-100 text-amber-700' },
-  inactive:  { label: 'Inactif',   tone: 'bg-slate-100 text-slate-500' },
+  inactive:  { label: 'Inactif',   tone: 'bg-ink-100 text-ink-500' },
 };
 
 export const MarketingPage: React.FC = () => {
@@ -61,7 +61,7 @@ export const MarketingPage: React.FC = () => {
       breadcrumbs={[{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Commercial' }]}
     >
       <div className="mb-6 overflow-x-auto">
-        <div className="flex gap-2 border-b border-slate-200">
+        <div className="flex gap-2 border-b border-ink-200">
           {tabs.filter(t => t.allowed).map(t => {
             const Icon = t.icon;
             return (
@@ -69,7 +69,7 @@ export const MarketingPage: React.FC = () => {
                 key={t.id}
                 onClick={() => setTab(t.id)}
                 className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition ${
-                  tab === t.id ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'
+                  tab === t.id ? 'border-brand-600 text-brand-700' : 'border-transparent text-ink-500 hover:text-ink-800'
                 }`}
               >
                 <Icon size={16} />
@@ -209,38 +209,38 @@ const DiscountsTab: React.FC = () => {
   return (
     <>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-ink-500">
           Les codes sont saisis par le client au moment du paiement. La remise s'applique au sous-total,
           avant les frais de livraison.
         </p>
         <button
           onClick={() => openForm()}
-          className="flex flex-shrink-0 items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white transition hover:bg-blue-700"
+          className="flex flex-shrink-0 items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 font-medium text-white transition hover:bg-brand-700"
         >
           <Plus size={18} />
           Nouveau code
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-ink-200 bg-white">
         {loading ? (
-          <div className="py-16 text-center text-sm text-slate-400">
+          <div className="py-16 text-center text-sm text-ink-400">
             <Loader2 size={20} className="mx-auto mb-2 animate-spin" />
             Chargement…
           </div>
         ) : discounts.length === 0 ? (
           <div className="px-6 py-16 text-center">
-            <Tag size={32} className="mx-auto text-slate-300" />
-            <p className="mt-3 text-sm font-medium text-slate-900">Aucun code promo</p>
-            <p className="mt-1 text-xs text-slate-500">
+            <Tag size={32} className="mx-auto text-ink-300" />
+            <p className="mt-3 text-sm font-medium text-ink-900">Aucun code promo</p>
+            <p className="mt-1 text-xs text-ink-500">
               Un code de bienvenue est le moyen le plus simple de convertir une première visite.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50">
-                <tr className="border-b border-slate-200 text-left text-sm font-semibold text-slate-900">
+              <thead className="bg-ink-50">
+                <tr className="border-b border-ink-200 text-left text-sm font-semibold text-ink-900">
                   <th className="px-6 py-4">Code</th>
                   <th className="px-6 py-4">Remise</th>
                   <th className="px-6 py-4">Conditions</th>
@@ -249,31 +249,31 @@ const DiscountsTab: React.FC = () => {
                   <th className="px-6 py-4 text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-ink-200">
                 {discounts.map(discount => {
                   const state = STATE_META[discount.state];
 
                   return (
-                    <tr key={discount.id} className="transition-colors hover:bg-slate-50">
+                    <tr key={discount.id} className="transition-colors hover:bg-ink-50">
                       <td className="px-6 py-4">
-                        <code className="rounded bg-slate-100 px-2 py-1 font-mono text-sm font-semibold text-slate-900">
+                        <code className="rounded bg-ink-100 px-2 py-1 font-mono text-sm font-semibold text-ink-900">
                           {discount.code}
                         </code>
-                        {discount.label && <p className="mt-1 text-xs text-slate-400">{discount.label}</p>}
+                        {discount.label && <p className="mt-1 text-xs text-ink-400">{discount.label}</p>}
                       </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-slate-900">
+                      <td className="px-6 py-4 text-sm font-semibold text-ink-900">
                         {discount.type === 'percent' ? `−${discount.value} %` : `−${xaf(discount.value)}`}
                       </td>
-                      <td className="px-6 py-4 text-xs text-slate-500">
+                      <td className="px-6 py-4 text-xs text-ink-500">
                         {discount.min_subtotal ? <p>Panier ≥ {xaf(discount.min_subtotal)}</p> : <p>Sans minimum</p>}
                         {discount.max_uses_per_user && <p>{discount.max_uses_per_user} usage(s) par client</p>}
                         {discount.ends_at && (
                           <p>Jusqu'au {new Date(discount.ends_at).toLocaleDateString('fr-FR')}</p>
                         )}
                       </td>
-                      <td className="px-6 py-4 text-center text-sm text-slate-700">
+                      <td className="px-6 py-4 text-center text-sm text-ink-700">
                         {discount.used_count}
-                        {discount.max_uses != null && <span className="text-slate-400"> / {discount.max_uses}</span>}
+                        {discount.max_uses != null && <span className="text-ink-400"> / {discount.max_uses}</span>}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${state.tone}`}>
@@ -285,7 +285,7 @@ const DiscountsTab: React.FC = () => {
                           <button
                             onClick={() => openForm(discount)}
                             aria-label={`Modifier ${discount.code}`}
-                            className="rounded-lg p-1.5 text-blue-600 transition hover:bg-blue-50"
+                            className="rounded-lg p-1.5 text-brand-600 transition hover:bg-brand-50"
                           >
                             <Edit2 size={16} />
                           </button>
@@ -314,32 +314,32 @@ const DiscountsTab: React.FC = () => {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Code *</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Code *</span>
                 <input
                   type="text" value={form.code} autoFocus
                   onChange={(e) => setForm(f => ({ ...f, code: e.target.value.toUpperCase() }))}
                   placeholder="BIENVENUE10"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 font-mono text-sm uppercase outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 font-mono text-sm uppercase outline-none focus:ring-2 focus:ring-brand-500"
                 />
-                <span className="mt-1 block text-xs text-slate-400">
+                <span className="mt-1 block text-xs text-ink-400">
                   La casse n'importe pas : le client peut taper en minuscules.
                 </span>
               </label>
 
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Libellé interne</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Libellé interne</span>
                 <input
                   type="text" value={form.label}
                   onChange={(e) => setForm(f => ({ ...f, label: e.target.value }))}
                   placeholder="Campagne rentrée"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Type de remise</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Type de remise</span>
                 <div className="grid grid-cols-2 gap-2">
                   {([['percent', 'Pourcentage'], ['fixed', 'Montant fixe']] as const).map(([type, label]) => (
                     <button
@@ -347,8 +347,8 @@ const DiscountsTab: React.FC = () => {
                       onClick={() => setForm(f => ({ ...f, type: type as DiscountType }))}
                       className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition ${
                         form.type === type
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                          ? 'border-brand-500 bg-brand-50 text-brand-700'
+                          : 'border-ink-200 text-ink-600 hover:bg-ink-50'
                       }`}
                     >
                       {label}
@@ -358,46 +358,46 @@ const DiscountsTab: React.FC = () => {
               </div>
 
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">
                   Valeur * {form.type === 'percent' ? '(%)' : '(XAF)'}
                 </span>
                 <input
                   type="number" min={0} max={form.type === 'percent' ? 100 : undefined} value={form.value}
                   onChange={(e) => setForm(f => ({ ...f, value: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
             </div>
 
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-slate-700">Panier minimum (XAF)</span>
+              <span className="mb-1.5 block text-sm font-medium text-ink-700">Panier minimum (XAF)</span>
               <input
                 type="number" min={0} value={form.min_subtotal}
                 onChange={(e) => setForm(f => ({ ...f, min_subtotal: e.target.value }))}
                 placeholder="Vide = sans minimum"
-                className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
               />
             </label>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Utilisations totales</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Utilisations totales</span>
                 <input
                   type="number" min={1} value={form.max_uses}
                   onChange={(e) => setForm(f => ({ ...f, max_uses: e.target.value }))}
                   placeholder="Vide = illimité"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Par client</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Par client</span>
                 <input
                   type="number" min={1} value={form.max_uses_per_user}
                   onChange={(e) => setForm(f => ({ ...f, max_uses_per_user: e.target.value }))}
                   placeholder="Vide = illimité"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
-                <span className="mt-1 block text-xs text-slate-400">
+                <span className="mt-1 block text-xs text-ink-400">
                   Ne s'applique qu'aux clients connectés.
                 </span>
               </label>
@@ -405,30 +405,30 @@ const DiscountsTab: React.FC = () => {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Début</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Début</span>
                 <input
                   type="datetime-local" value={form.starts_at}
                   onChange={(e) => setForm(f => ({ ...f, starts_at: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Fin</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Fin</span>
                 <input
                   type="datetime-local" value={form.ends_at}
                   onChange={(e) => setForm(f => ({ ...f, ends_at: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
             </div>
 
-            <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-slate-100 p-3 transition hover:bg-slate-50">
+            <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-ink-100 p-3 transition hover:bg-ink-50">
               <input
                 type="checkbox" checked={form.is_active}
                 onChange={(e) => setForm(f => ({ ...f, is_active: e.target.checked }))}
-                className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                className="h-4 w-4 rounded border-ink-300 text-brand-600 focus:ring-brand-500"
               />
-              <span className="text-sm font-medium text-slate-900">Code actif</span>
+              <span className="text-sm font-medium text-ink-900">Code actif</span>
             </label>
           </div>
 
@@ -564,13 +564,13 @@ const ShippingTab: React.FC = () => {
   return (
     <>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-ink-500">
           Le client choisit sa zone au moment de commander. Sans zone active, aucun frais de livraison
           n'est facturé.
         </p>
         <button
           onClick={() => openForm()}
-          className="flex flex-shrink-0 items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white transition hover:bg-blue-700"
+          className="flex flex-shrink-0 items-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 font-medium text-white transition hover:bg-brand-700"
         >
           <Plus size={18} />
           Nouvelle zone
@@ -578,15 +578,15 @@ const ShippingTab: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="rounded-xl border border-slate-200 bg-white py-16 text-center text-sm text-slate-400">
+        <div className="rounded-xl border border-ink-200 bg-white py-16 text-center text-sm text-ink-400">
           <Loader2 size={20} className="mx-auto mb-2 animate-spin" />
           Chargement…
         </div>
       ) : zones.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white px-6 py-16 text-center">
-          <Truck size={32} className="mx-auto text-slate-300" />
-          <p className="mt-3 text-sm font-medium text-slate-900">Aucune zone de livraison</p>
-          <p className="mt-1 text-xs text-slate-500">
+        <div className="rounded-xl border border-ink-200 bg-white px-6 py-16 text-center">
+          <Truck size={32} className="mx-auto text-ink-300" />
+          <p className="mt-3 text-sm font-medium text-ink-900">Aucune zone de livraison</p>
+          <p className="mt-1 text-xs text-ink-500">
             Tant qu'aucune zone n'existe, la livraison est gratuite pour tout le monde.
           </p>
         </div>
@@ -595,40 +595,40 @@ const ShippingTab: React.FC = () => {
           {zones.map(zone => (
             <article
               key={zone.id}
-              className={`rounded-xl border bg-white p-4 ${zone.is_active ? 'border-slate-200' : 'border-slate-200 opacity-60'}`}
+              className={`rounded-xl border bg-white p-4 ${zone.is_active ? 'border-ink-200' : 'border-ink-200 opacity-60'}`}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <h3 className="text-sm font-semibold text-slate-900">{zone.name}</h3>
-                  {zone.delay && <p className="mt-0.5 text-xs text-slate-400">{zone.delay}</p>}
+                  <h3 className="text-sm font-semibold text-ink-900">{zone.name}</h3>
+                  {zone.delay && <p className="mt-0.5 text-xs text-ink-400">{zone.delay}</p>}
                 </div>
                 {!zone.is_active && (
-                  <span className="flex-shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                  <span className="flex-shrink-0 rounded-full bg-ink-100 px-2 py-0.5 text-[11px] font-medium text-ink-500">
                     Inactive
                   </span>
                 )}
               </div>
 
               {zone.description && (
-                <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-slate-600">{zone.description}</p>
+                <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-ink-600">{zone.description}</p>
               )}
 
               <div className="mt-3 space-y-1">
-                <p className="text-lg font-bold text-slate-900">
+                <p className="text-lg font-bold text-ink-900">
                   {zone.fee === 0 ? 'Gratuite' : xaf(zone.fee)}
                 </p>
                 {zone.free_above != null && (
                   <p className="text-xs text-green-700">Offerte dès {xaf(zone.free_above)}</p>
                 )}
                 {!!zone.orders_count && (
-                  <p className="text-xs text-slate-400">{zone.orders_count} commande(s)</p>
+                  <p className="text-xs text-ink-400">{zone.orders_count} commande(s)</p>
                 )}
               </div>
 
-              <div className="mt-4 flex gap-2 border-t border-slate-100 pt-3">
+              <div className="mt-4 flex gap-2 border-t border-ink-100 pt-3">
                 <button
                   onClick={() => openForm(zone)}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-blue-600 transition hover:bg-blue-50"
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-brand-600 transition hover:bg-brand-50"
                 >
                   <Edit2 size={14} />
                   Modifier
@@ -652,47 +652,47 @@ const ShippingTab: React.FC = () => {
             {formError && <FormError message={formError} />}
 
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-slate-700">Nom *</span>
+              <span className="mb-1.5 block text-sm font-medium text-ink-700">Nom *</span>
               <input
                 type="text" value={form.name} autoFocus
                 onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
                 placeholder="Yaoundé — centre"
-                className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
               />
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-slate-700">Quartiers couverts</span>
+              <span className="mb-1.5 block text-sm font-medium text-ink-700">Quartiers couverts</span>
               <textarea
                 rows={2} value={form.description}
                 onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))}
                 placeholder="Bastos, Nlongkak, Mvog-Mbi, Essos"
-                className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
               />
-              <span className="mt-1 block text-xs text-slate-400">
+              <span className="mt-1 block text-xs text-ink-400">
                 Affiché au client pour qu'il choisisse la bonne zone.
               </span>
             </label>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Tarif (XAF) *</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Tarif (XAF) *</span>
                 <input
                   type="number" min={0} value={form.fee}
                   onChange={(e) => setForm(f => ({ ...f, fee: e.target.value }))}
                   placeholder="0 pour une livraison offerte"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Franco de port (XAF)</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Franco de port (XAF)</span>
                 <input
                   type="number" min={0} value={form.free_above}
                   onChange={(e) => setForm(f => ({ ...f, free_above: e.target.value }))}
                   placeholder="Vide = jamais offerte"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
-                <span className="mt-1 block text-xs text-slate-400">
+                <span className="mt-1 block text-xs text-ink-400">
                   Au-delà de ce montant, la livraison passe à 0.
                 </span>
               </label>
@@ -700,32 +700,32 @@ const ShippingTab: React.FC = () => {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Délai annoncé</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Délai annoncé</span>
                 <input
                   type="text" value={form.delay}
                   onChange={(e) => setForm(f => ({ ...f, delay: e.target.value }))}
                   placeholder="24 à 48 h"
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-slate-700">Ordre d'affichage</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Ordre d'affichage</span>
                 <input
                   type="number" min={0} value={form.sort_order}
                   onChange={(e) => setForm(f => ({ ...f, sort_order: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
-                <span className="mt-1 block text-xs text-slate-400">Le plus petit apparaît en premier.</span>
+                <span className="mt-1 block text-xs text-ink-400">Le plus petit apparaît en premier.</span>
               </label>
             </div>
 
-            <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-slate-100 p-3 transition hover:bg-slate-50">
+            <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-ink-100 p-3 transition hover:bg-ink-50">
               <input
                 type="checkbox" checked={form.is_active}
                 onChange={(e) => setForm(f => ({ ...f, is_active: e.target.checked }))}
-                className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                className="h-4 w-4 rounded border-ink-300 text-brand-600 focus:ring-brand-500"
               />
-              <span className="text-sm font-medium text-slate-900">Proposée aux clients</span>
+              <span className="text-sm font-medium text-ink-900">Proposée aux clients</span>
             </label>
           </div>
 
@@ -804,9 +804,9 @@ const NewsletterTab: React.FC = () => {
           <p className="text-xs font-medium text-green-600">Inscrits actifs</p>
           <p className="mt-1 text-2xl font-bold text-green-900">{stats?.active ?? '—'}</p>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <p className="text-xs font-medium text-slate-500">Désinscrits</p>
-          <p className="mt-1 text-2xl font-bold text-slate-700">{stats?.unsubscribed ?? '—'}</p>
+        <div className="rounded-xl border border-ink-200 bg-ink-50 p-4">
+          <p className="text-xs font-medium text-ink-500">Désinscrits</p>
+          <p className="mt-1 text-2xl font-bold text-ink-700">{stats?.unsubscribed ?? '—'}</p>
         </div>
       </div>
 
@@ -817,7 +817,7 @@ const NewsletterTab: React.FC = () => {
               key={key}
               onClick={() => setStatus(key as typeof status)}
               className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                status === key ? 'bg-blue-600 text-white' : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                status === key ? 'bg-brand-600 text-white' : 'border border-ink-200 bg-white text-ink-600 hover:bg-ink-50'
               }`}
             >
               {label}
@@ -827,47 +827,47 @@ const NewsletterTab: React.FC = () => {
 
         <button
           onClick={exportCsv}
-          className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+          className="rounded-lg border border-ink-200 bg-white px-4 py-2 text-xs font-medium text-ink-700 transition hover:bg-ink-50"
         >
           Exporter les actifs en CSV
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-ink-200 bg-white">
         {loading ? (
-          <div className="py-16 text-center text-sm text-slate-400">
+          <div className="py-16 text-center text-sm text-ink-400">
             <Loader2 size={20} className="mx-auto mb-2 animate-spin" />
             Chargement…
           </div>
         ) : subscribers.length === 0 ? (
           <div className="px-6 py-16 text-center">
-            <Mail size={32} className="mx-auto text-slate-300" />
-            <p className="mt-3 text-sm font-medium text-slate-900">Aucun inscrit</p>
-            <p className="mt-1 text-xs text-slate-500">
+            <Mail size={32} className="mx-auto text-ink-300" />
+            <p className="mt-3 text-sm font-medium text-ink-900">Aucun inscrit</p>
+            <p className="mt-1 text-xs text-ink-500">
               Le formulaire du pied de page alimente cette liste.
             </p>
           </div>
         ) : (
           <table className="w-full">
-            <thead className="bg-slate-50">
-              <tr className="border-b border-slate-200 text-left text-sm font-semibold text-slate-900">
+            <thead className="bg-ink-50">
+              <tr className="border-b border-ink-200 text-left text-sm font-semibold text-ink-900">
                 <th className="px-6 py-4">Adresse</th>
                 <th className="px-6 py-4">Origine</th>
                 <th className="px-6 py-4">Inscrit le</th>
                 <th className="px-6 py-4">Statut</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-ink-200">
               {subscribers.map(s => (
-                <tr key={s.id} className="transition-colors hover:bg-slate-50">
-                  <td className="px-6 py-3 text-sm text-slate-900">{s.email}</td>
-                  <td className="px-6 py-3 text-xs text-slate-500">{s.source}</td>
-                  <td className="px-6 py-3 text-xs text-slate-500">
+                <tr key={s.id} className="transition-colors hover:bg-ink-50">
+                  <td className="px-6 py-3 text-sm text-ink-900">{s.email}</td>
+                  <td className="px-6 py-3 text-xs text-ink-500">{s.source}</td>
+                  <td className="px-6 py-3 text-xs text-ink-500">
                     {s.created_at ? new Date(s.created_at).toLocaleDateString('fr-FR') : '—'}
                   </td>
                   <td className="px-6 py-3">
                     <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                      s.unsubscribed_at ? 'bg-slate-100 text-slate-500' : 'bg-green-100 text-green-700'
+                      s.unsubscribed_at ? 'bg-ink-100 text-ink-500' : 'bg-green-100 text-green-700'
                     }`}>
                       {s.unsubscribed_at ? 'Désinscrit' : 'Actif'}
                     </span>
@@ -888,11 +888,11 @@ const NewsletterTab: React.FC = () => {
 
 const Modal: React.FC<{ title: string; onClose: () => void; children: React.ReactNode }> = ({ title, onClose, children }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div className="absolute inset-0 bg-slate-900/40" onClick={onClose} aria-hidden />
+    <div className="absolute inset-0 bg-ink-900/40" onClick={onClose} aria-hidden />
     <div className="relative max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
-        <h2 className="text-base font-semibold text-slate-900">{title}</h2>
-        <button onClick={onClose} aria-label="Fermer" className="text-slate-400 hover:text-slate-700">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-ink-200 bg-white px-6 py-4">
+        <h2 className="text-base font-semibold text-ink-900">{title}</h2>
+        <button onClick={onClose} aria-label="Fermer" className="text-ink-400 hover:text-ink-700">
           <X size={20} />
         </button>
       </div>
@@ -907,17 +907,17 @@ const ModalActions: React.FC<{
   saving: boolean;
   confirmLabel: string;
 }> = ({ onCancel, onConfirm, saving, confirmLabel }) => (
-  <div className="mt-6 flex justify-end gap-3 border-t border-slate-200 pt-5">
+  <div className="mt-6 flex justify-end gap-3 border-t border-ink-200 pt-5">
     <button
       onClick={onCancel}
-      className="rounded-lg border border-slate-200 px-5 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+      className="rounded-lg border border-ink-200 px-5 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-50"
     >
       Annuler
     </button>
     <button
       onClick={onConfirm}
       disabled={saving}
-      className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-slate-300"
+      className="flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-brand-700 disabled:bg-ink-300"
     >
       {saving && <Loader2 size={16} className="animate-spin" />}
       {confirmLabel}
@@ -939,14 +939,14 @@ const ConfirmDialog: React.FC<{
   onConfirm: () => void;
 }> = ({ title, message, onCancel, onConfirm }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div className="absolute inset-0 bg-slate-900/40" onClick={onCancel} aria-hidden />
+    <div className="absolute inset-0 bg-ink-900/40" onClick={onCancel} aria-hidden />
     <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-      <h2 className="text-base font-semibold text-slate-900">{title}</h2>
-      <p className="mt-2 text-sm text-slate-600">{message}</p>
+      <h2 className="text-base font-semibold text-ink-900">{title}</h2>
+      <p className="mt-2 text-sm text-ink-600">{message}</p>
       <div className="mt-5 flex justify-end gap-3">
         <button
           onClick={onCancel}
-          className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+          className="rounded-lg border border-ink-200 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-ink-50"
         >
           Annuler
         </button>

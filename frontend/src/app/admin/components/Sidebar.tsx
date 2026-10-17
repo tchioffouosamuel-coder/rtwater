@@ -146,8 +146,8 @@ export const Sidebar: React.FC = () => {
                 onClick={() => toggleMenu(item.label)}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
                   expandedMenus.includes(item.label)
-                    ? 'bg-slate-200 text-slate-900'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    ? 'bg-ink-200 text-ink-900'
+                    : 'text-ink-600 hover:text-ink-900 hover:bg-ink-100'
                 } ${depth > 0 ? 'ml-0' : ''}`}
               >
                 <span className="flex-shrink-0">{item.icon}</span>
@@ -170,7 +170,7 @@ export const Sidebar: React.FC = () => {
               onClick={() => navigate(item.path)}
               className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
                 depth > 0 ? 'pl-12 text-xs' : ''
-              } text-slate-600 hover:text-slate-900 hover:bg-slate-100`}
+              } text-ink-600 hover:text-ink-900 hover:bg-ink-100`}
             >
               <span className="flex-shrink-0">{item.icon}</span>
               <span>{item.label}</span>
@@ -185,37 +185,37 @@ export const Sidebar: React.FC = () => {
       {/* Toggle Button Mobile */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 lg:hidden bg-slate-700 text-white p-2 rounded-lg hover:bg-slate-800 transition"
+        className="fixed top-4 left-4 z-50 lg:hidden bg-ink-700 text-white p-2 rounded-lg hover:bg-ink-800 transition"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-screen w-64 bg-slate-50 border-r border-slate-200 flex flex-col transform transition-transform duration-300 z-40 ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-ink-50 border-r border-ink-200 flex flex-col transform transition-transform duration-300 z-40 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
         {/* Logo */}
-        <div className="px-6 py-8 border-b border-slate-200">
+        <div className="px-6 py-8 border-b border-ink-200">
           <div className="flex items-center gap-3">
             <img src="/logo.webp" alt="RT Water" className="h-10 w-auto object-contain" />
-            <p className="text-xs text-slate-500">Backoffice</p>
+            <p className="text-xs text-ink-500">Backoffice</p>
           </div>
         </div>
 
         {/* User Info */}
         {user && (
-          <div className="px-6 py-4 border-b border-slate-200 bg-white">
+          <div className="px-6 py-4 border-b border-ink-200 bg-white">
             <div className="mb-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+              <div className="w-10 h-10 bg-gradient-to-br from-brand-400 to-brand-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                 {user.name.charAt(0)}
               </div>
             </div>
-            <p className="text-sm font-semibold text-slate-900">{user.name}</p>
-            <p className="text-xs text-slate-500 truncate">{user.email}</p>
+            <p className="text-sm font-semibold text-ink-900">{user.name}</p>
+            <p className="text-xs text-ink-500 truncate">{user.email}</p>
             <div className="mt-3">
-              <span className="inline-block px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
+              <span className="inline-block px-2.5 py-1 bg-brand-100 text-brand-700 text-xs font-semibold rounded-full">
                 {ROLE_LABELS[user.role] ?? user.role}
               </span>
             </div>
@@ -228,7 +228,7 @@ export const Sidebar: React.FC = () => {
         </nav>
 
         {/* Logout */}
-        <div className="border-t border-slate-200 p-4 bg-white">
+        <div className="border-t border-ink-200 p-4 bg-white">
           <button
             onClick={() => {
               logout();

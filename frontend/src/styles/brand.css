@@ -1,0 +1,277 @@
+/**
+ * RT Water Solution — Design system
+ *
+ * Reprend le langage visuel de la vitrine Auditron-X (échelles de couleur 50→950,
+ * neutres « ink », animations d'entrée, révélation au scroll, dégradés maillés,
+ * trames de fond, verre dépoli) en conservant la palette bleue RT Water :
+ *   brand-600 = #0077BE (bleu primaire)   aqua-500 = #00A8E8 (cyan secondaire)
+ */
+
+@theme {
+  /* Typographie */
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk', 'Manrope', system-ui, sans-serif;
+
+  /* Bleu primaire — ancré sur #0077BE */
+  --color-brand-50: #eff8ff;
+  --color-brand-100: #dcefff;
+  --color-brand-200: #b8e0ff;
+  --color-brand-300: #7cc8f8;
+  --color-brand-400: #35aced;
+  --color-brand-500: #0d8fd4;
+  --color-brand-600: #0077be;
+  --color-brand-700: #0b5f99;
+  --color-brand-800: #0f4f7d;
+  --color-brand-900: #123f63;
+  --color-brand-950: #0c2941;
+
+  /* Cyan secondaire — ancré sur #00A8E8 */
+  --color-aqua-50: #ecfdff;
+  --color-aqua-100: #cff7fe;
+  --color-aqua-200: #a5eefc;
+  --color-aqua-300: #67e0f9;
+  --color-aqua-400: #22c9ee;
+  --color-aqua-500: #00a8e8;
+  --color-aqua-600: #0286b8;
+  --color-aqua-700: #086b94;
+  --color-aqua-800: #105778;
+  --color-aqua-900: #124964;
+  --color-aqua-950: #052f43;
+
+  /* Neutres */
+  --color-ink-50: #f8fafc;
+  --color-ink-100: #f1f5f9;
+  --color-ink-200: #e2e8f0;
+  --color-ink-300: #cbd5e1;
+  --color-ink-400: #94a3b8;
+  --color-ink-500: #64748b;
+  --color-ink-600: #475569;
+  --color-ink-700: #334155;
+  --color-ink-800: #1e293b;
+  --color-ink-900: #0f172a;
+  --color-ink-950: #020617;
+
+  /* Animations d'entrée */
+  --animate-fade-in: fadeIn 0.6s ease-out forwards;
+  --animate-fade-up: fadeUp 0.7s ease-out forwards;
+  --animate-fade-down: fadeDown 0.7s ease-out forwards;
+  --animate-scale-in: scaleIn 0.6s ease-out forwards;
+  --animate-slide-left: slideLeft 0.8s ease-out forwards;
+  --animate-slide-right: slideRight 0.8s ease-out forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-ring: pulseRing 2s ease-out infinite;
+  --animate-shimmer: shimmer 3s linear infinite;
+  --animate-ripple: ripple 4s ease-in-out infinite;
+
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(24px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeDown {
+    0% { opacity: 0; transform: translateY(-24px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scaleIn {
+    0% { opacity: 0; transform: scale(0.92); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes slideLeft {
+    0% { opacity: 0; transform: translateX(40px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideRight {
+    0% { opacity: 0; transform: translateX(-40px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes pulseRing {
+    0% { transform: scale(0.8); opacity: 0.6; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  /* Ondulation discrète, clin d'œil au métier de l'eau */
+  @keyframes ripple {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+    50% { transform: translateY(-6px) scale(1.04); opacity: 0.8; }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Révélation au scroll
+   --------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Fonds décoratifs
+   --------------------------------------------------------------------------- */
+
+/* Texte en dégradé bleu */
+.gradient-text {
+  background: linear-gradient(135deg, #0077be 0%, #00a8e8 55%, #67e0f9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Trame quadrillée */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 119, 190, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 119, 190, 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.bg-grid-dark {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Trame pointillée */
+.bg-dots {
+  background-image: radial-gradient(circle, rgba(0, 119, 190, 0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.bg-dots-dark {
+  background-image: radial-gradient(circle, rgba(103, 224, 249, 0.14) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Dégradé maillé */
+.mesh-gradient {
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(at 20% 20%, rgba(0, 119, 190, 0.10) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(0, 168, 232, 0.09) 0px, transparent 50%),
+    radial-gradient(at 80% 80%, rgba(103, 224, 249, 0.08) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(0, 119, 190, 0.05) 0px, transparent 50%);
+}
+
+.mesh-gradient-dark {
+  background-color: #0c2941;
+  background-image:
+    radial-gradient(at 20% 20%, rgba(13, 143, 212, 0.26) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(0, 168, 232, 0.18) 0px, transparent 50%),
+    radial-gradient(at 80% 80%, rgba(103, 224, 249, 0.12) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(0, 119, 190, 0.14) 0px, transparent 50%);
+}
+
+/* Verre dépoli */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark .glass {
+  background: rgba(12, 41, 65, 0.6);
+}
+
+/* Reflet animé (squelettes de chargement, bandeaux promo) */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Masquer la barre de défilement (carrousels) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Barre de défilement personnalisée
+   --------------------------------------------------------------------------- */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Les titres passent en Space Grotesk, comme la vitrine */
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  /* Ancres de section : le header collant ne masque plus la cible */
+  section[id], footer[id] {
+    scroll-margin-top: 80px;
+  }
+}

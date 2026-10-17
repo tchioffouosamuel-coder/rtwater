@@ -1,24 +1,15 @@
 import { motion } from "motion/react";
-import { Sparkles, ArrowRight } from "lucide-react";
-import { useTheme } from "../../theme/ThemeContext";
+import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSiteContent } from "../../context/SiteContentContext";
 
-interface HeroSectionProps {
-  onNavigate?: (page: "accueil" | "galerie" | "devis" | "apropos") => void;
-}
-
-export function HeroSection({ onNavigate }: HeroSectionProps) {
+export function HeroSection() {
   const { home } = useSiteContent();
   const { hero } = home;
-  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const handleServicesClick = () => {
-    const servicesSection = document.getElementById("services");
-    if (servicesSection) {
-      servicesSection.scrollIntoView({ behavior: "smooth" });
-    }
+    document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleContactClick = () => {
@@ -27,10 +18,13 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
   };
 
   return (
-    <section id="accueil" className="relative min-h-[600px] sm:min-h-[700px] flex items-center overflow-hidden">
-      {/* Background Image with Overlay */}
+    <section
+      id="accueil"
+      className="relative min-h-[600px] sm:min-h-[700px] flex items-center overflow-hidden"
+    >
+      {/* Arrière-plan */}
       <div className="absolute inset-0">
-        {/* Primary contextual photo — water treatment infrastructure */}
+        {/* Photo de contexte : installations de traitement de l'eau */}
         <motion.img
           initial={{ scale: 1.08 }}
           animate={{ scale: 1 }}
@@ -41,15 +35,19 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           fetchPriority="high"
           decoding="async"
           // Image décorative : si elle ne charge pas, le dégradé bleu prend le relais sans texte parasite
-          onError={(e) => { e.currentTarget.style.visibility = "hidden"; }}
+          onError={(e) => {
+            e.currentTarget.style.visibility = "hidden";
+          }}
           className="w-full h-full object-cover"
         />
-        {/* Gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#003f6e]/90 via-[#0077BE]/80 to-[#00A8E8]/60"></div>
-        {/* Vignette edges */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20"></div>
+        {/* Voile dégradé pour la lisibilité */}
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-950/90 via-brand-600/80 to-aqua-500/60" />
+        {/* Vignettage */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
+        {/* Trame quadrillée, comme sur les sections claires */}
+        <div className="absolute inset-0 bg-grid-dark opacity-40 pointer-events-none" />
 
-        {/* Watermark logo */}
+        {/* Logo en filigrane */}
         <motion.img
           src="/logo.webp"
           alt=""
@@ -61,8 +59,8 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 40px rgba(255,255,255,0.4))" }}
         />
 
-        {/* Animated rising bubbles */}
-        <div className="absolute inset-0 overflow-hidden">
+        {/* Bulles montantes */}
+        <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
           {[...Array(22)].map((_, i) => (
             <motion.div
               key={i}
@@ -88,78 +86,63 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <div className="max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="flex items-center gap-2 mb-4 sm:mb-6"
-          >
-            <Sparkles className="w-5 sm:w-6 h-5 sm:h-6 text-yellow-300" />
-            <span className="text-yellow-300 font-semibold tracking-wide uppercase text-xs sm:text-sm">
-              {hero.badge}
+      {/* Contenu */}
+      <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-16 sm:py-20">
+        <div className="max-w-3xl">
+          {/* Pastille en verre dépoli avec point pulsant */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-aqua-100 text-xs font-semibold mb-5 backdrop-blur-sm animate-fade-down">
+            <span className="relative flex w-2 h-2">
+              <span className="absolute inline-flex w-full h-full rounded-full bg-aqua-300 animate-ping opacity-75" />
+              <span className="relative inline-flex w-2 h-2 rounded-full bg-aqua-400" />
             </span>
-          </motion.div>
+            {hero.badge}
+          </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight text-balance"
-          >
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-5 animate-fade-up text-balance">
             {hero.title}{" "}
-            <span className="bg-gradient-to-r from-[#00A8E8] to-cyan-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-aqua-300 to-aqua-100 bg-clip-text text-transparent">
               {hero.titleHighlight}
             </span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 mb-8 sm:mb-10 leading-relaxed"
+          <p
+            className="text-base md:text-lg text-white/90 leading-relaxed max-w-xl mb-7 animate-fade-up"
+            style={{ animationDelay: "0.1s" }}
           >
             {hero.description}
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+          {/* Boutons d'action */}
+          <div
+            className="flex flex-col sm:flex-row gap-3 animate-fade-up"
+            style={{ animationDelay: "0.2s" }}
           >
-            <motion.button
+            <button
               onClick={handleServicesClick}
-              whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(255, 255, 255, 0.3)" }}
-              whileTap={{ scale: 0.95 }}
-              className="group inline-flex items-center justify-center gap-2 bg-white text-[#0077BE] px-8 py-4 rounded-xl font-semibold shadow-2xl hover:shadow-white/50 transition-all duration-300"
+              className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-aqua-50 text-brand-700 text-sm font-semibold shadow-xl shadow-brand-950/25 transition-all hover:-translate-y-0.5"
             >
               {hero.servicesButtonLabel}
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </motion.button>
-            <motion.button
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button
               onClick={handleContactClick}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-300"
+              className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-sm font-semibold border border-white/20 backdrop-blur-sm transition-all hover:-translate-y-0.5"
             >
               {hero.contactButtonLabel}
-            </motion.button>
-          </motion.div>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Decorative Wave */}
+      {/* Vague décorative */}
       <div className="absolute bottom-0 left-0 right-0">
         <svg
           viewBox="0 0 1200 120"
           preserveAspectRatio="none"
-          className="w-full h-20 md:h-24 fill-white dark:fill-slate-900"
+          // Même couleur que la section suivante, en mode clair comme en mode sombre
+          className="w-full h-20 md:h-24 fill-ink-50 dark:fill-ink-950"
           aria-hidden="true"
         >
-          {/* Même couleur que la section suivante, en mode clair comme en mode sombre */}
           <path d="M0,0 C300,80 600,80 900,40 C1050,10 1150,10 1200,20 L1200,120 L0,120 Z" />
         </svg>
       </div>

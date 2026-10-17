@@ -127,25 +127,25 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
   if (!isAuthenticated) return <>{children}</>;
 
   return (
-    <div className="flex h-screen bg-slate-100 text-slate-900">
+    <div className="flex h-screen bg-ink-100 text-ink-900">
       <Sidebar />
 
       <div className="flex-1 overflow-auto lg:ml-64 flex flex-col">
         {/* Top Bar */}
-        <div className="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+        <div className="bg-white border-b border-ink-200 sticky top-0 z-20 shadow-sm">
           <div className="px-6 py-4 flex items-center justify-between">
             <div className="flex-1">
-              {title && <h1 className="text-2xl font-bold text-slate-900 mb-1">{title}</h1>}
+              {title && <h1 className="text-2xl font-bold text-ink-900 mb-1">{title}</h1>}
               {breadcrumbs && breadcrumbs.length > 0 && (
                 <div className="flex items-center gap-2 text-sm">
                   {breadcrumbs.map((crumb, index) => (
                     <React.Fragment key={index}>
                       {crumb.path
-                        ? <a href={crumb.path} className="text-slate-600 hover:text-slate-900 transition">{crumb.label}</a>
-                        : <span className="text-slate-500">{crumb.label}</span>
+                        ? <a href={crumb.path} className="text-ink-600 hover:text-ink-900 transition">{crumb.label}</a>
+                        : <span className="text-ink-500">{crumb.label}</span>
                       }
                       {index < breadcrumbs.length - 1 && (
-                        <ChevronRight size={16} className="text-slate-400" />
+                        <ChevronRight size={16} className="text-ink-400" />
                       )}
                     </React.Fragment>
                   ))}
@@ -159,7 +159,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
               <div className="relative" ref={panelRef}>
                 <button
                   onClick={handleOpenPanel}
-                  className="relative p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition"
+                  className="relative p-2 text-ink-600 hover:bg-ink-100 rounded-lg transition"
                   title="Notifications"
                 >
                   <Bell size={20} />
@@ -172,12 +172,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
 
                 {/* Notification Panel */}
                 {showPanel && (
-                  <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden">
+                  <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-ink-200 z-50 overflow-hidden">
                     {/* Panel header */}
-                    <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                    <div className="px-4 py-3 border-b border-ink-100 flex items-center justify-between bg-ink-50">
                       <div className="flex items-center gap-2">
-                        <ShoppingBag size={16} className="text-blue-600" />
-                        <span className="text-sm font-semibold text-slate-900">Commandes en attente</span>
+                        <ShoppingBag size={16} className="text-brand-600" />
+                        <span className="text-sm font-semibold text-ink-900">Commandes en attente</span>
                         {newCount > 0 && (
                           <span className="bg-red-100 text-red-700 text-xs font-bold px-1.5 py-0.5 rounded-full">
                             {newCount} nouveau{newCount > 1 ? 'x' : ''}
@@ -186,7 +186,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                       </div>
                       <button
                         onClick={() => setShowPanel(false)}
-                        className="p-1 hover:bg-slate-200 rounded-lg transition"
+                        className="p-1 hover:bg-ink-200 rounded-lg transition"
                       >
                         <X size={14} />
                       </button>
@@ -196,37 +196,37 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                     <div className="max-h-72 overflow-y-auto">
                       {pendingOrders.length === 0 ? (
                         <div className="py-10 text-center">
-                          <ShoppingBag size={32} className="mx-auto text-slate-300 mb-2" />
-                          <p className="text-sm text-slate-400">Aucune commande en attente</p>
+                          <ShoppingBag size={32} className="mx-auto text-ink-300 mb-2" />
+                          <p className="text-sm text-ink-400">Aucune commande en attente</p>
                         </div>
                       ) : (
-                        <div className="divide-y divide-slate-100">
+                        <div className="divide-y divide-ink-100">
                           {pendingOrders.map(order => {
                             const isNew = order.id > lastSeenId;
                             return (
                               <div
                                 key={order.id}
-                                className={`px-4 py-3 hover:bg-slate-50 transition ${isNew ? 'bg-blue-50/60' : ''}`}
+                                className={`px-4 py-3 hover:bg-ink-50 transition ${isNew ? 'bg-brand-50/60' : ''}`}
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-1.5">
                                       {isNew && (
-                                        <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                                        <span className="w-2 h-2 bg-brand-500 rounded-full flex-shrink-0" />
                                       )}
-                                      <p className="text-sm font-semibold text-slate-900 truncate">
+                                      <p className="text-sm font-semibold text-ink-900 truncate">
                                         Commande #{order.id}
                                       </p>
                                     </div>
-                                    <p className="text-xs text-slate-500 truncate mt-0.5">
+                                    <p className="text-xs text-ink-500 truncate mt-0.5">
                                       {order.user?.name ?? 'Client invité'}
                                     </p>
                                   </div>
                                   <div className="text-right flex-shrink-0">
-                                    <p className="text-sm font-bold text-slate-900">
+                                    <p className="text-sm font-bold text-ink-900">
                                       {Number(order.total).toLocaleString('fr-FR')} XAF
                                     </p>
-                                    <p className="text-xs text-slate-400 mt-0.5">{order.created_at}</p>
+                                    <p className="text-xs text-ink-400 mt-0.5">{order.created_at}</p>
                                   </div>
                                 </div>
                               </div>
@@ -237,20 +237,20 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                     </div>
 
                     {/* Panel footer */}
-                    <div className="px-4 py-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-2">
+                    <div className="px-4 py-3 border-t border-ink-100 bg-ink-50 flex items-center justify-between gap-2">
                       {newCount > 0 ? (
                         <button
                           onClick={handleMarkSeen}
-                          className="text-xs text-blue-600 hover:underline font-medium"
+                          className="text-xs text-brand-600 hover:underline font-medium"
                         >
                           Tout marquer comme vu
                         </button>
                       ) : (
-                        <span className="text-xs text-slate-400">Toutes vues</span>
+                        <span className="text-xs text-ink-400">Toutes vues</span>
                       )}
                       <a
                         href="/admin/orders"
-                        className="flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-blue-600 transition"
+                        className="flex items-center gap-1 text-xs font-semibold text-ink-700 hover:text-brand-600 transition"
                         onClick={() => setShowPanel(false)}
                       >
                         Voir toutes <ExternalLink size={11} />
@@ -260,7 +260,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                 )}
               </div>
 
-              <button className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition">
+              <button className="p-2 text-ink-600 hover:bg-ink-100 rounded-lg transition">
                 <Settings size={20} />
               </button>
             </div>

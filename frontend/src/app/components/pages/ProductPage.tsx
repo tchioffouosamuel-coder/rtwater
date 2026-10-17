@@ -106,14 +106,14 @@ export function ProductPage() {
   if (status === "loading") {
     return (
       <div className="max-w-6xl mx-auto px-4 py-10" aria-busy="true" aria-live="polite">
-        <div className="h-4 w-56 bg-gray-200 dark:bg-slate-700 rounded mb-6 animate-pulse" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-10">
-          <div className="h-72 sm:h-96 bg-gray-200 dark:bg-slate-700 rounded-xl animate-pulse" />
+        <div className="h-4 w-56 bg-ink-200 dark:bg-ink-700 rounded mb-6 animate-pulse" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-ink-800 rounded-2xl p-6 sm:p-10">
+          <div className="h-72 sm:h-96 bg-ink-200 dark:bg-ink-700 rounded-xl animate-pulse" />
           <div className="space-y-4">
-            <div className="h-8 w-3/4 bg-gray-200 dark:bg-slate-700 rounded animate-pulse" />
-            <div className="h-6 w-1/3 bg-gray-200 dark:bg-slate-700 rounded animate-pulse" />
-            <div className="h-20 bg-gray-200 dark:bg-slate-700 rounded animate-pulse" />
-            <div className="h-12 bg-gray-200 dark:bg-slate-700 rounded-xl animate-pulse" />
+            <div className="h-8 w-3/4 bg-ink-200 dark:bg-ink-700 rounded animate-pulse" />
+            <div className="h-6 w-1/3 bg-ink-200 dark:bg-ink-700 rounded animate-pulse" />
+            <div className="h-20 bg-ink-200 dark:bg-ink-700 rounded animate-pulse" />
+            <div className="h-12 bg-ink-200 dark:bg-ink-700 rounded-xl animate-pulse" />
           </div>
         </div>
         <span className="sr-only">{tx("Chargement du produit…", "Loading product…")}</span>
@@ -124,11 +124,11 @@ export function ProductPage() {
   if (status === "notfound" || !product) {
     return (
       <div className="max-w-xl mx-auto px-4 py-24 text-center">
-        <PackageX className="w-14 h-14 mx-auto text-gray-300 dark:text-slate-600 mb-4" />
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <PackageX className="w-14 h-14 mx-auto text-ink-300 dark:text-ink-600 mb-4" />
+        <h1 className="text-2xl font-bold text-ink-900 dark:text-white mb-2">
           {tx("Ce produit n'est plus disponible", "This product is no longer available")}
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 mb-8">
+        <p className="text-ink-500 dark:text-ink-400 mb-8">
           {tx(
             "Il a peut-être été retiré du catalogue. Découvrez nos autres solutions de traitement de l'eau.",
             "It may have been removed from the catalogue. Discover our other water treatment solutions."
@@ -136,7 +136,7 @@ export function ProductPage() {
         </p>
         <Link
           to="/shop"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white font-semibold"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-600 to-aqua-500 text-white font-semibold"
         >
           {tx("Voir la boutique", "Browse the shop")}
         </Link>
@@ -146,13 +146,13 @@ export function ProductPage() {
   }
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <div className="bg-ink-50 dark:bg-ink-900 min-h-screen">
       <div className="max-w-6xl mx-auto px-4 py-6 sm:py-10">
-        <nav aria-label={tx("Fil d'Ariane", "Breadcrumb")} className="mb-5 text-sm text-gray-500 dark:text-gray-400">
+        <nav aria-label={tx("Fil d'Ariane", "Breadcrumb")} className="mb-5 text-sm text-ink-500 dark:text-ink-400">
           <ol className="flex flex-wrap items-center gap-1">
-            <li><Link to="/" className="hover:text-[#0077BE]">{tx("Accueil", "Home")}</Link></li>
+            <li><Link to="/" className="hover:text-brand-600">{tx("Accueil", "Home")}</Link></li>
             <li aria-hidden="true"><ChevronRight className="w-3.5 h-3.5" /></li>
-            <li><Link to="/shop" className="hover:text-[#0077BE]">{tx("Boutique", "Shop")}</Link></li>
+            <li><Link to="/shop" className="hover:text-brand-600">{tx("Boutique", "Shop")}</Link></li>
             {product.category && (
               <>
                 <li aria-hidden="true"><ChevronRight className="w-3.5 h-3.5" /></li>
@@ -160,7 +160,7 @@ export function ProductPage() {
               </>
             )}
             <li aria-hidden="true"><ChevronRight className="w-3.5 h-3.5" /></li>
-            <li aria-current="page" className="text-gray-800 dark:text-gray-200 font-medium line-clamp-1">{product.name}</li>
+            <li aria-current="page" className="text-ink-800 dark:text-ink-200 font-medium line-clamp-1">{product.name}</li>
           </ol>
         </nav>
 
@@ -177,7 +177,7 @@ export function ProductPage() {
 
         {related.length > 0 && (
           <section className="mt-12" aria-labelledby="related-title">
-            <h2 id="related-title" className="text-xl font-bold text-gray-900 dark:text-white mb-5">
+            <h2 id="related-title" className="text-xl font-bold text-ink-900 dark:text-white mb-5">
               {tx("Vous aimerez aussi", "You may also like")}
             </h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

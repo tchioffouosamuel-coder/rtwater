@@ -68,9 +68,9 @@ export function GalleryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-ink-950 transition-colors duration-300">
       {/* Hero Section */}
-      <section className="relative py-20 sm:py-32 bg-gradient-to-br from-[#0077BE] to-[#00A8E8] overflow-hidden">
+      <section className="relative py-20 sm:py-32 bg-gradient-to-br from-brand-600 to-aqua-500 overflow-hidden">
         <div className="absolute inset-0">
           {[...Array(15)].map((_, i) => (
             <motion.div
@@ -110,7 +110,7 @@ export function GalleryPage() {
             </motion.span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
               {gallery.title}{" "}
-              <span className="text-white underline decoration-cyan-200/80 decoration-[6px] underline-offset-[10px]">
+              <span className="text-white underline decoration-aqua-200/80 decoration-[6px] underline-offset-[10px]">
                 {gallery.titleHighlight}
               </span>
             </h1>
@@ -122,7 +122,7 @@ export function GalleryPage() {
       </section>
 
       {/* Filter Section */}
-      <section className="py-6 sm:py-8 bg-white dark:bg-slate-800 sticky top-20 z-40 shadow-sm dark:shadow-lg dark:shadow-black/20 transition-colors duration-300">
+      <section className="py-6 sm:py-8 bg-white dark:bg-ink-800 sticky top-20 z-40 shadow-sm dark:shadow-lg dark:shadow-black/20 transition-colors duration-300">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
             {categories.map((category, index) => (
@@ -136,8 +136,8 @@ export function GalleryPage() {
                 onClick={() => setSelectedCategory(category.key)}
                 className={`px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 ${
                   selectedCategory === category.key
-                    ? "bg-gradient-to-r from-[#0077BE] to-[#00A8E8] text-white shadow-lg shadow-[#0077BE]/30"
-                    : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
+                    ? "bg-gradient-to-r from-brand-600 to-aqua-500 text-white shadow-lg shadow-brand-600/30"
+                    : "bg-ink-100 dark:bg-ink-700 text-ink-700 dark:text-ink-300 hover:bg-ink-200 dark:hover:bg-ink-600"
                 }`}
               >
                 {CATEGORY_LABELS[category.key] ?? category.key}
@@ -148,7 +148,7 @@ export function GalleryPage() {
       </section>
 
       {/* Gallery Grid */}
-      <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-gray-50 dark:from-slate-900 via-white dark:via-slate-800 to-gray-50 dark:to-slate-900 transition-colors duration-300">
+      <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-ink-50 dark:from-ink-900 via-white dark:via-ink-800 to-ink-50 dark:to-ink-900 transition-colors duration-300">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             layout
@@ -176,7 +176,7 @@ export function GalleryPage() {
                     <motion.span
                       initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      className="inline-block bg-[#0077BE] text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2"
+                      className="inline-block bg-brand-600 text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2"
                     >
                       {CATEGORY_LABELS[image.category] ?? image.category}
                     </motion.span>
@@ -212,7 +212,7 @@ export function GalleryPage() {
           <motion.button
             whileHover={{ scale: 1.1, rotate: 90 }}
             whileTap={{ scale: 0.95 }}
-            className="absolute top-4 sm:top-6 right-4 sm:right-6 text-white hover:text-[#00A8E8] transition-colors z-10"
+            className="absolute top-4 sm:top-6 right-4 sm:right-6 text-white hover:text-aqua-500 transition-colors z-10"
             onClick={() => setSelectedImage(null)}
           >
             <X className="w-8 sm:w-10 h-8 sm:h-10" />
@@ -251,7 +251,7 @@ export function GalleryPage() {
                 e.stopPropagation();
                 handlePrevImage();
               }}
-              className="absolute left-4 sm:left-8 top-1/2 transform -translate-y-1/2 text-white hover:text-[#00A8E8] transition-colors bg-black/30 hover:bg-black/50 p-2 sm:p-3 rounded-full backdrop-blur-sm"
+              className="absolute left-4 sm:left-8 top-1/2 transform -translate-y-1/2 text-white hover:text-aqua-500 transition-colors bg-black/30 hover:bg-black/50 p-2 sm:p-3 rounded-full backdrop-blur-sm"
             >
               <ChevronLeft className="w-6 sm:w-8 h-6 sm:h-8" />
             </motion.button>
@@ -265,7 +265,7 @@ export function GalleryPage() {
                 e.stopPropagation();
                 handleNextImage();
               }}
-              className="absolute right-4 sm:right-8 top-1/2 transform -translate-y-1/2 text-white hover:text-[#00A8E8] transition-colors bg-black/30 hover:bg-black/50 p-2 sm:p-3 rounded-full backdrop-blur-sm"
+              className="absolute right-4 sm:right-8 top-1/2 transform -translate-y-1/2 text-white hover:text-aqua-500 transition-colors bg-black/30 hover:bg-black/50 p-2 sm:p-3 rounded-full backdrop-blur-sm"
             >
               <ChevronRight className="w-6 sm:w-8 h-6 sm:h-8" />
             </motion.button>
@@ -280,7 +280,7 @@ export function GalleryPage() {
             <p className="text-white text-base sm:text-lg font-semibold">
               {filteredImages[selectedImageIndex].title}
             </p>
-            <span className="inline-block bg-[#0077BE] text-white px-3 py-1 rounded-full text-sm font-semibold mt-3">
+            <span className="inline-block bg-brand-600 text-white px-3 py-1 rounded-full text-sm font-semibold mt-3">
               {CATEGORY_LABELS[filteredImages[selectedImageIndex].category] ?? filteredImages[selectedImageIndex].category}
             </span>
           </motion.div>

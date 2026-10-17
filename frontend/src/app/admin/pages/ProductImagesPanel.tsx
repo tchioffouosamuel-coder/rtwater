@@ -27,7 +27,7 @@ const MATCH_LABELS: Record<MatchedBy, { label: string; hint: string; icon: React
     label: 'Référence',
     hint: 'Le fichier porte le nom de la référence produit',
     icon: Tag,
-    tone: 'bg-blue-100 text-blue-700',
+    tone: 'bg-brand-100 text-brand-700',
   },
   name: {
     label: 'Nom du produit',
@@ -185,7 +185,7 @@ export const ProductImagesPanel: React.FC = () => {
             <div className="border-b border-red-100 bg-red-50 px-4 py-3">
               <p className="text-sm font-semibold text-red-900">{result.errors.length} problème(s)</p>
             </div>
-            <ul className="max-h-60 divide-y divide-slate-100 overflow-y-auto">
+            <ul className="max-h-60 divide-y divide-ink-100 overflow-y-auto">
               {result.errors.map((message, i) => (
                 <li key={i} className="px-4 py-2 text-xs text-red-600">{message}</li>
               ))}
@@ -205,7 +205,7 @@ export const ProductImagesPanel: React.FC = () => {
 
         <button
           onClick={reset}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition hover:bg-blue-700"
+          className="flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-2.5 font-medium text-white transition hover:bg-brand-700"
         >
           <RefreshCw size={18} />
           Téléverser d'autres images
@@ -238,18 +238,18 @@ export const ProductImagesPanel: React.FC = () => {
         </div>
 
         {preview.summary.replacing > 0 && (
-          <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 transition hover:bg-slate-50">
+          <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-ink-200 bg-white p-4 transition hover:bg-ink-50">
             <input
               type="checkbox"
               checked={replaceExisting}
               onChange={(e) => setReplaceExisting(e.target.checked)}
-              className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+              className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-ink-300 text-brand-600 focus:ring-brand-500"
             />
             <span>
-              <span className="block text-sm font-medium text-slate-900">
+              <span className="block text-sm font-medium text-ink-900">
                 Remplacer les images existantes
               </span>
-              <span className="mt-0.5 block text-xs text-slate-500">
+              <span className="mt-0.5 block text-xs text-ink-500">
                 {preview.summary.replacing} produit(s) ont déjà une photo. Décoché, ils sont laissés
                 tels quels et seuls les produits sans image reçoivent la leur.
               </span>
@@ -271,44 +271,44 @@ export const ProductImagesPanel: React.FC = () => {
         )}
 
         {/* Rattachements */}
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-          <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
-            <p className="text-sm font-semibold text-slate-900">
+        <div className="overflow-hidden rounded-xl border border-ink-200 bg-white">
+          <div className="border-b border-ink-200 bg-ink-50 px-4 py-3">
+            <p className="text-sm font-semibold text-ink-900">
               Rattachements prévus
-              <span className="ml-2 text-xs font-normal text-slate-500">
+              <span className="ml-2 text-xs font-normal text-ink-500">
                 {preview.summary.matched} fichier(s)
               </span>
             </p>
           </div>
 
           {preview.matches.length === 0 ? (
-            <p className="px-4 py-12 text-center text-sm text-slate-400">
+            <p className="px-4 py-12 text-center text-sm text-ink-400">
               Aucun fichier ne correspond à un produit. Vérifiez les noms attendus plus bas.
             </p>
           ) : (
             <div className="max-h-96 overflow-auto">
               <table className="w-full">
-                <thead className="sticky top-0 bg-slate-50">
-                  <tr className="border-b border-slate-200 text-left text-xs font-semibold text-slate-600">
+                <thead className="sticky top-0 bg-ink-50">
+                  <tr className="border-b border-ink-200 text-left text-xs font-semibold text-ink-600">
                     <th className="px-4 py-3">Fichier</th>
                     <th className="px-4 py-3">Produit</th>
                     <th className="px-4 py-3">Rattaché par</th>
                     <th className="px-4 py-3 text-center">Effet</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-ink-100">
                   {preview.matches.map(match => {
                     const meta = MATCH_LABELS[match.matched_by];
                     const Icon = meta.icon;
 
                     return (
-                      <tr key={`${match.product_id}-${match.file}`} className="hover:bg-slate-50">
+                      <tr key={`${match.product_id}-${match.file}`} className="hover:bg-ink-50">
                         <td className="px-4 py-3">
-                          <code className="text-xs text-slate-700">{match.file}</code>
+                          <code className="text-xs text-ink-700">{match.file}</code>
                         </td>
                         <td className="px-4 py-3">
-                          <p className="text-sm font-medium text-slate-900">{match.name}</p>
-                          {match.sku && <p className="text-xs text-slate-400">{match.sku}</p>}
+                          <p className="text-sm font-medium text-ink-900">{match.name}</p>
+                          {match.sku && <p className="text-xs text-ink-400">{match.sku}</p>}
                         </td>
                         <td className="px-4 py-3">
                           <span
@@ -321,7 +321,7 @@ export const ProductImagesPanel: React.FC = () => {
                         </td>
                         <td className="px-4 py-3 text-center">
                           {match.replaces ? (
-                            <span className={`text-xs font-medium ${replaceExisting ? 'text-blue-700' : 'text-slate-400'}`}>
+                            <span className={`text-xs font-medium ${replaceExisting ? 'text-brand-700' : 'text-ink-400'}`}>
                               {replaceExisting ? 'Remplace la photo' : 'Ignoré'}
                             </span>
                           ) : (
@@ -339,17 +339,17 @@ export const ProductImagesPanel: React.FC = () => {
 
         {/* Fichiers sans correspondance */}
         {preview.unmatched.length > 0 && (
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
-            <p className="text-sm font-semibold text-slate-900">
+          <div className="rounded-xl border border-ink-200 bg-white p-4">
+            <p className="text-sm font-semibold text-ink-900">
               {preview.unmatched.length} fichier(s) sans correspondance
             </p>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-ink-500">
               Renommez-les avec la référence du produit, ou corrigez la colonne « image » de votre
               fichier Excel.
             </p>
             <div className="mt-3 flex flex-wrap gap-1.5">
               {preview.unmatched.map(file => (
-                <code key={file} className="rounded bg-slate-100 px-2 py-1 text-xs text-slate-600">
+                <code key={file} className="rounded bg-ink-100 px-2 py-1 text-xs text-ink-600">
                   {file}
                 </code>
               ))}
@@ -361,7 +361,7 @@ export const ProductImagesPanel: React.FC = () => {
           <button
             onClick={handleCommit}
             disabled={committing || attachable === 0}
-            className="flex items-center gap-2 rounded-lg bg-green-600 px-6 py-2.5 font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="flex items-center gap-2 rounded-lg bg-green-600 px-6 py-2.5 font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-ink-300"
           >
             {committing ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
             {committing ? 'Rattachement…' : `Rattacher ${attachable} image(s)`}
@@ -369,7 +369,7 @@ export const ProductImagesPanel: React.FC = () => {
           <button
             onClick={handleCancelPreview}
             disabled={committing}
-            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-6 py-2.5 font-medium text-ink-700 transition hover:bg-ink-50 disabled:opacity-50"
           >
             <ArrowLeft size={18} />
             Changer de fichiers
@@ -402,7 +402,7 @@ export const ProductImagesPanel: React.FC = () => {
             onDrop={(e) => { e.preventDefault(); setDragging(false); if (e.dataTransfer.files?.length) acceptFiles(e.dataTransfer.files); }}
             onClick={() => fileInput.current?.click()}
             className={`cursor-pointer rounded-xl border-2 border-dashed p-10 text-center transition ${
-              dragging ? 'border-blue-500 bg-blue-50' : 'border-slate-300 bg-white hover:border-blue-400 hover:bg-slate-50'
+              dragging ? 'border-brand-500 bg-brand-50' : 'border-ink-300 bg-white hover:border-brand-400 hover:bg-ink-50'
             }`}
           >
             <input
@@ -413,11 +413,11 @@ export const ProductImagesPanel: React.FC = () => {
               className="hidden"
               onChange={(e) => { if (e.target.files) acceptFiles(e.target.files); e.target.value = ''; }}
             />
-            <Upload size={36} className="mx-auto text-blue-500" />
-            <p className="mt-4 text-sm font-semibold text-slate-900">
+            <Upload size={36} className="mx-auto text-brand-500" />
+            <p className="mt-4 text-sm font-semibold text-ink-900">
               Glissez ici toutes vos photos produit
             </p>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-ink-500">
               Une archive .zip, ou les images directement (jpg, png, webp) — 1000 fichiers maximum
             </p>
           </div>
@@ -444,16 +444,16 @@ export const ProductImagesPanel: React.FC = () => {
           <button
             onClick={handleAnalyze}
             disabled={analyzing || (!archive && loose.length === 0)}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-2.5 font-medium text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-ink-300"
           >
             {analyzing ? <Loader2 size={18} className="animate-spin" /> : <ImageIcon size={18} />}
             {analyzing ? 'Analyse des fichiers…' : 'Analyser les images'}
           </button>
         </div>
 
-        <aside className="rounded-xl border border-blue-100 bg-blue-50/60 p-5">
-          <h3 className="text-sm font-semibold text-blue-900">Comment ça marche</h3>
-          <ol className="mt-3 space-y-3 text-xs leading-relaxed text-blue-800">
+        <aside className="rounded-xl border border-brand-100 bg-brand-50/60 p-5">
+          <h3 className="text-sm font-semibold text-brand-900">Comment ça marche</h3>
+          <ol className="mt-3 space-y-3 text-xs leading-relaxed text-brand-800">
             <li>
               <span className="font-semibold">1. Dans votre fichier Excel</span>, la colonne
               « image » porte le nom de la photo : <code className="rounded bg-white/70 px-1">RTW-B15.jpg</code>.
@@ -469,7 +469,7 @@ export const ProductImagesPanel: React.FC = () => {
             </li>
           </ol>
 
-          <p className="mt-4 border-t border-blue-200 pt-3 text-xs text-blue-700">
+          <p className="mt-4 border-t border-brand-200 pt-3 text-xs text-brand-700">
             Un fichier dont le nom ne figure pas dans l'Excel est quand même rattaché s'il porte la
             référence du produit ou son nom.
           </p>
@@ -500,7 +500,7 @@ const PendingList: React.FC<{
 }> = ({ pending, loading, count, expanded, onToggle, onCopy }) => {
   if (loading) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-400">
+      <div className="rounded-xl border border-ink-200 bg-white px-5 py-4 text-sm text-ink-400">
         <Loader2 size={16} className="mr-2 inline animate-spin" />
         Vérification des produits en attente…
       </div>
@@ -526,7 +526,7 @@ const PendingList: React.FC<{
       >
         <span className="flex items-center gap-2">
           <Clock size={16} className="flex-shrink-0 text-amber-600" />
-          <span className="text-sm font-semibold text-slate-900">
+          <span className="text-sm font-semibold text-ink-900">
             {count} produit(s) attendent une image
           </span>
         </span>
@@ -553,18 +553,18 @@ const PendingList: React.FC<{
 
           <div className="max-h-72 overflow-auto">
             <table className="w-full">
-              <thead className="sticky top-0 bg-slate-50">
-                <tr className="border-b border-slate-200 text-left text-xs font-semibold text-slate-600">
+              <thead className="sticky top-0 bg-ink-50">
+                <tr className="border-b border-ink-200 text-left text-xs font-semibold text-ink-600">
                   <th className="px-5 py-2.5">Produit</th>
                   <th className="px-5 py-2.5">Référence</th>
                   <th className="px-5 py-2.5">Fichier attendu</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-ink-100">
                 {pending.map(p => (
-                  <tr key={p.product_id} className="hover:bg-slate-50">
-                    <td className="px-5 py-2.5 text-sm text-slate-900">{p.name}</td>
-                    <td className="px-5 py-2.5 text-xs text-slate-500">{p.sku ?? '—'}</td>
+                  <tr key={p.product_id} className="hover:bg-ink-50">
+                    <td className="px-5 py-2.5 text-sm text-ink-900">{p.name}</td>
+                    <td className="px-5 py-2.5 text-xs text-ink-500">{p.sku ?? '—'}</td>
                     <td className="px-5 py-2.5">
                       <code className="rounded bg-amber-50 px-2 py-0.5 text-xs text-amber-800">
                         {p.expects}
@@ -582,9 +582,9 @@ const PendingList: React.FC<{
 };
 
 const TONES = {
-  slate: 'from-slate-50 to-slate-100 border-slate-200 text-slate-600 text-slate-900',
+  slate: 'from-ink-50 to-ink-100 border-ink-200 text-ink-600 text-ink-900',
   green: 'from-green-50 to-green-100 border-green-200 text-green-600 text-green-900',
-  blue: 'from-blue-50 to-blue-100 border-blue-200 text-blue-600 text-blue-900',
+  blue: 'from-brand-50 to-brand-100 border-brand-200 text-brand-600 text-brand-900',
   amber: 'from-amber-50 to-amber-100 border-amber-200 text-amber-600 text-amber-900',
   red: 'from-red-50 to-red-100 border-red-200 text-red-600 text-red-900',
 } as const;
@@ -606,16 +606,16 @@ const FileChip: React.FC<{
   subtitle: string;
   onRemove: () => void;
 }> = ({ icon, title, subtitle, onRemove }) => (
-  <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3">
+  <div className="flex items-center gap-3 rounded-lg border border-ink-200 bg-white px-4 py-3">
     <span className="flex-shrink-0">{icon}</span>
     <div className="min-w-0 flex-1">
-      <p className="truncate text-sm font-medium text-slate-900">{title}</p>
-      <p className="truncate text-xs text-slate-500">{subtitle}</p>
+      <p className="truncate text-sm font-medium text-ink-900">{title}</p>
+      <p className="truncate text-xs text-ink-500">{subtitle}</p>
     </div>
     <button
       onClick={(e) => { e.stopPropagation(); onRemove(); }}
       aria-label={`Retirer ${title}`}
-      className="flex-shrink-0 text-slate-400 transition hover:text-red-600"
+      className="flex-shrink-0 text-ink-400 transition hover:text-red-600"
     >
       <Trash2 size={16} />
     </button>
