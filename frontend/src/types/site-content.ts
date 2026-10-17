@@ -391,9 +391,11 @@ export const DEFAULT_HEADER: HeaderContent = {
   companyTagline: "Solution",
   navLinks: [
     { label: "Accueil", path: "/" },
-    { label: "Galerie", path: "/gallery" },
     { label: "À propos", path: "/about" },
-    { label: "Devis gratuit", path: "/devis" },
+    { label: "Produits", path: "/#nouveautes" },
+    { label: "Services", path: "/#services" },
+    { label: "Galerie", path: "/gallery" },
+    { label: "Devis", path: "/devis" },
     { label: "Boutique", path: "/shop" },
   ],
 };

@@ -33,20 +33,43 @@ export function Header() {
 
   // Menu géré dans le CMS (en français) : en anglais, les rubriques standard sont traduites
   const EN_LABELS: Record<string, string> = {
-    "/": "Home", "/gallery": "Gallery", "/about": "About", "/devis": "Free quote",
+    "/": "Home", "/gallery": "Gallery", "/about": "About", "/devis": "Quote",
     "/shop": "Shop", "/contact": "Contact", "/blog": "Blog",
+    "/#nouveautes": "Products", "/#services": "Services",
   };
   const menuItems = header.navLinks.map((item) =>
     language === "en" && EN_LABELS[item.path] ? { ...item, label: EN_LABELS[item.path] } : item
   );
 
+  // Certaines rubriques du menu (Produits, Services) visent une section de l'accueil
+  const scrollToAnchor = (id: string, attempt = 0) => {
+    const target = document.getElementById(id);
+    if (!target) {
+      // Après un changement de page, la section n'est montée qu'au rendu suivant
+      if (attempt < 12) window.setTimeout(() => scrollToAnchor(id, attempt + 1), 60);
+      return;
+    }
+    const headerHeight = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+    const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - 8;
+    window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
+  };
+
   const handleNavigation = (path: string) => {
-    navigate(path);
     setMobileMenuOpen(false);
+    const [route, anchor] = path.split("#");
+    const to = route || "/";
+    if (anchor) {
+      if (location.pathname !== to) navigate(to);
+      scrollToAnchor(anchor);
+      return;
+    }
+    navigate(to);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const isActive = (path: string) => {
+    // Une ancre ne désigne pas une page : on ne la souligne pas
+    if (path.includes("#")) return false;
     if (path === "/" && location.pathname === "/") return true;
     if (path !== "/" && location.pathname.startsWith(path)) return true;
     return false;
@@ -77,7 +100,7 @@ export function Header() {
             </motion.button>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex lg:items-center lg:gap-6">
+            <div className="hidden lg:flex lg:items-center lg:gap-4 xl:gap-6">
               {menuItems.map((item, index) => (
                 <motion.button
                   key={item.label}
@@ -85,7 +108,7 @@ export function Header() {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.08 + 0.3 }}
-                  className={`transition-all duration-300 font-medium text-sm relative group ${isActive(item.path)
+                  className={`transition-all duration-300 font-medium text-sm whitespace-nowrap relative group ${isActive(item.path)
                       ? "text-brand-600 dark:text-aqua-500"
                       : "text-ink-600 dark:text-ink-400 hover:text-brand-600 dark:hover:text-aqua-500"
                     }`}
