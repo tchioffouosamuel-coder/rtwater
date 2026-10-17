@@ -4,6 +4,7 @@ import { useI18n } from "../../i18n/I18nContext";
 import { useSiteContent } from "../../context/SiteContentContext";
 import { Reveal } from "./Reveal";
 import { SectionBadge } from "./ui/section";
+import { SERVICES_PHOTO } from "../content/photos";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   droplet: Droplet,
@@ -43,16 +44,32 @@ export function ServicesSection() {
       <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-aqua-400/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
-        {/* En-tête de section */}
+        {/* En-tête de section, épaulé par une photo de contexte */}
         <Reveal className="mb-14">
-          <div className="text-center max-w-3xl mx-auto">
-            <SectionBadge className="mb-3">{services.sectionSubtitle}</SectionBadge>
-            <h2 className="text-3xl md:text-4xl font-bold text-ink-900 dark:text-white tracking-tight mb-3">
-              {services.sectionTitle}
-            </h2>
-            <p className="text-ink-500 dark:text-ink-300 text-base leading-relaxed">
-              {services.sectionDescription}
-            </p>
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <figure className="order-2 lg:order-1">
+              <img
+                src={SERVICES_PHOTO.url}
+                alt={SERVICES_PHOTO.alt}
+                loading="lazy"
+                decoding="async"
+                className="w-full aspect-[4/3] object-cover rounded-2xl shadow-lg"
+              />
+              {SERVICES_PHOTO.caption ? (
+                <figcaption className="mt-3 text-sm text-ink-500 dark:text-ink-400 leading-relaxed">
+                  {SERVICES_PHOTO.caption}
+                </figcaption>
+              ) : null}
+            </figure>
+            <div className="order-1 lg:order-2">
+              <SectionBadge className="mb-3">{services.sectionSubtitle}</SectionBadge>
+              <h2 className="text-3xl md:text-4xl font-bold text-ink-900 dark:text-white tracking-tight mb-3">
+                {services.sectionTitle}
+              </h2>
+              <p className="text-ink-500 dark:text-ink-300 text-base leading-relaxed">
+                {services.sectionDescription}
+              </p>
+            </div>
           </div>
         </Reveal>
 

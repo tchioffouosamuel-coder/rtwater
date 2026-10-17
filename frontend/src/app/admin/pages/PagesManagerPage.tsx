@@ -481,7 +481,7 @@ function ContactEditor({ data, onChange }: { data: ContactContent; onChange: (d:
     <div className="space-y-4">
       <TextField label="Adresse" value={data.address} onChange={v => onChange({ ...data, address: v })} placeholder="Yaoundé, Cameroun" />
       <TextField label="Téléphone" value={data.phone} onChange={v => onChange({ ...data, phone: v })} placeholder="+237 6XX XXX XXX" />
-      <TextField label="Email" value={data.email} onChange={v => onChange({ ...data, email: v })} placeholder="info@rt-water.cm" />
+      <TextField label="Email" value={data.email} onChange={v => onChange({ ...data, email: v })} placeholder="contact@rt-watersolution.com" />
       <TextField label="Horaires" value={data.hours} onChange={v => onChange({ ...data, hours: v })} placeholder="Lun - Ven : 08:00 - 17:00" />
       <TextField label="URL embed Google Maps (optionnel)" value={data.mapEmbedUrl ?? ''} onChange={v => onChange({ ...data, mapEmbedUrl: v })} mono placeholder="https://www.google.com/maps/embed?..." />
       <TextField label="Numéro WhatsApp (bouton flottant du site)" value={data.whatsapp ?? ''} onChange={v => onChange({ ...data, whatsapp: v })} placeholder="+237 6XX XXX XXX" />

@@ -162,7 +162,7 @@ export const DEFAULT_HOME: HomeContent = {
     description:
       "Purification, forage et services de piscine professionnels à Yaoundé. Votre partenaire de confiance pour une eau pure et saine.",
     backgroundImage:
-      "https://6a36433705d679a122fa04b3.imgix.net/my-images/beautiful-african-women-having-fun-while-fetching-water.jpg?auto=format&fit=fill&w=384",
+      "https://images.unsplash.com/photo-1543181077-099f32f30a1c?auto=format&fit=crop&w=1920&q=80",
     servicesButtonLabel: "Nos services",
     contactButtonLabel: "Contactez-nous",
   },
@@ -172,7 +172,7 @@ export const DEFAULT_HOME: HomeContent = {
     sectionDescription:
       "Des solutions complètes pour tous vos besoins en eau, de la purification à l'installation. Excellence et innovation à chaque étape.",
     backgroundImage:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1519455953755-af066f52f1a6?auto=format&fit=crop&w=1920&q=80",
     items: [
       {
         icon: "droplet",
@@ -253,7 +253,11 @@ export const DEFAULT_HOME: HomeContent = {
       "Contactez-nous dès aujourd'hui pour un devis gratuit et personnalisé. Notre équipe d'experts est prête à répondre à tous vos besoins.",
     contactButtonLabel: "Contactez-nous",
     servicesButtonLabel: "Découvrir nos services",
-    trustIndicators: ["Disponible 24/7", "Devis gratuit", "Installation rapide"],
+    trustIndicators: [
+      "Disponible 24/7",
+      "Devis gratuit",
+      "Installation rapide",
+    ],
   },
 };
 
@@ -322,7 +326,7 @@ export const DEFAULT_ABOUT: AboutContent = {
 export const DEFAULT_CONTACT: ContactContent = {
   address: "Yaoundé, Cameroun",
   phone: "+237 6XX XXX XXX",
-  email: "info@rt-water.cm",
+  email: "contact@rt-watersolution.com",
   hours: "Lun - Ven : 08:00 - 17:00",
 };
 
@@ -339,7 +343,7 @@ export const DEFAULT_GALLERY: GalleryContent = {
       category: "drilling",
     },
     {
-      url: "https://images.unsplash.com/photo-1708287523092-0543d6803857?w=1080",
+      url: "https://images.unsplash.com/photo-1533163238111-4a7ced54f2e4?w=1080",
       title: "Station de purification",
       category: "purification",
     },
@@ -349,7 +353,7 @@ export const DEFAULT_GALLERY: GalleryContent = {
       category: "pools",
     },
     {
-      url: "https://images.unsplash.com/photo-1712640379137-6d2532f887a7?w=1080",
+      url: "https://images.unsplash.com/photo-1604981338911-b7e37bcd3899?w=1080",
       title: "Installation de pompes",
       category: "pumps",
     },
@@ -364,13 +368,13 @@ export const DEFAULT_GALLERY: GalleryContent = {
       category: "installation",
     },
     {
-      url: "https://images.unsplash.com/photo-1764344815153-3a356c392561?w=1080",
+      url: "https://images.unsplash.com/photo-1787150741378-ad5a5dee8501?w=1080",
       title: "Réservoirs de stockage",
       category: "installation",
     },
     {
-      url: "https://images.unsplash.com/photo-1635221798248-8a3452ad07cd?w=1080",
-      title: "Travaux professionnels",
+      url: "https://images.unsplash.com/photo-1543335547-334c05de28c2?w=1080",
+      title: "Au service des communautés",
       category: "maintenance",
     },
     {
@@ -410,7 +414,7 @@ export const DEFAULT_FOOTER: FooterContent = {
   ],
   address: "Yaoundé, Cameroun",
   phone: "+237 6XX XXX XXX",
-  email: "info@rt-water.cm",
+  email: "contact@rt-watersolution.com",
   socialLinks: [
     { platform: "facebook", url: "#" },
     { platform: "twitter", url: "#" },

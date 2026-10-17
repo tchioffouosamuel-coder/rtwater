@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSiteContent } from "../../context/SiteContentContext";
 import { Reveal } from "./Reveal";
 import { SectionBadge } from "./ui/section";
+import { TRUST_PHOTO } from "../content/photos";
 
 /**
  * Compteur qui s'incrémente lorsqu'il devient visible.
@@ -73,19 +74,35 @@ export function TrustSection() {
       <div className="absolute inset-0 bg-dots dark:bg-dots-dark opacity-30 pointer-events-none" />
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
-        {/* En-tête de section */}
+        {/* En-tête de section, photo en vis-à-vis (disposition inversée par rapport aux services) */}
         <Reveal className="mb-14">
-          <div className="text-center max-w-3xl mx-auto">
-            <SectionBadge tone="aqua" className="mb-3">
-              {trust.sectionSubtitle}
-            </SectionBadge>
-            <h2 className="text-3xl md:text-4xl font-bold text-ink-900 dark:text-white tracking-tight mb-3">
-              {trust.sectionTitle}{" "}
-              <span className="gradient-text">{trust.sectionTitleHighlight}</span>
-            </h2>
-            <p className="text-ink-500 dark:text-ink-300 text-base leading-relaxed">
-              {trust.sectionDescription}
-            </p>
+          <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-8 lg:gap-12 items-center">
+            <div>
+              <SectionBadge tone="aqua" className="mb-3">
+                {trust.sectionSubtitle}
+              </SectionBadge>
+              <h2 className="text-3xl md:text-4xl font-bold text-ink-900 dark:text-white tracking-tight mb-3">
+                {trust.sectionTitle}{" "}
+                <span className="gradient-text">{trust.sectionTitleHighlight}</span>
+              </h2>
+              <p className="text-ink-500 dark:text-ink-300 text-base leading-relaxed">
+                {trust.sectionDescription}
+              </p>
+            </div>
+            <figure>
+              <img
+                src={TRUST_PHOTO.url}
+                alt={TRUST_PHOTO.alt}
+                loading="lazy"
+                decoding="async"
+                className="w-full aspect-[16/10] object-cover rounded-2xl shadow-lg"
+              />
+              {TRUST_PHOTO.caption ? (
+                <figcaption className="mt-3 text-sm text-ink-500 dark:text-ink-400 leading-relaxed">
+                  {TRUST_PHOTO.caption}
+                </figcaption>
+              ) : null}
+            </figure>
           </div>
         </Reveal>
 

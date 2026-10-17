@@ -2,6 +2,7 @@ import { Phone, ArrowRight, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSiteContent } from "../../context/SiteContentContext";
 import { Reveal } from "./Reveal";
+import { CTA_PHOTO } from "../content/photos";
 
 export function CTASection() {
   const { home } = useSiteContent();
@@ -19,8 +20,17 @@ export function CTASection() {
 
   return (
     <section className="relative py-20 md:py-28 bg-brand-950 overflow-hidden">
-      {/* Fond maillé sombre et trame, à la place du dégradé animé */}
-      <div className="absolute inset-0 mesh-gradient-dark pointer-events-none" />
+      {/* Photo de contexte sous un voile bleu profond, à la place du dégradé animé */}
+      <img
+        src={CTA_PHOTO.url}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      {/* Un seul voile : assez dense pour le texte blanc, assez clair pour laisser voir la scène */}
+      <div className="absolute inset-0 bg-brand-950/80 pointer-events-none" />
       <div className="absolute inset-0 bg-grid-dark opacity-50 pointer-events-none" />
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-aqua-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-brand-400/10 rounded-full blur-[100px] pointer-events-none" />
