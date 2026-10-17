@@ -1,4 +1,7 @@
 import { HeroSection } from "../HeroSection";
+import { AnnouncementBanner } from "../AnnouncementBanner";
+import { NewProductsSection } from "../NewProductsSection";
+import { AdToasts } from "../AdToasts";
 import { ServicesSection } from "../ServicesSection";
 import { TrustSection } from "../TrustSection";
 import { CTASection } from "../CTASection";
@@ -11,10 +14,15 @@ export function HomePage() {
   });
   return (
     <>
-      <HeroSection /> 
+      <HeroSection />
+      {/* Bandeau d'annonces : il chevauche le bas du héros, là où le regard arrive */}
+      <AnnouncementBanner />
+      <NewProductsSection />
       <ServicesSection />
       <TrustSection />
       <CTASection />
+      {/* Pubs flottantes : montées ici, elles ne suivent pas le visiteur hors de l'accueil */}
+      <AdToasts />
     </>
   );
 }

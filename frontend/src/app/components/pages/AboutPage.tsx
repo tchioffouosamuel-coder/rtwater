@@ -10,6 +10,8 @@ import {
   CarouselNext,
 } from "../ui/carousel";
 import { useSeo } from "../../../lib/seo";
+import { PageHeroMedia } from "../ui/PageHeroMedia";
+import { ABOUT_HEADER_PHOTO } from "../../content/photos";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   droplet: Droplet,
@@ -35,6 +37,7 @@ export function AboutPage() {
     <div className="min-h-screen bg-white dark:bg-ink-950 transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative py-20 sm:py-32 bg-gradient-to-br from-brand-600 to-aqua-500 overflow-hidden">
+        <PageHeroMedia photo={ABOUT_HEADER_PHOTO} />
         <div className="absolute inset-0">
           {[...Array(15)].map((_, i) => (
             <motion.div

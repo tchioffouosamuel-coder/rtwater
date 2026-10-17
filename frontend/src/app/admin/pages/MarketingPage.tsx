@@ -5,9 +5,10 @@ import * as commerce from '../../../services/commerce';
 import type { Discount, DiscountState, DiscountType, ShippingZone } from '../../../services/commerce';
 import { toast } from 'sonner';
 import {
-  AlertCircle, Edit2, Loader2, Mail, Plus, Tag, Trash2, Truck, X,
+  AlertCircle, Edit2, Loader2, Mail, Megaphone, Plus, Tag, Trash2, Truck, X,
 } from 'lucide-react';
 import { fetchSubscribers } from '../../../services/newsletter';
+import { AnnouncementsPanel } from './AnnouncementsPanel';
 
 /**
  * Écran commercial : codes promo, zones de livraison, lettre d'information.
@@ -17,7 +18,7 @@ import { fetchSubscribers } from '../../../services/newsletter';
  * complet à lui seul.
  */
 
-type TabId = 'discounts' | 'shipping' | 'newsletter';
+type TabId = 'discounts' | 'announcements' | 'shipping' | 'newsletter';
 
 const xaf = (value: number) => `${Math.round(value).toLocaleString('fr-FR')} XAF`;
 
@@ -36,6 +37,10 @@ export const MarketingPage: React.FC = () => {
   const canShipping = hasPermission('manage_shipping');
   const canNewsletter = hasPermission('manage_newsletter');
 
+  // Les annonces suivent la même permission que les codes promo : même métier,
+  // même personne au clavier.
+  const canAnnouncements = canDiscounts;
+
   const firstTab: TabId = canDiscounts ? 'discounts' : canShipping ? 'shipping' : 'newsletter';
   const [tab, setTab] = useState<TabId>(firstTab);
 
@@ -50,7 +55,8 @@ export const MarketingPage: React.FC = () => {
   }
 
   const tabs: Array<{ id: TabId; label: string; icon: React.ElementType; allowed: boolean }> = [
-    { id: 'discounts',  label: 'Codes promo',        icon: Tag,   allowed: canDiscounts },
+    { id: 'discounts',  label: 'Codes promo',        icon: Tag,      allowed: canDiscounts },
+    { id: 'announcements', label: 'Annonces & pubs',  icon: Megaphone, allowed: canAnnouncements },
     { id: 'shipping',   label: 'Zones de livraison', icon: Truck, allowed: canShipping },
     { id: 'newsletter', label: "Lettre d'information", icon: Mail, allowed: canNewsletter },
   ];
@@ -81,6 +87,7 @@ export const MarketingPage: React.FC = () => {
       </div>
 
       {tab === 'discounts' && canDiscounts && <DiscountsTab />}
+      {tab === 'announcements' && canAnnouncements && <AnnouncementsPanel />}
       {tab === 'shipping' && canShipping && <ShippingTab />}
       {tab === 'newsletter' && canNewsletter && <NewsletterTab />}
     </AdminLayout>

@@ -90,7 +90,7 @@ export function HeroSection() {
       <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-16 sm:py-20">
         <div className="max-w-3xl">
           {/* Pastille en verre dépoli avec point pulsant */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-aqua-100 text-xs font-semibold mb-5 backdrop-blur-sm animate-fade-down">
+          <div className="glass-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-aqua-100 text-xs font-semibold mb-5 animate-fade-down">
             <span className="relative flex w-2 h-2">
               <span className="absolute inline-flex w-full h-full rounded-full bg-aqua-300 animate-ping opacity-75" />
               <span className="relative inline-flex w-2 h-2 rounded-full bg-aqua-400" />
@@ -98,15 +98,18 @@ export function HeroSection() {
             {hero.badge}
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-5 animate-fade-up text-balance">
+          <h1 className="text-glass-dark text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-5 animate-fade-up text-balance">
             {hero.title}{" "}
-            <span className="bg-gradient-to-r from-aqua-300 to-aqua-100 bg-clip-text text-transparent">
+            <span
+              className="bg-gradient-to-r from-aqua-300 via-white to-aqua-100 bg-clip-text text-transparent"
+              style={{ backgroundSize: "220% 100%", animation: "gradientShift 8s ease infinite" }}
+            >
               {hero.titleHighlight}
             </span>
           </h1>
 
           <p
-            className="text-base md:text-lg text-white/90 leading-relaxed max-w-xl mb-7 animate-fade-up"
+            className="text-glass-dark text-base md:text-lg text-white/90 leading-relaxed max-w-xl mb-7 animate-fade-up"
             style={{ animationDelay: "0.1s" }}
           >
             {hero.description}
@@ -119,14 +122,14 @@ export function HeroSection() {
           >
             <button
               onClick={handleServicesClick}
-              className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-aqua-50 text-brand-700 text-sm font-semibold shadow-xl shadow-brand-950/25 transition-all hover:-translate-y-0.5"
+              className="sheen group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-aqua-50 text-brand-700 text-sm font-semibold shadow-xl shadow-brand-950/25 transition-all hover:-translate-y-0.5"
             >
               {hero.servicesButtonLabel}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
             <button
               onClick={handleContactClick}
-              className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-sm font-semibold border border-white/20 backdrop-blur-sm transition-all hover:-translate-y-0.5"
+              className="glass-dark sheen inline-flex items-center justify-center px-6 py-3.5 rounded-xl hover:bg-white/15 text-white text-sm font-semibold transition-all hover:-translate-y-0.5"
             >
               {hero.contactButtonLabel}
             </button>

@@ -40,8 +40,11 @@ export function ServicesSection() {
 
       {/* Trame pointillée et halos bleus */}
       <div className="absolute inset-0 bg-dots dark:bg-dots-dark opacity-40 pointer-events-none" />
-      <div className="absolute -top-40 -right-40 w-96 h-96 bg-brand-500/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-aqua-400/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="aurora-blob absolute -top-40 -right-40 w-96 h-96 bg-brand-500/10 rounded-full pointer-events-none" />
+      <div
+        className="aurora-blob absolute -bottom-40 -left-40 w-96 h-96 bg-aqua-400/10 rounded-full pointer-events-none"
+        style={{ animationDelay: "-9s" }}
+      />
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
         {/* En-tête de section, épaulé par une photo de contexte */}
@@ -53,7 +56,7 @@ export function ServicesSection() {
                 alt={SERVICES_PHOTO.alt}
                 loading="lazy"
                 decoding="async"
-                className="w-full aspect-[4/3] object-cover rounded-2xl shadow-lg"
+                className="w-full aspect-[4/3] object-cover rounded-2xl shadow-lg ring-1 ring-white/40"
               />
               {SERVICES_PHOTO.caption ? (
                 <figcaption className="mt-3 text-sm text-ink-500 dark:text-ink-400 leading-relaxed">
@@ -63,10 +66,10 @@ export function ServicesSection() {
             </figure>
             <div className="order-1 lg:order-2">
               <SectionBadge className="mb-3">{services.sectionSubtitle}</SectionBadge>
-              <h2 className="text-3xl md:text-4xl font-bold text-ink-900 dark:text-white tracking-tight mb-3">
+              <h2 className="gradient-text-animated text-3xl md:text-4xl font-bold tracking-tight mb-3">
                 {services.sectionTitle}
               </h2>
-              <p className="text-ink-500 dark:text-ink-300 text-base leading-relaxed">
+              <p className="text-glass text-ink-500 dark:text-ink-300 text-base leading-relaxed">
                 {services.sectionDescription}
               </p>
             </div>
@@ -79,14 +82,16 @@ export function ServicesSection() {
             const Icon = ICON_MAP[service.icon] ?? Droplet;
             return (
               <Reveal key={service.title ?? index} delay={(index % 3) * 80}>
-                <article className="group relative h-full p-6 rounded-2xl bg-white dark:bg-ink-900 border border-ink-200 dark:border-white/10 hover:border-brand-300 dark:hover:border-brand-400/40 hover:shadow-xl hover:shadow-brand-500/5 transition-all duration-300 hover:-translate-y-1">
+                <article className="glass-card lift sheen group relative h-full p-6 rounded-2xl">
                   <div
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                    className={`glow-aqua w-12 h-12 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6`}
                   >
                     <Icon size={24} strokeWidth={1.8} className="text-white" aria-hidden="true" />
                   </div>
 
-                  <h3 className="font-bold text-ink-900 dark:text-white mb-2">{service.title}</h3>
+                  <h3 className="text-glass font-bold text-ink-900 dark:text-white mb-2 transition-colors group-hover:text-brand-700 dark:group-hover:text-aqua-300">
+                    {service.title}
+                  </h3>
                   <p className="text-sm text-ink-500 dark:text-ink-400 leading-relaxed">
                     {service.description}
                   </p>

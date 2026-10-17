@@ -309,6 +309,58 @@ export const SettingsPage: React.FC = () => {
                     </select>
                   </Field>
                 </div>
+
+                {/* Section « Nouveautés » de l'accueil : le discours change à chaque
+                    arrivage, il ne doit pas dépendre d'un déploiement. */}
+                <div className="mt-8 border-t border-ink-100 pt-6">
+                  <h3 className="mb-4 text-sm font-semibold text-ink-900">
+                    Section « Nouveautés » de la page d'accueil
+                  </h3>
+
+                  <Toggle
+                    checked={!!settings.home_new_enabled}
+                    onChange={(v) => change('home_new_enabled', v)}
+                    label="Afficher les nouveaux produits sur l'accueil"
+                    hint="Les derniers produits mis en ligne, dans l'ordre d'entrée en boutique."
+                  />
+
+                  <div className="mt-4 grid gap-4">
+                    <Field label="Titre de la section" error={errors.home_new_title}>
+                      <input
+                        type="text" maxLength={120} value={settings.home_new_title ?? ''}
+                        onChange={(e) => change('home_new_title', e.target.value)}
+                        className={inputClass(errors.home_new_title)}
+                      />
+                    </Field>
+                    <Field label="Accroche" error={errors.home_new_subtitle}>
+                      <input
+                        type="text" maxLength={300} value={settings.home_new_subtitle ?? ''}
+                        onChange={(e) => change('home_new_subtitle', e.target.value)}
+                        className={inputClass(errors.home_new_subtitle)}
+                      />
+                    </Field>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <Field label="Produits affichés" error={errors.home_new_count} hint="Entre 2 et 24.">
+                        <input
+                          type="number" min={2} max={24} value={settings.home_new_count}
+                          onChange={(e) => change('home_new_count', Number(e.target.value))}
+                          className={inputClass(errors.home_new_count)}
+                        />
+                      </Field>
+                      <Field
+                        label="Durée du badge « Nouveau » (jours)"
+                        error={errors.home_new_days}
+                        hint="Au-delà, le produit n'est plus signalé comme nouveau."
+                      >
+                        <input
+                          type="number" min={1} max={365} value={settings.home_new_days}
+                          onChange={(e) => change('home_new_days', Number(e.target.value))}
+                          className={inputClass(errors.home_new_days)}
+                        />
+                      </Field>
+                    </div>
+                  </div>
+                </div>
               </Section>
             )}
 

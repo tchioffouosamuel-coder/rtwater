@@ -4,6 +4,8 @@ import { motion } from "motion/react";
 import { ArrowLeft, Calendar, User, Loader2, Rss } from "lucide-react";
 import { fetchPosts, fetchPost } from "../../../services/blog";
 import { useSeo } from "../../../lib/seo";
+import { PageHeroMedia } from "../ui/PageHeroMedia";
+import { BLOG_HEADER_PHOTO } from "../../content/photos";
 
 interface Post {
   id: number;
@@ -47,8 +49,9 @@ export function BlogPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-ink-950">
       {/* Hero */}
-      <section className="py-20 sm:py-28 bg-gradient-to-br from-brand-600 to-aqua-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative overflow-hidden py-20 sm:py-28 bg-gradient-to-br from-brand-600 to-aqua-500">
+        <PageHeroMedia photo={BLOG_HEADER_PHOTO} />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
               <Rss size={16} />

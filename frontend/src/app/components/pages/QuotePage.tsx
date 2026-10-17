@@ -7,6 +7,8 @@ import { useTheme } from "../../../theme/ThemeContext";
 import { submitQuoteRequest } from "../../../services/quotes";
 import { useSeo } from "../../../lib/seo";
 import { trackEvent } from "../../../lib/monitoring";
+import { PageHeroMedia } from "../ui/PageHeroMedia";
+import { QUOTE_HEADER_PHOTO } from "../../content/photos";
 
 export function QuotePage() {
   useSeo({
@@ -147,6 +149,7 @@ export function QuotePage() {
     <div className="min-h-screen bg-white dark:bg-ink-950 transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative py-20 sm:py-32 bg-gradient-to-br from-brand-600 to-aqua-500 overflow-hidden">
+        <PageHeroMedia photo={QUOTE_HEADER_PHOTO} veil="dense" />
         <div className="absolute inset-0">
           {[...Array(15)].map((_, i) => (
             <motion.div

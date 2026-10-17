@@ -6,6 +6,8 @@ import { useUserAuth } from "../../../context/UserAuthContext";
 import { useI18n } from "../../../i18n/I18nContext";
 import { useSeo } from "../../../lib/seo";
 import { ORDER_STEPS, orderStepIndex, statusColor, statusLabel } from "../../../lib/orderStatus";
+import { PageHeroMedia } from "../ui/PageHeroMedia";
+import { TRACKING_HEADER_PHOTO } from "../../content/photos";
 
 interface TrackedOrder {
   reference: string;
@@ -77,15 +79,18 @@ export function OrderTrackingPage() {
 
   return (
     <div className="min-h-screen bg-ink-50 dark:bg-ink-900">
-      <section className="bg-gradient-to-br from-brand-600 to-aqua-500 py-14 sm:py-20 text-white text-center px-4">
-        <PackageSearch className="w-12 h-12 mx-auto mb-4 opacity-90" aria-hidden="true" />
-        <h1 className="text-3xl sm:text-4xl font-bold">{tx("Suivre ma commande", "Track my order")}</h1>
-        <p className="mt-3 text-white/85 max-w-xl mx-auto">
-          {tx(
-            "Saisissez la référence reçue par e-mail, par exemple CMD-000042, et le téléphone ou l'e-mail utilisé pour commander.",
-            "Enter the reference from your email, for example CMD-000042, and the phone or email used to order."
-          )}
-        </p>
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-600 to-aqua-500 py-14 sm:py-20 text-white text-center px-4">
+        <PageHeroMedia photo={TRACKING_HEADER_PHOTO} />
+        <div className="relative">
+          <PackageSearch className="w-12 h-12 mx-auto mb-4 opacity-90" aria-hidden="true" />
+          <h1 className="text-3xl sm:text-4xl font-bold">{tx("Suivre ma commande", "Track my order")}</h1>
+          <p className="mt-3 text-white/85 max-w-xl mx-auto">
+            {tx(
+              "Saisissez la référence reçue par e-mail, par exemple CMD-000042, et le téléphone ou l'e-mail utilisé pour commander.",
+              "Enter the reference from your email, for example CMD-000042, and the phone or email used to order."
+            )}
+          </p>
+        </div>
       </section>
 
       <div className="max-w-3xl mx-auto px-4 -mt-8 pb-16">

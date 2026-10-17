@@ -5,6 +5,8 @@ import { useI18n } from "../../../i18n/I18nContext";
 import { useTheme } from "../../../theme/ThemeContext";
 import { useSiteContent } from "../../../context/SiteContentContext";
 import { useSeo } from "../../../lib/seo";
+import { PageHeroMedia } from "../ui/PageHeroMedia";
+import { GALLERY_HEADER_PHOTO } from "../../content/photos";
 
 const CATEGORY_LABELS: Record<string, string> = {
   all: "Tout",
@@ -71,6 +73,7 @@ export function GalleryPage() {
     <div className="min-h-screen bg-white dark:bg-ink-950 transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative py-20 sm:py-32 bg-gradient-to-br from-brand-600 to-aqua-500 overflow-hidden">
+        <PageHeroMedia photo={GALLERY_HEADER_PHOTO} />
         <div className="absolute inset-0">
           {[...Array(15)].map((_, i) => (
             <motion.div

@@ -16,6 +16,13 @@ export interface PublicSettings {
   payment_cash: boolean;
   products_per_page: number;
   default_language: string;
+
+  /** Section « Nouveautés » de la page d'accueil. */
+  home_new_enabled: boolean;
+  home_new_title: string;
+  home_new_subtitle: string;
+  home_new_count: number;
+  home_new_days: number;
 }
 
 /** Réglages complets, accessibles au backoffice seulement. */

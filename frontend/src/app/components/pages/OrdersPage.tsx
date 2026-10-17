@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useI18n } from "../../../i18n/I18nContext";
 import { useEffect, useState } from "react";
 import * as ordersService from "../../../services/orders";
+import { PageHeroMedia } from "../ui/PageHeroMedia";
+import { ORDERS_HEADER_PHOTO } from "../../content/photos";
 
 interface ApiOrder {
   id: string | number;
@@ -65,8 +67,9 @@ export function OrdersPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-ink-950">
       {/* Hero */}
-      <section className="relative py-16 sm:py-24 bg-gradient-to-br from-brand-600 to-aqua-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden py-16 sm:py-24 bg-gradient-to-br from-brand-600 to-aqua-500">
+        <PageHeroMedia photo={ORDERS_HEADER_PHOTO} />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

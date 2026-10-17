@@ -51,7 +51,7 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
   }, [value]);
 
   return (
-    <div ref={ref} className="text-4xl md:text-5xl font-bold gradient-text tabular-nums">
+    <div ref={ref} className="text-4xl md:text-5xl font-bold gradient-text-animated tabular-nums">
       {count}
       {suffix}
     </div>
@@ -72,6 +72,11 @@ export function TrustSection() {
   return (
     <section className="relative py-20 md:py-28 bg-white dark:bg-ink-900 overflow-hidden transition-colors duration-300">
       <div className="absolute inset-0 bg-dots dark:bg-dots-dark opacity-30 pointer-events-none" />
+      <div className="aurora-blob absolute -left-28 top-24 h-72 w-72 rounded-full bg-aqua-400/10 pointer-events-none" />
+      <div
+        className="aurora-blob absolute -right-24 bottom-10 h-80 w-80 rounded-full bg-brand-500/10 pointer-events-none"
+        style={{ animationDelay: "-11s" }}
+      />
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
         {/* En-tête de section, photo en vis-à-vis (disposition inversée par rapport aux services) */}
@@ -81,11 +86,11 @@ export function TrustSection() {
               <SectionBadge tone="aqua" className="mb-3">
                 {trust.sectionSubtitle}
               </SectionBadge>
-              <h2 className="text-3xl md:text-4xl font-bold text-ink-900 dark:text-white tracking-tight mb-3">
+              <h2 className="text-glass text-3xl md:text-4xl font-bold text-ink-900 dark:text-white tracking-tight mb-3">
                 {trust.sectionTitle}{" "}
-                <span className="gradient-text">{trust.sectionTitleHighlight}</span>
+                <span className="gradient-text-animated">{trust.sectionTitleHighlight}</span>
               </h2>
-              <p className="text-ink-500 dark:text-ink-300 text-base leading-relaxed">
+              <p className="text-glass text-ink-500 dark:text-ink-300 text-base leading-relaxed">
                 {trust.sectionDescription}
               </p>
             </div>
@@ -95,7 +100,7 @@ export function TrustSection() {
                 alt={TRUST_PHOTO.alt}
                 loading="lazy"
                 decoding="async"
-                className="w-full aspect-[16/10] object-cover rounded-2xl shadow-lg"
+                className="w-full aspect-[16/10] object-cover rounded-2xl shadow-lg ring-1 ring-white/40"
               />
               {TRUST_PHOTO.caption ? (
                 <figcaption className="mt-3 text-sm text-ink-500 dark:text-ink-400 leading-relaxed">
@@ -115,16 +120,16 @@ export function TrustSection() {
 
             return (
               <Reveal key={stat.label ?? index} delay={(index % 3) * 80}>
-                <div className="group h-full p-6 md:p-8 rounded-2xl bg-white dark:bg-ink-950 border border-ink-200 dark:border-white/10 hover:border-brand-300 dark:hover:border-brand-400/40 hover:shadow-xl hover:shadow-brand-500/5 transition-all duration-300 hover:-translate-y-1">
+                <div className="glass-card lift sheen group h-full p-6 md:p-8 rounded-2xl">
                   <div
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}
+                    className={`glow-aqua w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-5 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6`}
                   >
                     <Icon size={24} strokeWidth={1.8} className="text-white" aria-hidden="true" />
                   </div>
 
                   <Counter value={value} suffix={stat.suffix} />
 
-                  <div className="font-bold text-ink-900 dark:text-white mt-3 mb-1.5">
+                  <div className="text-glass font-bold text-ink-900 dark:text-white mt-3 mb-1.5">
                     {stat.label}
                   </div>
                   <p className="text-sm text-ink-500 dark:text-ink-400 leading-relaxed">

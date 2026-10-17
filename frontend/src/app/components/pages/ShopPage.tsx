@@ -16,6 +16,8 @@ import { trackEvent } from "../../../lib/monitoring";
 import { FavoriteButton, RecentlyViewed } from "../shop/ShopWidgets";
 import { useSeo } from "../../../lib/seo";
 import { mapApiProduct, productPath, type ShopProduct } from "../../../lib/product";
+import { PageHeroMedia } from "../ui/PageHeroMedia";
+import { SHOP_HEADER_PHOTO } from "../../content/photos";
 
 interface ApiCategory {
   id: number;
@@ -209,6 +211,7 @@ export function ShopPage() {
 
       {/* ── Hero ── */}
       <section className="relative pt-20 sm:pt-28 pb-10 overflow-hidden bg-gradient-to-br from-brand-600 via-aqua-600 to-aqua-500">
+        <PageHeroMedia photo={SHOP_HEADER_PHOTO} />
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-white/10 blur-3xl" />
           <div className="absolute -bottom-10 -left-10 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
