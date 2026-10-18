@@ -35,7 +35,7 @@ export const AdminLogin: React.FC = () => {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-4">
-            <img src="/logo.webp" alt="RT Water" className="h-14 w-auto object-contain" />
+            <img src="/logo-transparent.webp" alt="RT Water" className="h-14 w-auto object-contain" />
           </div>
           <h2 className="text-3xl font-bold text-white mb-2">Connexion</h2>
           <p className="text-ink-400">Accédez à votre tableau de bord</p>

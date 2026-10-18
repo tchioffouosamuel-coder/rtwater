@@ -54,7 +54,7 @@ export function Footer() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-6">
-              <img src="/logo.webp" alt="RT Water Solution" className="h-12 w-auto" />
+              <img src="/logo-transparent.webp" alt="RT Water Solution" className="h-12 w-auto" />
             </div>
             <p className="text-ink-300 mb-6 leading-relaxed">
               {footer.tagline}

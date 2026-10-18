@@ -4,6 +4,7 @@ import { AdminLayout } from '../layout/AdminLayout';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import * as ordersService from '../../../services/orders';
 import { formatApiDate } from '../../../lib/date';
+import { markOrdersRead } from '../../../lib/order-notifications.mjs';
 import { toast } from 'sonner';
 import { Search, Eye, Printer, TrendingUp, Clock, CheckCircle, AlertCircle, Package, Truck, X, ShoppingBag, DollarSign, RefreshCw } from 'lucide-react';
 
@@ -48,6 +49,11 @@ export const OrdersAdminPage: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<ApiOrder | null>(null);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const requestedOrderId = searchParams.get('order');
+
+  // Mark only a successfully opened sheet, including direct notification links.
+  useEffect(() => {
+    if (selectedOrder?.id) markOrdersRead([selectedOrder.id]);
+  }, [selectedOrder?.id]);
 
   const loadOrders = useCallback(async () => {
     setLoading(true);
@@ -129,7 +135,7 @@ export const OrdersAdminPage: React.FC = () => {
     <AdminLayout title="Gestion des commandes" breadcrumbs={[{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Commandes' }]}>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="admin-summary-grid mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {/* Total commandes */}
         <div className="relative overflow-hidden bg-gradient-to-br from-brand-600 to-aqua-500 rounded-2xl p-5 text-white shadow-lg shadow-brand-600/20">
           <div className="flex items-center justify-between mb-3">
@@ -150,7 +156,11 @@ export const OrdersAdminPage: React.FC = () => {
             </div>
             <span className="text-xs bg-white/20 px-2 py-1 rounded-full">CA</span>
           </div>
-          <p className="text-3xl font-bold">{stats.revenue.toFixed(0)} <span className="text-lg font-medium">XOF</span></p>
+          <p className="text-3xl font-bold" title={`${stats.revenue.toLocaleString('fr-FR')} XOF`}>
+            <span className="sm:hidden">{new Intl.NumberFormat('fr-FR', { notation: 'compact', maximumFractionDigits: 1 }).format(stats.revenue)}</span>
+            <span className="hidden sm:inline">{stats.revenue.toFixed(0)}</span>{' '}
+            <span className="text-xs font-medium sm:text-lg">XOF</span>
+          </p>
           <p className="text-sm text-white/70 mt-1">Chiffre d'affaires</p>
         </div>
 
@@ -352,9 +362,9 @@ export const OrdersAdminPage: React.FC = () => {
       {/* Modal détail commande */}
       {selectedOrder && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-0 backdrop-blur-sm sm:items-center sm:p-4">
-          <div className="max-h-[92dvh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white pb-[env(safe-area-inset-bottom)] shadow-xl sm:max-h-[90vh] sm:rounded-xl sm:pb-0">
-            <div className="sticky top-0 flex items-center justify-between border-b border-ink-200 bg-white px-4 py-4 sm:px-6">
-              <h3 className="text-lg font-semibold text-ink-900">Commande #{selectedOrder.id}</h3>
+          <div role="dialog" aria-modal="true" aria-labelledby="order-sheet-title" className="max-h-[92dvh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white pb-[env(safe-area-inset-bottom)] shadow-xl sm:max-h-[90vh] sm:rounded-xl sm:pb-0">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-ink-200 bg-white px-4 py-3 sm:px-6 sm:py-4">
+              <h3 id="order-sheet-title" className="text-base font-semibold text-ink-900 sm:text-lg">Commande #{selectedOrder.id}</h3>
               <button
                 onClick={() => {
                   setSelectedOrder(null);
@@ -364,14 +374,14 @@ export const OrdersAdminPage: React.FC = () => {
                     setSearchParams(nextParams, { replace: true });
                   }
                 }}
-                className="p-1 hover:bg-ink-100 rounded-lg"
+                className="rounded-lg p-2.5 hover:bg-ink-100"
                 aria-label="Fermer le détail de la commande"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="p-6 space-y-5">
+            <div className="space-y-4 p-4 text-sm sm:space-y-5 sm:p-6">
               {/* Statut actuel + transitions */}
               <div>
                 <p className="text-xs text-ink-500 uppercase font-semibold mb-2">Statut</p>
@@ -402,10 +412,10 @@ export const OrdersAdminPage: React.FC = () => {
               {/* Client */}
               <div className="border-t border-ink-100 pt-5">
                 <p className="text-xs text-ink-500 uppercase font-semibold mb-2">Client</p>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div><p className="text-ink-400">Nom</p><p className="font-medium">{selectedOrder.user?.name ?? '—'}</p></div>
-                  <div><p className="text-ink-400">Email</p><p className="font-medium">{selectedOrder.user?.email ?? '—'}</p></div>
-                  <div className="col-span-2"><p className="text-ink-400">Adresse</p><p className="font-medium">{selectedOrder.address}</p></div>
+                <div className="grid grid-cols-1 gap-3 text-sm min-[380px]:grid-cols-2">
+                  <div className="min-w-0"><p className="text-ink-500">Nom</p><p className="break-words font-medium">{selectedOrder.user?.name ?? '—'}</p></div>
+                  <div className="min-w-0"><p className="text-ink-500">Email</p><p className="font-medium [overflow-wrap:anywhere]">{selectedOrder.user?.email ?? '—'}</p></div>
+                  <div className="min-w-0 min-[380px]:col-span-2"><p className="text-ink-500">Adresse</p><p className="break-words font-medium">{selectedOrder.address}</p></div>
                 </div>
               </div>
 
@@ -414,12 +424,12 @@ export const OrdersAdminPage: React.FC = () => {
                 <p className="text-xs text-ink-500 uppercase font-semibold mb-3">Articles</p>
                 <div className="space-y-2">
                   {selectedOrder.items.map((item, i) => (
-                    <div key={i} className="flex justify-between items-center p-3 bg-ink-50 rounded-lg text-sm">
-                      <div>
-                        <p className="font-medium">{item.product?.name ?? 'Produit supprimé'}</p>
+                    <div key={i} className="flex items-start justify-between gap-3 rounded-lg bg-ink-50 p-3 text-sm">
+                      <div className="min-w-0 flex-1">
+                        <p className="break-words font-medium">{item.product?.name ?? 'Produit supprimé'}</p>
                         <p className="text-ink-400">Qté {item.quantity} × {parseFloat(item.price).toFixed(0)} XOF</p>
                       </div>
-                      <p className="font-semibold">{(item.quantity * parseFloat(item.price)).toFixed(0)} XOF</p>
+                      <p className="shrink-0 text-right font-semibold"><span className="block">{(item.quantity * parseFloat(item.price)).toLocaleString('fr-FR')}</span><span className="text-xs font-medium">XOF</span></p>
                     </div>
                   ))}
                 </div>

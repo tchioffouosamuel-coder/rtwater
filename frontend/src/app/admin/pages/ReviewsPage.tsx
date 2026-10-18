@@ -105,7 +105,7 @@ export function ReviewsPage() {
       breadcrumbs={[{ label: 'Backoffice', path: '/admin/dashboard' }, { label: 'Avis Clients' }]}
     >
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="admin-summary-grid grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {statCards.map(({ label, value, color, bg, icon: Icon }) => (
           <div key={label} className={`${bg} rounded-xl p-4 flex items-center gap-3`}>
             <Icon size={20} className={color} />

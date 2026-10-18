@@ -111,7 +111,7 @@ export const AnalyticsPage: React.FC = () => {
       ) : (
         <>
           {/* KPI cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+          <div className="admin-summary-grid grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
             {[
               {
                 label: 'Revenu total',

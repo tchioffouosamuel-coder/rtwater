@@ -125,7 +125,7 @@ export const RegisterPage: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-4 mb-12"
           >
-            <img src="/logo.webp" alt="RT Water" className="h-14 w-auto object-contain" />
+            <img src="/logo-transparent.webp" alt="RT Water" className="h-14 w-auto object-contain" />
           </motion.div>
 
           <motion.h2
@@ -179,7 +179,7 @@ export const RegisterPage: React.FC = () => {
         >
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center justify-center mb-8">
-            <img src="/logo.webp" alt="RT Water" className="h-11 w-auto object-contain" />
+            <img src="/logo-transparent.webp" alt="RT Water" className="h-11 w-auto object-contain" />
           </div>
 
           {/* Back to login */}

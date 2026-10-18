@@ -97,7 +97,7 @@ export function Header() {
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
-              <img src="/logo.webp" alt="RT Water Solution"               className="h-12 w-auto" />
+              <img src="/logo-transparent.webp" alt="RT Water Solution" className="h-12 w-auto" />
             </motion.button>
 
             {/* Desktop Navigation */}

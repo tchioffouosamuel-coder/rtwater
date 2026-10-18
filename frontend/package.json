@@ -7,6 +7,7 @@
     "build": "vite build",
     "dev": "vite",
     "test:push": "node --test ./scripts/push-worker.test.js",
+    "test:admin": "node --test ./scripts/order-notifications.test.js",
     "smoke-api": "node ./scripts/smoke-api.js"
   },
   "dependencies": {

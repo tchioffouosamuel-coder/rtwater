@@ -7,7 +7,7 @@
  * - API publique (catalogue, catégories, pages, blog) : réseau d'abord, copie locale en secours.
  * - Jamais de cache pour les requêtes authentifiées ni pour les commandes, paiements, profil.
  */
-const VERSION = "rtwater-v2";
+const VERSION = "rtwater-v3";
 const SHELL = `${VERSION}-shell`;
 const ASSETS = `${VERSION}-assets`;
 const IMAGES = `${VERSION}-images`;
@@ -15,7 +15,7 @@ const API = `${VERSION}-api`;
 const MAX_IMAGES = 120;
 const MAX_API = 80;
 
-const PRECACHE = ["/", "/offline.html", "/manifest.webmanifest", "/icon-192.png", "/logo.webp"];
+const PRECACHE = ["/", "/offline.html", "/manifest.webmanifest", "/icon-192.png", "/logo-transparent.webp"];
 const PUBLIC_API = /\/api\/(products|categories|pages|blog|services)(\/|\?|$)/;
 
 self.addEventListener("install", (event) => {

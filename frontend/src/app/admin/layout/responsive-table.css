@@ -1,0 +1,57 @@
+@media (max-width: 639px) {
+  .admin-content table {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-content table thead {
+    display: none;
+  }
+
+  .admin-content table tbody {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .admin-content table tbody tr {
+    display: block;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.875rem;
+    background: #fff;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 1px 3px rgb(15 23 42 / 5%);
+  }
+
+  .admin-content table tbody td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 0;
+    border: 0 !important;
+    padding: 0.55rem 0 !important;
+    text-align: right !important;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-content table tbody td + td {
+    border-top: 1px solid #f1f5f9 !important;
+  }
+
+  .admin-content table tbody td[data-label]::before {
+    flex: 0 1 42%;
+    color: #64748b;
+    content: attr(data-label);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .admin-content table tbody td > * {
+    min-width: 0;
+  }
+}

@@ -111,7 +111,7 @@ export const AdminDashboard: React.FC = () => {
     <AdminLayout title="Tableau de bord" breadcrumbs={[{ label: 'Accueil' }]}>
 
       {/* Welcome */}
-      <div className="mb-8 p-6 bg-gradient-to-r from-ink-700 via-ink-800 to-ink-900 rounded-xl text-white">
+      <div className="mb-5 rounded-xl bg-gradient-to-r from-ink-700 via-ink-800 to-ink-900 p-4 text-white sm:mb-8 sm:p-6">
         <h2 className="text-2xl font-bold mb-1">Bienvenue, {user?.name}! 👋</h2>
         <p className="text-ink-300 text-sm">
           {kpis
@@ -129,23 +129,23 @@ export const AdminDashboard: React.FC = () => {
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center text-red-700 mb-8">{error}</div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="admin-summary-grid mb-5 grid grid-cols-2 gap-3 sm:mb-8 sm:gap-6 lg:grid-cols-4">
             {stats.map((stat, i) => {
               const Icon = stat.icon;
               const isUp = stat.pct === null ? null : stat.pct >= 0;
               return (
-                <div key={i} className={`${stat.color} p-6 rounded-xl border border-ink-200 hover:shadow-lg transition-all`}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <p className="text-ink-600 text-sm font-medium">{stat.label}</p>
-                      <p className="text-3xl font-bold text-ink-900 mt-2">{stat.value}</p>
+                <div key={i} className={`${stat.color} relative rounded-xl border border-ink-200 p-3 transition-all hover:shadow-lg sm:p-6`}>
+                  <div className="mb-2 flex min-w-0 items-start justify-between gap-2 sm:mb-4">
+                    <div className="min-w-0 flex-1">
+                      <p className="pr-6 text-xs font-medium text-ink-600 sm:pr-0 sm:text-sm">{stat.label}</p>
+                      <p className="mt-2 text-xl font-bold leading-tight text-ink-900 sm:text-3xl">{stat.value}</p>
                     </div>
-                    <div className={`p-3 rounded-lg ${stat.iconColor}`}><Icon size={24} /></div>
+                    <div className={`absolute right-3 top-3 rounded-lg sm:static sm:p-3 ${stat.iconColor}`}><Icon size={24} /></div>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex min-w-0 items-start gap-1">
                     {isUp === true  && <TrendingUp  size={16} className="text-green-600" />}
                     {isUp === false && <TrendingDown size={16} className="text-red-600"   />}
-                    <p className={`text-sm font-medium ${isUp === true ? 'text-green-600' : isUp === false ? 'text-red-600' : 'text-ink-600'}`}>
+                    <p className={`text-xs font-medium sm:text-sm ${isUp === true ? 'text-green-600' : isUp === false ? 'text-red-600' : 'text-ink-600'}`}>
                       {stat.change}
                     </p>
                   </div>

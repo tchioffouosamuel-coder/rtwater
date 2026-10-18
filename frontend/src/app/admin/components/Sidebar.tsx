@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAdminAuth, ROLE_LABELS } from '../../../context/AdminAuthContext';
-import { ChevronDown, LogOut, Menu, X, LayoutDashboard, Package, FileText, FileSpreadsheet, FolderTree, Newspaper, Tag, Users, Wrench, ShoppingCart, Warehouse, CreditCard, Receipt, BarChart3, Settings, Star, FileQuestion } from 'lucide-react';
+import { ChevronDown, LogOut, Plus, X, LayoutDashboard, Package, FileText, FileSpreadsheet, FolderTree, Newspaper, Tag, Users, Wrench, ShoppingCart, Warehouse, CreditCard, Receipt, BarChart3, Settings, Star, FileQuestion } from 'lucide-react';
 
 interface NavItem {
   label: string;
@@ -15,7 +15,7 @@ export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout, hasPermission } = useAdminAuth();
-  const [isOpen, setIsOpen] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const gestionPaths = [
     '/admin/products',
     '/admin/categories',
@@ -32,9 +32,15 @@ export const Sidebar: React.FC = () => {
   );
   const isGestionExpanded = expandedMenus.includes('Gestion');
 
+  React.useEffect(() => setShowMore(false), [location.pathname]);
   React.useEffect(() => {
-    setIsOpen(false);
-  }, [location.pathname]);
+    if (!showMore) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShowMore(false);
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    return () => document.removeEventListener('keydown', closeOnEscape);
+  }, [showMore]);
 
   const toggleMenu = (label: string) => {
     setExpandedMenus(prev =>
@@ -154,6 +160,19 @@ export const Sidebar: React.FC = () => {
     },
   ];
 
+  const accessibleItems = navItems
+    .filter(item => !item.requiredPermission || hasPermission(item.requiredPermission))
+    .flatMap(item => item.submenu
+      ? item.submenu.filter(child => !child.requiredPermission || hasPermission(child.requiredPermission))
+      : [item]);
+  const preferredMobileItems = ['Dashboard', 'Commandes', 'Inventaire']
+    .map(label => accessibleItems.find(item => item.label === label))
+    .filter((item): item is NavItem => Boolean(item));
+  const primaryMobileItems = [
+    ...preferredMobileItems,
+    ...accessibleItems.filter(item => !preferredMobileItems.some(primary => primary.path === item.path)),
+  ].slice(0, 3);
+
   const renderNavItems = (items: NavItem[], depth = 0) => {
     return items
       .filter(item => !item.requiredPermission || hasPermission(item.requiredPermission))
@@ -186,7 +205,10 @@ export const Sidebar: React.FC = () => {
             </>
           ) : (
             <button
-              onClick={() => navigate(item.path)}
+              onClick={() => {
+                navigate(item.path);
+                setShowMore(false);
+              }}
               className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
                 depth > 0 ? 'pl-12 text-xs' : ''
               } ${
@@ -205,25 +227,13 @@ export const Sidebar: React.FC = () => {
 
   return (
     <>
-      {/* Toggle Button Mobile */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
-        aria-expanded={isOpen}
-        className="fixed left-3 top-3 z-[60] rounded-xl bg-ink-900 p-3 text-white shadow-lg transition hover:bg-ink-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 lg:hidden"
-      >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
-
       {/* Sidebar */}
       <div
-        className={`fixed left-0 top-0 z-50 flex h-dvh w-72 max-w-[calc(100vw-2rem)] flex-col border-r border-ink-200 bg-ink-50 shadow-2xl transition-transform duration-300 lg:z-40 lg:h-screen lg:w-64 lg:max-w-none lg:shadow-none ${
-          isOpen ? 'visible translate-x-0' : 'invisible -translate-x-full'
-        } lg:visible lg:translate-x-0`}
+        className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-ink-200 bg-ink-50 lg:flex"
       >
         {/* User Info */}
         {user && (
-          <div className="border-b border-ink-200 bg-white px-6 py-4 pt-16 lg:pt-4">
+          <div className="border-b border-ink-200 bg-white px-6 py-4">
             <div className="mb-3">
               <div className="w-10 h-10 bg-gradient-to-br from-brand-400 to-brand-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                 {user.name.charAt(0)}
@@ -250,7 +260,7 @@ export const Sidebar: React.FC = () => {
             onClick={() => {
               logout();
               navigate('/admin/login');
-              setIsOpen(false);
+              setShowMore(false);
             }}
             className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 hover:text-red-700"
           >
@@ -260,12 +270,104 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* Overlay Mobile */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-ink-950/45 backdrop-blur-[2px] lg:hidden"
-          onClick={() => setIsOpen(false)}
-        ></div>
+      <nav
+        aria-label="Navigation principale"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-ink-200 bg-white/95 px-2 pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-lg lg:hidden"
+        style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 0.5rem)' }}
+      >
+        {primaryMobileItems.map(item => {
+          const active = location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
+          return (
+            <button
+              key={item.path}
+              type="button"
+              onClick={() => navigate(item.path)}
+              aria-current={active ? 'page' : undefined}
+              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[10px] font-semibold transition ${
+                active ? 'text-brand-700' : 'text-ink-500'
+              }`}
+            >
+              <span className={`flex h-8 w-10 items-center justify-center rounded-xl ${active ? 'bg-brand-50' : ''}`}>
+                {item.icon}
+              </span>
+              <span className="max-w-full truncate">{item.label}</span>
+            </button>
+          );
+        })}
+        <button
+          type="button"
+          onClick={() => setShowMore(true)}
+          aria-expanded={showMore}
+          aria-haspopup="dialog"
+          className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[10px] font-semibold transition ${
+            showMore ? 'text-brand-700' : 'text-ink-500'
+          }`}
+        >
+          <span className={`flex h-8 w-10 items-center justify-center rounded-xl ${showMore ? 'bg-brand-50' : ''}`}>
+            <Plus size={22} />
+          </span>
+          Plus
+        </button>
+      </nav>
+
+      {showMore && (
+        <div className="fixed inset-0 z-50 flex items-end bg-ink-950/45 backdrop-blur-[2px] lg:hidden" onClick={() => setShowMore(false)}>
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-admin-menu-title"
+            className="max-h-[82dvh] w-full overflow-y-auto rounded-t-3xl border-t border-ink-200 bg-white px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3 shadow-2xl"
+            onClick={event => event.stopPropagation()}
+          >
+            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-ink-300" />
+            <div className="mb-3 flex items-center justify-between">
+              <h2 id="mobile-admin-menu-title" className="text-lg font-bold text-ink-900">Menu</h2>
+              <button type="button" onClick={() => setShowMore(false)} aria-label="Fermer le menu" className="rounded-full p-2 text-ink-500 hover:bg-ink-100">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {accessibleItems.map(item => {
+                const active = location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
+                return (
+                  <button
+                    key={item.path}
+                    type="button"
+                    onClick={() => {
+                      navigate(item.path);
+                      setShowMore(false);
+                    }}
+                    aria-current={active ? 'page' : undefined}
+                    className={`flex min-h-14 items-center gap-3 rounded-xl border px-3 text-left text-sm font-medium transition ${
+                      active ? 'border-brand-200 bg-brand-50 text-brand-800' : 'border-ink-100 text-ink-700 hover:bg-ink-50'
+                    }`}
+                  >
+                    <span className="shrink-0">{item.icon}</span>
+                    <span className="min-w-0 truncate">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="mt-4 border-t border-ink-100 pt-3">
+              <div className="mb-3">
+                <p className="text-sm font-semibold text-ink-900">{user?.name}</p>
+                <p className="text-xs text-ink-500">{user && (ROLE_LABELS[user.role] ?? user.role)}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  logout();
+                  navigate('/admin/login');
+                  setShowMore(false);
+                }}
+                className="flex min-h-12 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+              >
+                <LogOut size={18} />
+                Déconnexion
+              </button>
+            </div>
+          </section>
+        </div>
       )}
     </>
   );

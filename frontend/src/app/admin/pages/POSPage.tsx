@@ -202,7 +202,7 @@ export const POSPage: React.FC = () => {
       )}
 
       {/* Daily Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="admin-summary-grid mb-6 grid grid-cols-2 gap-3 min-[480px]:grid-cols-3 sm:gap-4">
         <div className="bg-brand-50 border border-brand-200 rounded-xl p-4">
           <div className="flex items-center justify-between">
             <div>

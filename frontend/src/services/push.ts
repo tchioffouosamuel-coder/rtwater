@@ -1,10 +1,12 @@
 import api from "./api";
 import { ensureServiceWorker } from "../lib/offline";
 import type { MessagePayload } from "firebase/messaging";
+import { firebaseConfigFromEnv, isFirebaseConfigured } from "../../config/firebase.mjs";
 
 const ENABLED = "rtwater.push.enabled";
 const INSTALLATION = "rtwater.push.installation";
 export const vapidKey = (import.meta.env.VITE_FIREBASE_VAPID_KEY ?? "").trim();
+export const firebaseConfigured = isFirebaseConfigured(firebaseConfigFromEnv(import.meta.env));
 
 export function supportsPush() {
   return window.isSecureContext && "Notification" in window && "PushManager" in window && "serviceWorker" in navigator;
@@ -40,7 +42,7 @@ async function messaging() {
 
 /** Après accord du navigateur ; ne déclenche jamais une demande de permission. */
 export async function syncPushSubscription() {
-  if (!vapidKey || !supportsPush()) throw new Error("push/unsupported");
+  if (!firebaseConfigured || !vapidKey || !supportsPush()) throw new Error("push/unsupported");
   if (Notification.permission !== "granted") throw new Error("push/permission");
   const { client, sdk } = await messaging();
   const serviceWorkerRegistration = await ensureServiceWorker();

@@ -258,7 +258,7 @@ export const ProductsPage: React.FC = () => {
       ]}
     >
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="admin-summary-grid mb-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
         <div className="bg-gradient-to-br from-brand-50 to-brand-100 rounded-xl border border-brand-200 p-4">
           <p className="text-sm text-brand-600 font-medium">Total produits</p>
           <p className="text-2xl font-bold text-brand-900 mt-2">{stats.total}</p>

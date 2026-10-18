@@ -124,7 +124,7 @@ export const ReceiptsPage: React.FC = () => {
       ]}
     >
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="admin-summary-grid mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {/* Total commandes */}
         <div className="relative overflow-hidden bg-gradient-to-br from-brand-600 to-aqua-500 rounded-2xl p-5 text-white shadow-lg shadow-brand-600/20">
           <div className="flex items-center justify-between mb-3">

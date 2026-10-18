@@ -217,7 +217,7 @@ export function ShopPage() {
           <div className="absolute -bottom-10 -left-10 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
           {/* Watermark logo */}
           <img
-            src="/logo.webp"
+            src="/logo-transparent.webp"
             alt=""
             aria-hidden="true"
             className="absolute right-[-6%] top-1/2 -translate-y-1/2 w-[320px] sm:w-[460px] lg:w-[580px] select-none opacity-[0.18]"

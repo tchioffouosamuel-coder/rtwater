@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { useI18n } from "../i18n/I18nContext";
-import { disablePush, isPushEnabled, notificationUrl, onPushMessage, supportsPush, syncPushSubscription, vapidKey } from "../services/push";
+import { disablePush, firebaseConfigured, isPushEnabled, notificationUrl, onPushMessage, supportsPush, syncPushSubscription, vapidKey } from "../services/push";
 
 type PushStatus = "hidden" | "idle" | "enabled" | "blocked" | "busy";
 const PushContext = createContext<{ status: PushStatus; toggle: () => Promise<void> }>({ status: "hidden", toggle: async () => {} });
@@ -12,7 +12,7 @@ export function PushProvider({ children }: { children: ReactNode }) {
   const busy = useRef(false);
 
   useEffect(() => {
-    if (!vapidKey || !supportsPush()) return;
+    if (!firebaseConfigured || !vapidKey || !supportsPush()) return;
     let disposed = false;
     const restore = async () => {
       if (busy.current) return;

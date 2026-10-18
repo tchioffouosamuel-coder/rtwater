@@ -1,14 +1,16 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { firebaseWorkerConfigPlugin } from './config/firebase.mjs'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     // The React and Tailwind plugins are both required for Make, even if
     // Tailwind is not being actively used – do not remove them
     react(),
     tailwindcss(),
+    firebaseWorkerConfigPlugin(loadEnv(mode, process.cwd(), 'VITE_FIREBASE_')),
   ],
   resolve: {
     alias: {
@@ -41,4 +43,4 @@ export default defineConfig({
     // Sourcemaps désactivées en production
     sourcemap: false,
   }
-})
+}))

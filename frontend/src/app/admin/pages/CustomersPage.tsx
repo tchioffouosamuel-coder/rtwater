@@ -122,7 +122,7 @@ export const CustomersPage: React.FC = () => {
       breadcrumbs={[{ label: 'Dashboard', path: '/admin/dashboard' }, { label: 'Clients' }]}
     >
       {/* Indicateurs */}
-      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="admin-summary-grid mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard
           tone="blue" icon={<Users size={18} />}
           label="Clients" value={stats ? String(stats.total) : '—'}

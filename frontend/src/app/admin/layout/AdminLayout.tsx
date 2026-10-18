@@ -5,9 +5,11 @@ import { Sidebar } from '../components/Sidebar';
 import { ChevronRight, Bell, Settings, ShoppingBag, X, ExternalLink } from 'lucide-react';
 import { fetchAdminOrders } from '../../../services/orders';
 import { toast } from 'sonner';
+import { isOrderNotificationRead, markOrdersRead, readOrderNotificationState, subscribeOrderReadState } from '../../../lib/order-notifications.mjs';
+import './responsive-table.css';
+import './responsive.css';
 
 const POLL_INTERVAL_MS = 30_000;
-const LAST_SEEN_KEY    = 'rtwater_last_seen_order_id';
 
 /** Plays a two-note chime using Web Audio API — no external file needed */
 function playNotificationChime() {
@@ -46,27 +48,52 @@ interface AdminLayoutProps {
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, breadcrumbs }) => {
-  const { isAuthenticated } = useAdminAuth();
+  const { isAuthenticated, hasPermission } = useAdminAuth();
+  const canReadOrders = hasPermission('manage_orders');
   const navigate = useNavigate();
 
   const [pendingOrders, setPendingOrders] = useState<NotifOrder[]>([]);
-  const [newCount, setNewCount]           = useState(0);
   const [showPanel, setShowPanel]         = useState(false);
-  const [lastSeenId, setLastSeenId]       = useState<number>(() =>
-    parseInt(localStorage.getItem(LAST_SEEN_KEY) || '0', 10)
-  );
+  const [readState, setReadState] = useState(() => readOrderNotificationState());
+  const newCount = pendingOrders.filter(order => !isOrderNotificationRead(order.id, readState)).length;
 
   const isFirstPoll = useRef(true);
   const prevCount   = useRef(0);
   const panelRef    = useRef<HTMLDivElement>(null);
 
+  useEffect(() => subscribeOrderReadState(setReadState), []);
+  useEffect(() => { prevCount.current = newCount; }, [newCount]);
+
+  useEffect(() => {
+    const labelTables = () => {
+      document.querySelectorAll<HTMLTableElement>('.admin-content table').forEach(table => {
+        const labels = Array.from(table.querySelectorAll(':scope > thead th'), cell => cell.textContent?.trim() ?? '');
+        table.querySelectorAll(':scope > tbody > tr').forEach(row => {
+          Array.from(row.cells).forEach((cell, index) => {
+            const label = labels[index];
+            if (label && cell.dataset.label !== label) cell.dataset.label = label;
+            else if (!label) delete cell.dataset.label;
+          }, [isAuthenticated]);
+        });
+      });
+    };
+
+    labelTables();
+    const observer = new MutationObserver(labelTables);
+    const content = document.querySelector('.admin-content');
+    if (content) observer.observe(content, { childList: true, subtree: true, characterData: true });
+    return () => observer.disconnect();
+  });
+
   const fetchNotifications = useCallback(async () => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !canReadOrders) return;
     try {
       const res    = await fetchAdminOrders({ status: 'pending', per_page: 15, page: 1 });
       const orders: NotifOrder[] = res?.data ?? [];
 
-      const unseen = orders.filter(o => o.id > lastSeenId).length;
+      // Read after the request: a sheet may have been opened while it was loading.
+      const currentReadState = readOrderNotificationState();
+      const unseen = orders.filter(order => !isOrderNotificationRead(order.id, currentReadState)).length;
 
       // Notify only after first poll when new orders appear during the session
       if (!isFirstPoll.current && unseen > prevCount.current) {
@@ -82,16 +109,16 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
       prevCount.current   = unseen;
 
       setPendingOrders(orders);
-      setNewCount(unseen);
+      setReadState(currentReadState);
     } catch { /* silent on network error */ }
-  }, [isAuthenticated, lastSeenId]);
+  }, [isAuthenticated, canReadOrders]);
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !canReadOrders) return;
     fetchNotifications();
     const id = setInterval(fetchNotifications, POLL_INTERVAL_MS);
     return () => clearInterval(id);
-  }, [isAuthenticated, fetchNotifications]);
+  }, [isAuthenticated, canReadOrders, fetchNotifications]);
 
   // Close panel on click outside
   useEffect(() => {
@@ -102,7 +129,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
       }
     };
     document.addEventListener('mousedown', handle);
-    return () => document.removeEventListener('mousedown', handle);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShowPanel(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handle);
+      document.removeEventListener('keydown', onKeyDown);
+    };
   }, [showPanel]);
 
   const handleOpenPanel = () => {
@@ -111,10 +145,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
 
   const handleMarkSeen = () => {
     if (pendingOrders.length === 0) return;
-    const maxId = Math.max(...pendingOrders.map(o => o.id));
-    localStorage.setItem(LAST_SEEN_KEY, String(maxId));
-    setLastSeenId(maxId);
-    setNewCount(0);
+    markOrdersRead(pendingOrders.map(order => order.id));
     prevCount.current = 0;
   };
 
@@ -129,16 +160,16 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
   if (!isAuthenticated) return <>{children}</>;
 
   return (
-    <div className="flex h-dvh min-h-screen overflow-hidden bg-ink-100 text-ink-900">
+    <div className="admin-layout flex h-dvh min-h-screen overflow-hidden bg-ink-100 text-ink-900">
       <Sidebar />
 
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden lg:ml-64">
         {/* Top Bar */}
         <div className="sticky top-0 z-20 border-b border-ink-200 bg-white shadow-sm">
-          <div className="flex items-center justify-between gap-2 px-3 py-3 pl-16 sm:gap-4 sm:px-6 sm:py-3 sm:pl-16 lg:pl-6">
+          <div className="flex items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6">
             <div className="flex min-w-0 flex-1 items-center gap-4">
               <img
-                src="/logo.webp"
+                src="/logo-transparent.webp"
                 alt="RT Water Solution"
                 className="hidden h-10 w-auto max-w-[130px] shrink-0 object-contain sm:block"
               />
@@ -172,6 +203,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                   onClick={handleOpenPanel}
                   className="relative p-2 text-ink-600 hover:bg-ink-100 rounded-lg transition"
                   title="Notifications"
+                  aria-label="Notifications"
+                  aria-expanded={showPanel}
+                  aria-controls="admin-order-notifications"
                 >
                   <Bell size={20} />
                   {newCount > 0 && (
@@ -183,11 +217,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
 
                 {/* Notification Panel */}
                 {showPanel && (
-                  <div className="absolute right-0 top-full z-50 mt-2 w-80 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-2xl">
+                  <div id="admin-order-notifications" role="dialog" aria-label="Commandes en attente" className="fixed inset-x-3 top-[4.5rem] z-50 flex max-h-[calc(100dvh-10rem)] flex-col overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 sm:max-w-[calc(100vw-1.5rem)]">
                     {/* Panel header */}
-                    <div className="px-4 py-3 border-b border-ink-100 flex items-center justify-between bg-ink-50">
-                      <div className="flex items-center gap-2">
-                        <ShoppingBag size={16} className="text-brand-600" />
+                    <div className="flex shrink-0 items-start justify-between gap-2 border-b border-ink-100 bg-ink-50 px-3 py-3 sm:px-4">
+                      <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                        <ShoppingBag size={16} className="shrink-0 text-brand-600" />
                         <span className="text-sm font-semibold text-ink-900">Commandes en attente</span>
                         {newCount > 0 && (
                           <span className="bg-red-100 text-red-700 text-xs font-bold px-1.5 py-0.5 rounded-full">
@@ -197,14 +231,15 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                       </div>
                       <button
                         onClick={() => setShowPanel(false)}
-                        className="p-1 hover:bg-ink-200 rounded-lg transition"
+                        aria-label="Fermer les notifications"
+                        className="shrink-0 rounded-lg p-2 transition hover:bg-ink-200"
                       >
                         <X size={14} />
                       </button>
                     </div>
 
                     {/* Order list */}
-                    <div className="max-h-72 overflow-y-auto">
+                    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain sm:max-h-72">
                       {pendingOrders.length === 0 ? (
                         <div className="py-10 text-center">
                           <ShoppingBag size={32} className="mx-auto text-ink-300 mb-2" />
@@ -213,7 +248,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                       ) : (
                         <div className="divide-y divide-ink-100">
                           {pendingOrders.map(order => {
-                            const isNew = order.id > lastSeenId;
+                            const isNew = !isOrderNotificationRead(order.id, readState);
                             return (
                               <button
                                 key={order.id}
@@ -223,7 +258,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                                   navigate(`/admin/orders?order=${order.id}`);
                                 }}
                                 aria-label={`Ouvrir la commande ${order.id}`}
-                                className={`block w-full px-4 py-3 text-left hover:bg-ink-100 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition ${isNew ? 'bg-brand-50/60' : ''}`}
+                                className={`block w-full px-3 py-3 text-left hover:bg-ink-100 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition sm:px-4 ${isNew ? 'bg-brand-50/60' : ''}`}
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <div className="flex-1 min-w-0">
@@ -239,11 +274,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                                       {order.user?.name ?? 'Client invité'}
                                     </p>
                                   </div>
-                                  <div className="text-right flex-shrink-0">
-                                    <p className="text-sm font-bold text-ink-900">
+                                  <div className="min-w-0 max-w-[55%] text-right">
+                                    <p className="break-words text-sm font-bold text-ink-900">
                                       {Number(order.total).toLocaleString('fr-FR')} XAF
                                     </p>
-                                    <p className="text-xs text-ink-400 mt-0.5">{order.created_at}</p>
+                                    <p className="mt-0.5 break-words text-xs text-ink-500">{order.created_at}</p>
                                   </div>
                                 </div>
                               </button>
@@ -254,7 +289,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                     </div>
 
                     {/* Panel footer */}
-                    <div className="px-4 py-3 border-t border-ink-100 bg-ink-50 flex items-center justify-between gap-2">
+                    <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-ink-100 bg-ink-50 px-3 py-3 sm:px-4">
                       {newCount > 0 ? (
                         <button
                           onClick={handleMarkSeen}
@@ -289,8 +324,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
         </div>
 
         {/* Content */}
-        <div className="min-h-0 flex-1 overflow-auto overscroll-contain">
-          <div className="p-3 sm:p-6">
+        <div className="admin-content min-h-0 flex-1 overflow-auto overscroll-contain">
+          <div className="p-3 pb-24 sm:p-6 sm:pb-6">
             {children}
           </div>
         </div>

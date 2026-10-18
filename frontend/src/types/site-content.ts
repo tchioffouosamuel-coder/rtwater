@@ -385,7 +385,7 @@ export const DEFAULT_GALLERY: GalleryContent = {
 };
 
 export const DEFAULT_HEADER: HeaderContent = {
-  logoUrl: "/logo.webp",
+  logoUrl: "/logo-transparent.webp",
   companyName: "RT Water",
   companyTagline: "Solution",
   navLinks: [
@@ -400,7 +400,7 @@ export const DEFAULT_HEADER: HeaderContent = {
 };
 
 export const DEFAULT_FOOTER: FooterContent = {
-  logoUrl: "/logo.webp",
+  logoUrl: "/logo-transparent.webp",
   companyName: "RT Water",
   companyTagline: "Solution",
   tagline:
