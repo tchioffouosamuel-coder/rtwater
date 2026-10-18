@@ -107,10 +107,119 @@ test("a new window opens when no existing window is available", async () => {
 
 test("offline worker remains installed when Firebase scripts are unavailable", () => {
   const registered = [];
+  const warnings = [];
   const offline = readFileSync(new URL("../public/sw.js", import.meta.url), "utf8");
   vm.runInNewContext(offline, {
     self: { addEventListener: name => registered.push(name) },
-    importScripts() { throw new Error("offline"); }, console: { warn() {} },
+    importScripts() { throw new Error("offline"); }, console: { warn: (...args) => warnings.push(args) },
   });
   assert.deepEqual(registered, ["install", "activate", "fetch"]);
+  assert.equal(warnings[0][1].message, "offline");
+});
+
+function offlineHarness({ fetch: fetchRequest, cached, putError = false, blockedManifest = false } = {}) {
+  const listeners = {};
+  const added = [];
+  const stored = [];
+  let activated = false;
+  const cache = {
+    match: async () => cached,
+    put: async (...args) => {
+      if (putError) throw new Error('Quota exceeded');
+      stored.push(args);
+    },
+    keys: async () => [],
+    add: async url => {
+      if (blockedManifest && url === '/manifest.webmanifest') throw new Error('403');
+      added.push(url);
+    },
+  };
+  vm.runInNewContext(readFileSync(new URL('../public/sw.js', import.meta.url), 'utf8'), {
+    URL, Response,
+    fetch: fetchRequest || (async () => { throw new TypeError('Failed to fetch'); }),
+    caches: { open: async () => cache },
+    self: {
+      location: { origin: 'https://rt-watersolution.com' },
+      addEventListener: (name, handler) => { listeners[name] = handler; },
+      skipWaiting: async () => { activated = true; },
+    },
+    importScripts() {},
+  });
+  return {
+    added, stored,
+    install: async () => {
+      let work;
+      listeners.install({ waitUntil: promise => { work = promise; } });
+      await work;
+      assert.ok(activated);
+    },
+    request: async (overrides = {}) => {
+      let response;
+      const background = [];
+      listeners.fetch({
+        request: {
+          url: 'https://api.rt-watersolution.com/api/pages?slugs=accueil',
+          method: 'GET', headers: new Headers(), mode: 'cors', ...overrides,
+        },
+        respondWith: promise => { response = promise; },
+        waitUntil: promise => background.push(promise),
+      });
+      const result = await response;
+      await Promise.all(background);
+      return result;
+    },
+  };
+}
+
+test('a failed API fetch without cache resolves to JSON 503 instead of rejecting the FetchEvent', async () => {
+  const h = offlineHarness();
+  const response = await h.request();
+  assert.equal(response.status, 503);
+  assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  assert.equal(typeof (await response.json()).message, 'string');
+  assert.equal(h.stored.length, 0);
+});
+
+test('a failed API fetch serves its previously cached response', async () => {
+  const response = await offlineHarness({ cached: Response.json({ accueil: 'cached' }) }).request();
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { accueil: 'cached' });
+});
+
+test('an upstream HTTP error retains its status and is never cached', async () => {
+  const h = offlineHarness({ fetch: async () => new Response('blocked', { status: 403 }) });
+  assert.equal((await h.request()).status, 403);
+  assert.equal(h.stored.length, 0);
+});
+
+test('a cache quota failure does not hide a successful network response', async () => {
+  const response = await offlineHarness({
+    fetch: async () => Response.json({ accueil: 'fresh' }), putError: true,
+  }).request();
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { accueil: 'fresh' });
+});
+
+test('blocked optional precache entries do not prevent worker installation', async () => {
+  const h = offlineHarness({ blockedManifest: true });
+  await h.install();
+  assert.ok(h.added.includes('/offline.html'));
+  assert.ok(h.added.includes('/'));
+  assert.ok(!h.added.includes('/manifest.webmanifest'));
+});
+
+test('missing offline images, assets and pages still resolve to a Response', async () => {
+  for (const overrides of [
+    { url: 'https://rt-watersolution.com/photo.webp', destination: 'image' },
+    { url: 'https://rt-watersolution.com/assets/app.js' },
+    { url: 'https://rt-watersolution.com/shop', mode: 'navigate' },
+  ]) {
+    assert.equal((await offlineHarness().request(overrides)).status, 503);
+  }
+});
+
+test('authenticated and non-GET API requests are not intercepted', async () => {
+  const h = offlineHarness({ fetch: async () => { assert.fail('must not fetch'); } });
+  assert.equal(await h.request({ headers: new Headers({ Authorization: 'Bearer test-token' }) }), undefined);
+  assert.equal(await h.request({ method: 'POST' }), undefined);
 });

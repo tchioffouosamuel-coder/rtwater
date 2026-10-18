@@ -3,6 +3,11 @@
     Options -MultiViews
 </IfModule>
 
+<IfModule mod_headers.c>
+    # Allow Google Identity's popup to communicate with the sign-in page.
+    Header always set Cross-Origin-Opener-Policy "same-origin-allow-popups"
+</IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 

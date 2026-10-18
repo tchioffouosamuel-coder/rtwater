@@ -431,6 +431,9 @@ chemins ne correspondant pas à un fichier ou dossier existant.
 
 Côté API, vérifier que `config/cors.php` accepte le domaine du frontend.
 
+Pour les erreurs 403/CORS, le manifeste bloqué et la vérification du navigateur
+Hostinger, suivre [HOSTINGER_DEPLOYMENT.md](HOSTINGER_DEPLOYMENT.md).
+
 ---
 
 ## Travaux en attente
