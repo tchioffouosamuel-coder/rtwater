@@ -161,8 +161,7 @@ export const DEFAULT_HOME: HomeContent = {
     titleHighlight: "besoins en eau",
     description:
       "Purification, forage et services de piscine professionnels à Yaoundé. Votre partenaire de confiance pour une eau pure et saine.",
-    backgroundImage:
-      "https://images.unsplash.com/photo-1543181077-099f32f30a1c?auto=format&fit=crop&w=1920&q=80",
+    backgroundImage: "/images/headers/contact.webp",
     servicesButtonLabel: "Nos services",
     contactButtonLabel: "Contactez-nous",
   },

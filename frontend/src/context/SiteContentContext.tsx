@@ -55,6 +55,24 @@ function safeParseContent<T>(raw: unknown, defaults: T): T {
   return defaults;
 }
 
+function parseHomeContent(raw: unknown): HomeContent {
+  const content = safeParseContent(raw, DEFAULT_HOME);
+  const backgroundImage = content.hero?.backgroundImage;
+  const isPreviousDefault =
+    backgroundImage?.includes("1543181077-099f32f30a1c") ||
+    backgroundImage?.includes("beautiful-african-women-having-fun-while-fetching-water.jpg");
+
+  if (!isPreviousDefault) return content;
+
+  return {
+    ...content,
+    hero: {
+      ...content.hero,
+      backgroundImage: DEFAULT_HOME.hero.backgroundImage,
+    },
+  };
+}
+
 export function SiteContentProvider({ children }: { children: React.ReactNode }) {
   const [home, setHome] = useState<HomeContent>(DEFAULT_HOME);
   const [about, setAbout] = useState<AboutContent>(DEFAULT_ABOUT);
@@ -74,7 +92,7 @@ export function SiteContentProvider({ children }: { children: React.ReactNode })
     setIsLoading(true);
 
     const slugMap = [
-      { slug: "accueil", setter: (raw: unknown) => setHome(safeParseContent(raw, DEFAULT_HOME)) },
+      { slug: "accueil", setter: (raw: unknown) => setHome(parseHomeContent(raw)) },
       { slug: "a-propos", setter: (raw: unknown) => setAbout(safeParseContent(raw, DEFAULT_ABOUT)) },
       { slug: "contact", setter: (raw: unknown) => setContact(safeParseContent(raw, DEFAULT_CONTACT)) },
       { slug: "galerie", setter: (raw: unknown) => setGallery(safeParseContent(raw, DEFAULT_GALLERY)) },

@@ -38,6 +38,9 @@ export function HeroSection() {
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-16 sm:py-20">
         <div className="max-w-3xl">
+          <p className="mb-3 text-white/90 text-xs font-bold uppercase tracking-[0.2em]">
+            RT WATER SOLUTION
+          </p>
           <div className="inline-flex items-center gap-2 border-l-2 border-aqua-400 pl-3 text-aqua-100 text-xs font-semibold uppercase tracking-[0.18em] mb-6">
             {hero.badge}
           </div>

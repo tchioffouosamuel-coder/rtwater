@@ -28,9 +28,9 @@ const unsplash = (id: string, w: number) =>
 
 /** Bandeau d'accueil : la collecte de l'eau sur une piste de latérite. */
 export const HERO_PHOTO: SitePhoto = {
-  url: unsplash("1543181077-099f32f30a1c", 1920),
-  alt: "Des habitantes et habitants d'un village marchent sur une piste de latérite en portant des bidons d'eau.",
-  credit: "Unsplash",
+  url: "/images/headers/contact.webp",
+  alt: "Un filet d'eau claire coule entre des mains ouvertes.",
+  credit: "Pexels",
 };
 
 /** Section « Nos services » : point d'eau équipé d'une pompe manuelle. */

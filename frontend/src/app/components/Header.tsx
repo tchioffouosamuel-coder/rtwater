@@ -10,6 +10,16 @@ import { useCartUI } from "../../context/CartUIContext";
 import { useUserAuth } from "../../context/UserAuthContext";
 import { useSiteContent } from "../../context/SiteContentContext";
 
+const NAV_PATH_ORDER = [
+  "/",
+  "/about",
+  "/#nouveautes",
+  "/#services",
+  "/gallery",
+  "/devis",
+  "/shop",
+];
+
 export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,9 +47,17 @@ export function Header() {
     "/shop": "Shop", "/contact": "Contact", "/blog": "Blog",
     "/#nouveautes": "Products", "/#services": "Services",
   };
-  const menuItems = header.navLinks.map((item) =>
-    language === "en" && EN_LABELS[item.path] ? { ...item, label: EN_LABELS[item.path] } : item
-  );
+  const menuItems = header.navLinks
+    .map((item, index) => ({ item, index }))
+    .sort((a, b) => {
+      const aOrder = NAV_PATH_ORDER.indexOf(a.item.path);
+      const bOrder = NAV_PATH_ORDER.indexOf(b.item.path);
+      return (aOrder < 0 ? NAV_PATH_ORDER.length : aOrder) -
+        (bOrder < 0 ? NAV_PATH_ORDER.length : bOrder) || a.index - b.index;
+    })
+    .map(({ item }) =>
+      language === "en" && EN_LABELS[item.path] ? { ...item, label: EN_LABELS[item.path] } : item
+    );
 
   // Certaines rubriques du menu (Produits, Services) visent une section de l'accueil
   const scrollToAnchor = (id: string, attempt = 0) => {
