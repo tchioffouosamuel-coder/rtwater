@@ -65,15 +65,22 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
   useEffect(() => { prevCount.current = newCount; }, [newCount]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     const labelTables = () => {
       document.querySelectorAll<HTMLTableElement>('.admin-content table').forEach(table => {
         const labels = Array.from(table.querySelectorAll(':scope > thead th'), cell => cell.textContent?.trim() ?? '');
         table.querySelectorAll(':scope > tbody > tr').forEach(row => {
+          if (row.cells.length === 1 && row.cells[0].colSpan > 1) {
+            delete row.cells[0].dataset.label;
+            return;
+          }
+
           Array.from(row.cells).forEach((cell, index) => {
             const label = labels[index];
             if (label && cell.dataset.label !== label) cell.dataset.label = label;
             else if (!label) delete cell.dataset.label;
-          }, [isAuthenticated]);
+          });
         });
       });
     };
@@ -83,7 +90,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
     const content = document.querySelector('.admin-content');
     if (content) observer.observe(content, { childList: true, subtree: true, characterData: true });
     return () => observer.disconnect();
-  });
+  }, [isAuthenticated]);
 
   const fetchNotifications = useCallback(async () => {
     if (!isAuthenticated || !canReadOrders) return;

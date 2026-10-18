@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ChevronRight, PackageX } from "lucide-react";
 import { ProductDetails } from "../ProductDetails";
 import { fetchProduct, fetchProducts } from "../../../services/products";
@@ -17,6 +17,7 @@ import { ProductMiniCard, RecentlyViewed } from "../shop/ShopWidgets";
 /** Fiche produit complète, partageable et indexable : /shop/12-filtre-osmose */
 export function ProductPage() {
   const { slug } = useParams();
+  const { hash } = useLocation();
   const navigate = useNavigate();
   const id = productIdFromSlug(slug);
   const { addToCart } = useCart();
@@ -27,6 +28,19 @@ export function ProductPage() {
   const [product, setProduct] = useState<ShopProduct | null>(null);
   const [related, setRelated] = useState<ShopProduct[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "notfound">("loading");
+
+  // A product replaces a potentially long list: do not retain its footer position.
+  // "instant" also overrides the site's global smooth scrolling before paint.
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [id]);
+
+  useLayoutEffect(() => {
+    if (status !== "ready" || product?.id !== id || hash !== "#fiche-technique") return;
+    const section = document.getElementById("fiche-technique");
+    section?.scrollIntoView({ block: "start", behavior: "instant" });
+    section?.focus({ preventScroll: true });
+  }, [id, product?.id, status, hash]);
 
   useEffect(() => {
     if (!id) { setStatus("notfound"); return; }
@@ -43,7 +57,7 @@ export function ProductPage() {
         trackEvent("view_item", { item_id: p.id, item_name: p.name });
         // Corrige une adresse ancienne ou mal saisie vers l'adresse canonique
         const canonical = productPath(p);
-        if (window.location.pathname !== canonical) navigate(canonical, { replace: true });
+        if (window.location.pathname !== canonical) navigate(canonical + window.location.search + window.location.hash, { replace: true });
       })
       .catch(() => { if (!cancelled) setStatus("notfound"); });
     return () => { cancelled = true; };

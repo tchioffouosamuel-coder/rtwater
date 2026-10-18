@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Download, ExternalLink, FileText, Loader2, Maximize2, X } from "lucide-react";
 import type { ProductDatasheet as Datasheet } from "../../lib/product";
+import { hasProductDatasheet } from "../../lib/product";
 import { useI18n } from "../../i18n/I18nContext";
 
 /**
@@ -11,13 +12,13 @@ import { useI18n } from "../../i18n/I18nContext";
  *  — image : un tableau de caractéristiques, donc agrandissable, sinon illisible ;
  *  — PDF : affiché en ligne quand le navigateur sait le faire, téléchargeable sinon.
  */
-export function ProductDatasheet({ datasheet }: { datasheet: Datasheet | null }) {
+export function ProductDatasheet({ datasheet, id }: { datasheet: Datasheet | null; id?: string }) {
   const { tx } = useI18n();
 
-  if (!datasheet) return null;
+  if (!hasProductDatasheet(datasheet)) return null;
 
   return (
-    <section className="mt-10 border-t border-ink-200 pt-8 dark:border-ink-700">
+    <section id={id} tabIndex={-1} className="mt-10 scroll-mt-24 border-t border-ink-200 pt-8 focus:outline-none dark:border-ink-700">
       <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-ink-900 dark:text-white">
         <FileText className="h-5 w-5 text-brand-600" />
         {tx("Fiche technique", "Technical datasheet")}
@@ -115,7 +116,7 @@ function DatasheetImage({ datasheet }: { datasheet: Datasheet }) {
           loading="lazy"
           className="w-full object-contain"
         />
-        <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-lg bg-black/60 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+        <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-lg bg-black/60 px-2.5 py-1.5 text-xs font-medium text-white transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-visible:opacity-100">
           <Maximize2 size={12} />
           {tx("Agrandir", "Enlarge")}
         </span>
@@ -187,11 +188,11 @@ function DatasheetPdf({ datasheet }: { datasheet: Datasheet }) {
           </p>
         </div>
 
-        <div className="flex flex-shrink-0 gap-2">
+        <div className="flex w-full shrink-0 flex-wrap gap-2 sm:w-auto">
           <button
             type="button"
             onClick={() => setShowPreview((v) => !v)}
-            className="rounded-lg border border-ink-200 px-3 py-2 text-xs font-medium text-ink-700 transition hover:bg-ink-50 dark:border-ink-600 dark:text-ink-200 dark:hover:bg-ink-700"
+            className="min-h-11 rounded-lg border border-ink-200 px-3 py-2 text-xs font-medium text-ink-700 transition hover:bg-ink-50 dark:border-ink-600 dark:text-ink-200 dark:hover:bg-ink-700"
           >
             {showPreview ? tx("Masquer", "Hide") : tx("Aperçu", "Preview")}
           </button>
@@ -199,7 +200,7 @@ function DatasheetPdf({ datasheet }: { datasheet: Datasheet }) {
           <a
             href={datasheet.url}
             download={datasheet.filename ?? undefined}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-brand-600 to-aqua-500 px-3 py-2 text-xs font-semibold text-white transition hover:shadow-lg"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-brand-700 px-3 py-2 text-xs font-semibold text-white transition hover:bg-brand-800"
           >
             <Download size={14} />
             {tx("Télécharger", "Download")}

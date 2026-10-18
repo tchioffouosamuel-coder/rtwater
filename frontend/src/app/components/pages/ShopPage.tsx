@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Search, Star, Truck, Award, Zap, X, Eye, ShoppingCart,
   TrendingUp, Shield, ChevronLeft, ChevronRight, Flame,
-  Clock, SlidersHorizontal, Tag, Package, Droplets,
+  Clock, SlidersHorizontal, Tag, Package, Droplets, FileText,
 } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
 import { ProductDetails } from "../ProductDetails";
@@ -15,7 +15,7 @@ import { useShopMemory } from "../../../context/ShopMemoryContext";
 import { trackEvent } from "../../../lib/monitoring";
 import { FavoriteButton, RecentlyViewed } from "../shop/ShopWidgets";
 import { useSeo } from "../../../lib/seo";
-import { mapApiProduct, productPath, type ShopProduct } from "../../../lib/product";
+import { hasProductDatasheet, mapApiProduct, productPath, type ShopProduct } from "../../../lib/product";
 import { PageHeroMedia } from "../ui/PageHeroMedia";
 import { SHOP_HEADER_PHOTO } from "../../content/photos";
 
@@ -621,6 +621,15 @@ export function ShopPage() {
                       </div>
 
                       {/* Mobile buttons */}
+                      {hasProductDatasheet(product.datasheet) && (
+                        <Link
+                          to={`${productPath(product)}#fiche-technique`}
+                          className="mb-2 inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border border-brand-200 px-2 py-2 text-[11px] font-semibold text-brand-700 hover:bg-brand-50 dark:border-brand-400/30 dark:text-aqua-200 dark:hover:bg-brand-500/10 sm:hidden"
+                        >
+                          <FileText className="h-3.5 w-3.5 shrink-0" />
+                          {tx("Fiche technique", "Technical datasheet")}
+                        </Link>
+                      )}
                       <div className="flex gap-1.5 sm:hidden">
                         <button
                           onClick={() => { setSelectedProduct(product); setIsDetailsOpen(true); }}

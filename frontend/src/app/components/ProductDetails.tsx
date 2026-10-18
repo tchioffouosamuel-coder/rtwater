@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from "motion/react";
-import { X, ChevronLeft, ChevronRight, Star, Check, AlertCircle, Send, Loader2, MessageSquare, Share2, ExternalLink, Truck, ShieldCheck, Phone } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Star, Check, AlertCircle, Send, Loader2, MessageSquare, Share2, ExternalLink, Truck, ShieldCheck, Phone, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
-import { productPath } from "../../lib/product";
+import { hasProductDatasheet, productPath } from "../../lib/product";
 import { SITE_URL } from "../../lib/seo";
 import { useI18n } from "../../i18n/I18nContext";
 import { FavoriteButton } from "./shop/ShopWidgets";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useId } from "react";
 import { fetchProduct } from "../../services/products";
 import { fetchProductReviews, createReview, type Review, type ReviewStats } from "../../services/reviews";
 import { ProductDatasheet } from "./ProductDatasheet";
@@ -71,6 +71,8 @@ function RatingBar({ count, total, label }: { count: number; total: number; labe
 }
 
 export function ProductDetails({ product, isOpen, onClose, onAddToCart, variant = "modal" }: ProductDetailsProps) {
+  const instanceId = useId();
+  const datasheetId = variant === "page" ? "fiche-technique" : `fiche-technique-${instanceId}`;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [productData, setProductData] = useState<any>(product || null);
@@ -107,7 +109,9 @@ export function ProductDetails({ product, isOpen, onClose, onAddToCart, variant 
 
   useEffect(() => {
     let mounted = true;
-    if (!isOpen) return;
+    // The full page already fetched this product, including its datasheet.
+    if (!isOpen || variant === "page") return;
+    setProductData(product);
     (async () => {
       try {
         if (product?.id) {
@@ -118,11 +122,11 @@ export function ProductDetails({ product, isOpen, onClose, onAddToCart, variant 
           setProductData(product);
         }
       } catch {
-        setProductData(product);
+        if (mounted) setProductData(product);
       }
     })();
     return () => { mounted = false; };
-  }, [isOpen, product]);
+  }, [isOpen, product, variant]);
 
   const loadReviews = useCallback(async () => {
     if (!product?.id || !isOpen) return;
@@ -171,7 +175,8 @@ export function ProductDetails({ product, isOpen, onClose, onAddToCart, variant 
     }
   };
 
-  const prod = productData || product || {};
+  const prod = variant === "page" ? product || {} : productData || product || {};
+  const hasDatasheet = hasProductDatasheet(prod.datasheet);
   const productImages = [prod.image || prod.image_url].filter(Boolean);
   const pagePath = prod.id && prod.name ? productPath({ id: prod.id, name: prod.name }) : "";
 
@@ -266,6 +271,21 @@ export function ProductDetails({ product, isOpen, onClose, onAddToCart, variant 
                           </>
                         )}
                       </div>
+                      {hasDatasheet && (
+                        <button
+                          type="button"
+                          aria-controls={datasheetId}
+                          onClick={() => {
+                            const section = document.getElementById(datasheetId);
+                            section?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+                            section?.focus({ preventScroll: true });
+                          }}
+                          className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-semibold text-brand-700 transition hover:bg-brand-100 dark:border-brand-400/30 dark:bg-brand-500/10 dark:text-aqua-200 dark:hover:bg-brand-500/20 sm:w-auto"
+                        >
+                          <FileText className="h-4 w-4 shrink-0" />
+                          {tx("Fiche technique", "Technical datasheet")}
+                        </button>
+                      )}
                     </div>
 
                     <div className={`p-4 rounded-lg flex items-center gap-3 ${(prod.stock ?? 0) > 0 ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20'}`}>
@@ -345,7 +365,7 @@ export function ProductDetails({ product, isOpen, onClose, onAddToCart, variant 
                 )}
 
                 {/* Fiche technique — texte, image ou PDF */}
-                <ProductDatasheet datasheet={prod.datasheet ?? null} />
+                <ProductDatasheet id={datasheetId} datasheet={prod.datasheet ?? null} />
 
                 {/* Reviews Section */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-10 pt-8 border-t border-ink-200 dark:border-ink-700">

@@ -29,6 +29,12 @@ export interface ProductDatasheet {
   filename: string | null;
 }
 
+export function hasProductDatasheet(datasheet: ProductDatasheet | null | undefined): datasheet is ProductDatasheet {
+  if (!datasheet) return false;
+  if (datasheet.type === "text") return Boolean(datasheet.text?.trim());
+  return (datasheet.type === "image" || datasheet.type === "pdf") && Boolean(datasheet.url?.trim());
+}
+
 export function slugify(text: string): string {
   return text
     .normalize("NFD")

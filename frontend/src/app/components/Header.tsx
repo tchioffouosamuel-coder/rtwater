@@ -19,7 +19,7 @@ export function Header() {
   const { cartCount } = useCart();
   const { openCart } = useCartUI();
   const { user, logout } = useUserAuth();
-  const { contact } = useSiteContent();
+  const { header, contact } = useSiteContent();
   const { favorites } = useShopMemory();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
