@@ -5,6 +5,7 @@ import { useI18n } from '../../../i18n/I18nContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, Lock, Eye, EyeOff, LogIn, Droplets, Shield, Truck, Award, ArrowLeft } from 'lucide-react';
 import { useUserAuth } from '../../../context/UserAuthContext';
+import { GoogleAuthButton } from '../GoogleAuthButton';
 
 
 const BENEFITS = [
@@ -22,7 +23,7 @@ export const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError]               = useState('');
   const [isLoading, setIsLoading]       = useState(false);
-  const { login } = useUserAuth();
+  const { login, loginWithGoogle } = useUserAuth();
   const navigate  = useNavigate();
   const { tx, language } = useI18n();
 
@@ -48,6 +49,27 @@ export const LoginPage: React.FC = () => {
         setError(tx('Connexion au serveur impossible. Vérifiez votre réseau puis réessayez.', 'Could not reach the server. Check your connection and try again.'));
       } else {
         setError(tx(`Le serveur a répondu une erreur (${status}). Réessayez plus tard.`, `The server returned an error (${status}). Please try again later.`));
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleCredential = async (idToken: string) => {
+    setError('');
+    setIsLoading(true);
+    try {
+      await loginWithGoogle(idToken);
+      navigate(navState.from && navState.from !== '/login' ? navState.from : '/shop', { replace: true });
+    } catch (err: any) {
+      if (err?.status === 422) {
+        setError(tx('La vérification Google a échoué. Veuillez réessayer.', 'Google verification failed. Please try again.'));
+      } else if (err?.status === 409) {
+        setError(tx('Ce compte Google est lié à un autre compte client.', 'This Google account is linked to a different customer account.'));
+      } else if (err?.status === 503) {
+        setError(tx('La connexion Google est temporairement indisponible.', 'Google sign-in is temporarily unavailable.'));
+      } else {
+        setError(err?.message || tx('Connexion Google impossible. Réessayez.', 'Google sign-in failed. Please try again.'));
       }
     } finally {
       setIsLoading(false);
@@ -256,6 +278,20 @@ export const LoginPage: React.FC = () => {
                 )}
               </motion.button>
             </form>
+
+            <div className="mt-6">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
+                <span className="text-xs font-medium text-ink-400 dark:text-ink-500">{tx('ou continuer avec', 'or continue with')}</span>
+                <div className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
+              </div>
+              <GoogleAuthButton
+                text="signin_with"
+                disabled={isLoading}
+                onCredential={handleGoogleCredential}
+                onError={setError}
+              />
+            </div>
 
             {/* Divider + register */}
             <div className="mt-7">

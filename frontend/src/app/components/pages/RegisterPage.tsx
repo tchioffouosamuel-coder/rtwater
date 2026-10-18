@@ -5,6 +5,7 @@ import { Mail, Lock, Eye, EyeOff, UserPlus, Droplets, Shield, Truck, Award, Arro
 import { useUserAuth } from '../../../context/UserAuthContext';
 import { useI18n } from '../../../i18n/I18nContext';
 import { useSeo } from "../../../lib/seo";
+import { GoogleAuthButton } from '../GoogleAuthButton';
 
 
 const BENEFITS = [
@@ -36,7 +37,7 @@ export const RegisterPage: React.FC = () => {
   const [showConfirm, setShowConfirm]     = useState(false);
   const [error, setError]                 = useState('');
   const [isLoading, setIsLoading]         = useState(false);
-  const { register } = useUserAuth();
+  const { register, loginWithGoogle } = useUserAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,6 +72,27 @@ export const RegisterPage: React.FC = () => {
         setError(topMsg);
       } else {
         setError(tx('Une erreur est survenue. Veuillez réessayer.', 'Something went wrong. Please try again.'));
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleCredential = async (idToken: string) => {
+    setError('');
+    setIsLoading(true);
+    try {
+      await loginWithGoogle(idToken);
+      navigate('/shop');
+    } catch (err: any) {
+      if (err?.status === 422) {
+        setError(tx('La vérification Google a échoué. Veuillez réessayer.', 'Google verification failed. Please try again.'));
+      } else if (err?.status === 409) {
+        setError(tx('Ce compte Google est lié à un autre compte client.', 'This Google account is linked to a different customer account.'));
+      } else if (err?.status === 503) {
+        setError(tx('La connexion Google est temporairement indisponible.', 'Google sign-in is temporarily unavailable.'));
+      } else {
+        setError(err?.message || tx('Inscription avec Google impossible. Réessayez.', 'Google sign-up failed. Please try again.'));
       }
     } finally {
       setIsLoading(false);
@@ -375,6 +397,20 @@ export const RegisterPage: React.FC = () => {
                 )}
               </motion.button>
             </form>
+
+            <div className="mt-6">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
+                <span className="text-xs font-medium text-ink-400 dark:text-ink-500">{tx('ou continuer avec', 'or continue with')}</span>
+                <div className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
+              </div>
+              <GoogleAuthButton
+                text="signup_with"
+                disabled={isLoading}
+                onCredential={handleGoogleCredential}
+                onError={setError}
+              />
+            </div>
 
             {/* Divider + login */}
             <div className="mt-7">

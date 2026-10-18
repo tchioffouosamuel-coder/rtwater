@@ -71,6 +71,7 @@ Créés par `UserSeeder`, mot de passe `password` pour tous :
 |---|---|
 | `DB_*` | connexion MySQL |
 | `FRONTEND_URL` | utilisée dans les e-mails et les liens signés |
+| `GOOGLE_CLIENT_ID` | audience autorisée pour la vérification des jetons Google |
 | `SEBPAY_API_KEY`, `SEBPAY_SECRET`, `SEBPAY_ENV` | passerelle Mobile Money |
 | `MAIL_*` | e-mails transactionnels |
 | `MAIL_ADMIN_ADDRESS` | destinataire des alertes internes |
@@ -83,12 +84,20 @@ injoignable ne fait jamais échouer une commande.
 | Clé | Rôle |
 |---|---|
 | `VITE_API_BASE_URL` | base de l'API ; défaut en dur dans `src/services/api.ts` |
+| `VITE_GOOGLE_CLIENT_ID` | identifiant OAuth Web Google utilisé sur les écrans connexion/inscription |
 | `VITE_SITE_URL` | URL canonique, pour le SEO |
 | `VITE_PLAUSIBLE_DOMAIN` | mesure d'audience sans cookie — démarre sans consentement |
 | `VITE_GA4_ID` | Google Analytics — **déclenche le bandeau de consentement** |
 
 Le bandeau de cookies n'apparaît que si `VITE_GA4_ID` est défini. Plausible ne posant
 aucun cookie, il n'y a rien à demander au visiteur et le bandeau reste masqué.
+
+Pour activer Google, créez un client OAuth de type **Application Web** dans Google
+Cloud Console, ajoutez le domaine du frontend aux origines JavaScript autorisées, puis
+utilisez le même identifiant client dans `frontend/.env` (`VITE_GOOGLE_CLIENT_ID`) et
+`api/.env` (`GOOGLE_CLIENT_ID`). Après configuration, exécutez `php artisan migrate`
+dans `api/` et reconstruisez le frontend. L'API vérifie le jeton Google, son audience
+et l'adresse e-mail vérifiée avant de créer ou lier un compte client.
 
 ---
 

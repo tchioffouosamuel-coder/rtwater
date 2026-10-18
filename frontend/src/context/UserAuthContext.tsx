@@ -17,6 +17,7 @@ interface UserAuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
     login: (email: string, password: string) => Promise<void>;
+    loginWithGoogle: (idToken: string) => Promise<void>;
     register: (name: string, email: string, password: string, passwordConfirmation: string) => Promise<void>;
     logout: () => Promise<void>;
     /** Remplace l'utilisateur courant après une mise à jour du profil */
@@ -76,6 +77,20 @@ export const UserAuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const loginWithGoogle = async (idToken: string) => {
+        setIsLoading(true);
+        try {
+            const res = await authService.loginWithGoogle(idToken);
+            if (res?.user) {
+                setUser(toUser(res.user));
+                toast('Connexion réussie', { icon: '✅' });
+                loadMe();
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const register = async (name: string, email: string, password: string, passwordConfirmation: string) => {
         setIsLoading(true);
         try {
@@ -98,7 +113,7 @@ export const UserAuthProvider = ({ children }: { children: ReactNode }) => {
     const setUserFromApi = useCallback((apiUser: any) => setUser(toUser(apiUser)), []);
 
     return (
-        <UserAuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, register, logout, setUserFromApi }}>
+        <UserAuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, loginWithGoogle, register, logout, setUserFromApi }}>
             {children}
         </UserAuthContext.Provider>
     );

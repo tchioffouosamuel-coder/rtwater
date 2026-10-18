@@ -34,6 +34,16 @@ export async function register(payload: {
   return res;
 }
 
+export async function loginWithGoogle(idToken: string) {
+  const res = await api.request("/google-auth", {
+    method: "POST",
+    body: { id_token: idToken },
+    silent: true,
+  });
+  if (res?.token) localStorage.setItem("userToken", res.token);
+  return res;
+}
+
 export async function me() {
   return api.request("/me", { method: "GET", silent: true });
 }
