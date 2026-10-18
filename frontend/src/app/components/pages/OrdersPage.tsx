@@ -67,7 +67,7 @@ export function OrdersPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-ink-950">
       {/* Hero */}
-      <section className="relative overflow-hidden py-16 sm:py-24 bg-gradient-to-br from-brand-600 to-aqua-500">
+      <section className="relative overflow-hidden py-16 sm:py-24 bg-brand-800">
         <PageHeroMedia photo={ORDERS_HEADER_PHOTO} />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div

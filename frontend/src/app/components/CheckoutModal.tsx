@@ -721,7 +721,7 @@ export function CheckoutModal() {
                     <p className="text-xs font-semibold text-ink-500 uppercase tracking-wider mb-3">{tx("Opérateur", "Operator")} *</p>
                     <div className="grid grid-cols-2 gap-3">
                       {OPERATORS.map(op => {
-                        const color = OPERATOR_COLORS[op.id] ?? "#0077BE";
+                        const color = OPERATOR_COLORS[op.id] ?? "#285f60";
                         const selected = selectedOperator === op.id;
                         return (
                           <button

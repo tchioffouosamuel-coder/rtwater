@@ -14,18 +14,6 @@ const BENEFITS = [
   { icon: Award,    fr: 'Garantie qualité sur tous les produits', en: 'Quality guarantee on every product' },
 ];
 
-// Floating bubble animation
-function Bubble({ delay, size, x, duration }: { delay: number; size: number; x: number; duration: number }) {
-  return (
-    <motion.div
-      className="absolute rounded-full bg-white/10 backdrop-blur-sm"
-      style={{ width: size, height: size, left: `${x}%`, bottom: -size }}
-      animate={{ y: [0, -(600 + size)], opacity: [0, 0.6, 0] }}
-      transition={{ duration, delay, repeat: Infinity, ease: 'linear' }}
-    />
-  );
-}
-
 export const LoginPage: React.FC = () => {
   const location = useLocation();
   const navState = (location.state ?? {}) as { from?: string; notice?: string; email?: string };
@@ -66,36 +54,11 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const bubbles = [
-    { delay: 0,   size: 14, x: 10, duration: 8  },
-    { delay: 2,   size: 22, x: 25, duration: 11 },
-    { delay: 1.5, size: 10, x: 40, duration: 7  },
-    { delay: 3,   size: 18, x: 55, duration: 10 },
-    { delay: 0.5, size: 26, x: 70, duration: 13 },
-    { delay: 4,   size: 12, x: 82, duration: 9  },
-    { delay: 2.5, size: 20, x: 90, duration: 12 },
-  ];
-
   return (
     <div className="min-h-screen flex">
       {/* ── Left brand panel (hidden on mobile) ── */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-brand-800 via-brand-600 to-aqua-500 flex-col items-center justify-center p-12">
-        {/* Bubbles */}
-        {bubbles.map((b, i) => <Bubble key={i} {...b} />)}
-
-        {/* Background wave shapes */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div
-            className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-white/5"
-            animate={{ scale: [1, 1.15, 1], rotate: [0, 20, 0] }}
-            transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-white/5"
-            animate={{ scale: [1.1, 1, 1.1], rotate: [0, -15, 0] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </div>
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-brand-800 flex-col items-center justify-center p-12">
+        <div className="absolute bottom-0 right-0 h-1 w-2/3 bg-clay-500" />
 
         <div className="relative z-10 max-w-sm text-white">
           {/* Logo */}
@@ -147,7 +110,7 @@ export const LoginPage: React.FC = () => {
       </div>
 
       {/* ── Right form panel ── */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 bg-gradient-to-br from-ink-50 to-brand-50/40 dark:from-ink-950 dark:to-ink-900 relative overflow-hidden">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 bg-ink-50 dark:bg-ink-950 relative overflow-hidden">
         {/* Subtle background circles */}
         <div className="absolute top-0 right-0 w-72 h-72 bg-aqua-500/5 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-56 h-56 bg-brand-600/5 rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />

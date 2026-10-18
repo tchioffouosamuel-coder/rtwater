@@ -1,55 +1,65 @@
 /**
  * RT Water Solution — Design system
  *
- * Reprend le langage visuel de la vitrine Auditron-X (échelles de couleur 50→950,
- * neutres « ink », animations d'entrée, révélation au scroll, dégradés maillés,
- * trames de fond, verre dépoli) en conservant la palette bleue RT Water :
- *   brand-600 = #0077BE (bleu primaire)   aqua-500 = #00A8E8 (cyan secondaire)
+ * Identité RT Water Solution : pétrole profond, sauge, argile et tons minéraux.
  */
 
 @theme {
   /* Typographie */
-  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Space Grotesk', 'Manrope', system-ui, sans-serif;
+  --font-sans: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Playfair Display', 'DM Sans', Georgia, serif;
 
-  /* Bleu primaire — ancré sur #0077BE */
-  --color-brand-50: #eff8ff;
-  --color-brand-100: #dcefff;
-  --color-brand-200: #b8e0ff;
-  --color-brand-300: #7cc8f8;
-  --color-brand-400: #35aced;
-  --color-brand-500: #0d8fd4;
-  --color-brand-600: #0077be;
-  --color-brand-700: #0b5f99;
-  --color-brand-800: #0f4f7d;
-  --color-brand-900: #123f63;
-  --color-brand-950: #0c2941;
+  /* Pétrole profond */
+  --color-brand-50: #eef4f1;
+  --color-brand-100: #dce9e3;
+  --color-brand-200: #bfd5cc;
+  --color-brand-300: #93b9ad;
+  --color-brand-400: #65988e;
+  --color-brand-500: #3f7772;
+  --color-brand-600: #285f60;
+  --color-brand-700: #1f5052;
+  --color-brand-800: #1b4245;
+  --color-brand-900: #18383b;
+  --color-brand-950: #102629;
 
-  /* Cyan secondaire — ancré sur #00A8E8 */
-  --color-aqua-50: #ecfdff;
-  --color-aqua-100: #cff7fe;
-  --color-aqua-200: #a5eefc;
-  --color-aqua-300: #67e0f9;
-  --color-aqua-400: #22c9ee;
-  --color-aqua-500: #00a8e8;
-  --color-aqua-600: #0286b8;
-  --color-aqua-700: #086b94;
-  --color-aqua-800: #105778;
-  --color-aqua-900: #124964;
-  --color-aqua-950: #052f43;
+  /* Sauge — accent secondaire */
+  --color-aqua-50: #f1f5f1;
+  --color-aqua-100: #e1ebe3;
+  --color-aqua-200: #c6d9cc;
+  --color-aqua-300: #a6c2b1;
+  --color-aqua-400: #84a995;
+  --color-aqua-500: #6d927f;
+  --color-aqua-600: #557765;
+  --color-aqua-700: #435f52;
+  --color-aqua-800: #394d44;
+  --color-aqua-900: #303f38;
+  --color-aqua-950: #19251f;
 
-  /* Neutres */
-  --color-ink-50: #f8fafc;
-  --color-ink-100: #f1f5f9;
-  --color-ink-200: #e2e8f0;
-  --color-ink-300: #cbd5e1;
-  --color-ink-400: #94a3b8;
-  --color-ink-500: #64748b;
-  --color-ink-600: #475569;
-  --color-ink-700: #334155;
-  --color-ink-800: #1e293b;
-  --color-ink-900: #0f172a;
-  --color-ink-950: #020617;
+  /* Argile — accent chaud réservé aux détails et aux actions */
+  --color-clay-50: #fbf2eb;
+  --color-clay-100: #f5e3d5;
+  --color-clay-200: #edc8ad;
+  --color-clay-300: #dfa783;
+  --color-clay-400: #cf865d;
+  --color-clay-500: #bd6d3d;
+  --color-clay-600: #a95732;
+  --color-clay-700: #8d452b;
+  --color-clay-800: #733b29;
+  --color-clay-900: #603326;
+  --color-clay-950: #351911;
+
+  /* Neutres minéraux et chauds */
+  --color-ink-50: #faf8f3;
+  --color-ink-100: #f3f0e8;
+  --color-ink-200: #e7e1d5;
+  --color-ink-300: #d2cabb;
+  --color-ink-400: #a59e90;
+  --color-ink-500: #7b776d;
+  --color-ink-600: #625f57;
+  --color-ink-700: #4b4a43;
+  --color-ink-800: #343a35;
+  --color-ink-900: #242f2d;
+  --color-ink-950: #172120;
 
   /* Animations d'entrée */
   --animate-fade-in: fadeIn 0.6s ease-out forwards;
@@ -182,7 +192,7 @@
 
 /* Texte en dégradé bleu */
 .gradient-text {
-  background: linear-gradient(135deg, #0077be 0%, #00a8e8 55%, #67e0f9 100%);
+  background: linear-gradient(135deg, #1f5052 0%, #557765 55%, #bd6d3d 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -191,8 +201,8 @@
 /* Trame quadrillée */
 .bg-grid {
   background-image:
-    linear-gradient(to right, rgba(0, 119, 190, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 119, 190, 0.07) 1px, transparent 1px);
+    linear-gradient(to right, rgba(31, 80, 82, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(31, 80, 82, 0.05) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
@@ -205,7 +215,7 @@
 
 /* Trame pointillée */
 .bg-dots {
-  background-image: radial-gradient(circle, rgba(0, 119, 190, 0.12) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(31, 80, 82, 0.09) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
@@ -216,21 +226,19 @@
 
 /* Dégradé maillé */
 .mesh-gradient {
-  background-color: #ffffff;
+  background-color: #faf8f3;
   background-image:
-    radial-gradient(at 20% 20%, rgba(0, 119, 190, 0.10) 0px, transparent 50%),
-    radial-gradient(at 80% 0%, rgba(0, 168, 232, 0.09) 0px, transparent 50%),
-    radial-gradient(at 80% 80%, rgba(103, 224, 249, 0.08) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(0, 119, 190, 0.05) 0px, transparent 50%);
+    radial-gradient(at 20% 20%, rgba(31, 80, 82, 0.07) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(189, 109, 61, 0.05) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(109, 146, 127, 0.05) 0px, transparent 50%);
 }
 
 .mesh-gradient-dark {
-  background-color: #0c2941;
+  background-color: #172120;
   background-image:
-    radial-gradient(at 20% 20%, rgba(13, 143, 212, 0.26) 0px, transparent 50%),
-    radial-gradient(at 80% 0%, rgba(0, 168, 232, 0.18) 0px, transparent 50%),
-    radial-gradient(at 80% 80%, rgba(103, 224, 249, 0.12) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(0, 119, 190, 0.14) 0px, transparent 50%);
+    radial-gradient(at 20% 20%, rgba(101, 152, 142, 0.16) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(189, 109, 61, 0.10) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(40, 95, 96, 0.14) 0px, transparent 50%);
 }
 
 /* Verre dépoli */
@@ -241,7 +249,7 @@
 }
 
 .dark .glass {
-  background: rgba(12, 41, 65, 0.6);
+  background: rgba(32, 44, 42, 0.85);
 }
 
 /* ---------------------------------------------------------------------------
@@ -250,40 +258,29 @@
    les bandeaux et les pubs, avec le liseré clair qui donne l'épaisseur du verre.
    --------------------------------------------------------------------------- */
 
-/* Carte en verre : fond laiteux, liseré clair, ombre portée bleutée */
+/* Surface légère pour les annonces qui se superposent au contenu. */
 .glass-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.5));
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
-    0 18px 40px -24px rgba(0, 119, 190, 0.45);
+  background: rgba(255, 254, 250, 0.96);
+  border: 1px solid rgba(231, 225, 213, 0.9);
+  box-shadow: 0 12px 32px -24px rgba(31, 80, 82, 0.38);
 }
 
 .dark .glass-card {
-  background: linear-gradient(135deg, rgba(18, 63, 99, 0.62), rgba(12, 41, 65, 0.42));
+  background: rgba(32, 44, 42, 0.96);
   border-color: rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
-    0 18px 40px -24px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 12px 32px -24px rgba(0, 0, 0, 0.45);
 }
 
 /* Verre posé sur une photo ou un fond sombre : plus opaque, texte blanc */
 .glass-dark {
-  background: rgba(12, 41, 65, 0.38);
-  backdrop-filter: blur(14px) saturate(130%);
-  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  background: rgba(23, 33, 32, 0.78);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.14) inset;
 }
 
 /* Pastille en verre : badges, puces, compteurs */
 .glass-pill {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.65);
+  background: rgba(255, 254, 250, 0.92);
+  border: 1px solid rgba(231, 225, 213, 0.9);
 }
 
 .dark .glass-pill {
@@ -293,22 +290,17 @@
 
 /* Texte sur verre : un halo clair derrière les lettres les décolle du fond */
 .text-glass {
-  text-shadow: 0 1px 12px rgba(255, 255, 255, 0.45);
+  text-shadow: none;
 }
 
 .dark .text-glass,
 .text-glass-dark {
-  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.55), 0 0 32px rgba(0, 168, 232, 0.25);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* Titre en dégradé animé — prolonge `.gradient-text` */
 .gradient-text-animated {
-  background: linear-gradient(110deg, #0077be 0%, #00a8e8 35%, #67e0f9 55%, #0077be 100%);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientShift 8s ease infinite;
+  color: #1f5052;
 }
 
 /* Lueur posée derrière un élément (pseudo-élément, donc sans nœud en plus) */
@@ -322,9 +314,8 @@
   inset: -18%;
   z-index: -1;
   border-radius: inherit;
-  background: radial-gradient(circle at 50% 50%, rgba(0, 168, 232, 0.35), transparent 70%);
-  filter: blur(18px);
-  animation: glowPulse 3.2s ease-in-out infinite;
+  background: rgba(109, 146, 127, 0.12);
+  filter: blur(24px);
   pointer-events: none;
 }
 
@@ -379,7 +370,7 @@
 
 .lift:hover {
   transform: translateY(-6px);
-  box-shadow: 0 26px 50px -28px rgba(0, 119, 190, 0.6);
+  box-shadow: 0 20px 40px -30px rgba(31, 80, 82, 0.35);
 }
 
 /* Le verre dépoli coûte cher sur les machines modestes : on le retire quand le
@@ -439,28 +430,28 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+background: #f3f0e8;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+background: #d2cabb;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #a59e90;
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #172120;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #394d44;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #557765;
 }
 
 /* ---------------------------------------------------------------------------
@@ -473,10 +464,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Les titres passent en Space Grotesk, comme la vitrine */
+  /* Les titres éditoriaux distinguent la marque sans nuire à la lisibilité. */
   h1, h2, h3 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.035em;
   }
 
   /* Ancres de section : le header collant ne masque plus la cible */

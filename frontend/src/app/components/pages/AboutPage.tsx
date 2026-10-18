@@ -36,7 +36,7 @@ export function AboutPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-ink-950 transition-colors duration-300">
       {/* Hero Section */}
-      <section className="relative py-20 sm:py-32 bg-gradient-to-br from-brand-600 to-aqua-500 overflow-hidden">
+      <section className="relative py-20 sm:py-32 bg-brand-800 overflow-hidden">
         <PageHeroMedia photo={ABOUT_HEADER_PHOTO} />
         <div className="absolute inset-0">
           {[...Array(15)].map((_, i) => (
@@ -259,7 +259,7 @@ export function AboutPage() {
                   <motion.div
                     key={index}
                     className="w-2 h-2 bg-ink-300 dark:bg-ink-600 rounded-full transition-all duration-300"
-                    whileHover={{ scale: 1.2, backgroundColor: "#0077BE" }}
+                    whileHover={{ scale: 1.2, backgroundColor: "#bd6d3d" }}
                   />
                 ))}
               </div>

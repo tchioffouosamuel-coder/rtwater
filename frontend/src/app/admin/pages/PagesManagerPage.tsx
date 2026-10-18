@@ -938,8 +938,7 @@ export const PagesManagerPage: React.FC = () => {
                 )}
                 <button
                   onClick={() => openEditor(section)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition hover:opacity-90 active:scale-95"
-                  style={{ background: 'linear-gradient(135deg, #0077BE, #00A8E8)' }}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-700 transition hover:bg-brand-800 active:scale-95"
                 >
                   <Edit2 size={15} />
                   Éditer le contenu
@@ -974,8 +973,7 @@ export const PagesManagerPage: React.FC = () => {
             <button
               onClick={handleSave}
               disabled={saving || editorLoading}
-              className="flex items-center gap-2 px-5 py-2 text-white font-medium rounded-lg transition hover:opacity-90 disabled:opacity-60 flex-shrink-0"
-              style={{ backgroundColor: '#0077BE' }}
+              className="flex items-center gap-2 px-5 py-2 text-white font-medium bg-brand-700 rounded-lg transition hover:bg-brand-800 disabled:opacity-60 flex-shrink-0"
             >
               {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
               Enregistrer

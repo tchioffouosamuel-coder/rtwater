@@ -210,7 +210,7 @@ export function ShopPage() {
     <div className="min-h-screen bg-ink-50 dark:bg-ink-950 transition-colors duration-300">
 
       {/* ── Hero ── */}
-      <section className="relative pt-20 sm:pt-28 pb-10 overflow-hidden bg-gradient-to-br from-brand-600 via-aqua-600 to-aqua-500">
+      <section className="relative pt-20 sm:pt-28 pb-10 overflow-hidden bg-brand-800">
         <PageHeroMedia photo={SHOP_HEADER_PHOTO} />
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-white/10 blur-3xl" />

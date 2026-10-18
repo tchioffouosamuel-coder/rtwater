@@ -40,26 +40,8 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative bg-ink-900 text-white overflow-hidden transition-colors duration-300">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <svg className="w-full h-full" viewBox="0 0 100 100">
-          <pattern
-            id="footer-pattern"
-            x="0"
-            y="0"
-            width="20"
-            height="20"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle cx="10" cy="10" r="1.5" fill="white" />
-          </pattern>
-          <rect width="100" height="100" fill="url(#footer-pattern)" />
-        </svg>
-      </div>
-
-      {/* Gradient Overlay */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-600 via-aqua-500 to-brand-600"></div>
+    <footer className="relative bg-brand-900 text-white overflow-hidden transition-colors duration-300">
+      <div className="h-1 bg-clay-500" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -88,7 +70,7 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.6 }}
           >
-            <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-ink-300 bg-clip-text text-transparent">
+            <h3 className="text-xl font-semibold mb-6 text-white">
               {t("footer.services")}
             </h3>
             <ul className="space-y-3">
@@ -119,7 +101,7 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-ink-300 bg-clip-text text-transparent">
+            <h3 className="text-xl font-semibold mb-6 text-white">
               {t("footer.quickLinks")}
             </h3>
             <ul className="space-y-3">
@@ -150,7 +132,7 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            <h3 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-ink-300 bg-clip-text text-transparent">
+            <h3 className="text-xl font-semibold mb-6 text-white">
               {t("footer.contact")}
             </h3>
             <ul className="space-y-4">

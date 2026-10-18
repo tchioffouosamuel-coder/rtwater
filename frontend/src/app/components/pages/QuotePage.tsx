@@ -148,7 +148,7 @@ export function QuotePage() {
   return (
     <div className="min-h-screen bg-white dark:bg-ink-950 transition-colors duration-300">
       {/* Hero Section */}
-      <section className="relative py-20 sm:py-32 bg-gradient-to-br from-brand-600 to-aqua-500 overflow-hidden">
+      <section className="relative py-20 sm:py-32 bg-brand-800 overflow-hidden">
         <PageHeroMedia photo={QUOTE_HEADER_PHOTO} veil="dense" />
         <div className="absolute inset-0">
           {[...Array(15)].map((_, i) => (

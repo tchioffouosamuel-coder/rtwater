@@ -91,10 +91,7 @@ const iconMap: Record<string, React.ElementType> = {
 
 function HeroSection({ block }: { block: HeroBlock }) {
   return (
-    <section
-      className="w-full py-24 px-4 text-white text-center"
-      style={{ background: 'linear-gradient(135deg, #0077BE 0%, #00A8E8 100%)' }}
-    >
+    <section className="w-full py-24 px-4 text-white text-center bg-brand-800">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">{block.title}</h1>
         {block.subtitle && (
@@ -103,8 +100,7 @@ function HeroSection({ block }: { block: HeroBlock }) {
         {block.cta_label && block.cta_link && (
           <Link
             to={block.cta_link}
-            className="inline-block px-8 py-3 bg-white font-semibold rounded-full transition hover:bg-brand-50"
-            style={{ color: '#0077BE' }}
+            className="inline-block px-8 py-3 bg-ink-50 text-brand-800 font-semibold transition hover:bg-white"
           >
             {block.cta_label}
           </Link>
@@ -127,10 +123,9 @@ function FeaturesSection({ block }: { block: FeaturesBlock }) {
             return (
               <div key={idx} className="p-6 rounded-xl border border-ink-200 hover:shadow-md transition-shadow">
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{ backgroundColor: '#EFF8FF' }}
+                  className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center mb-4"
                 >
-                  <IconComponent size={24} style={{ color: '#0077BE' }} />
+                  <IconComponent size={24} className="text-brand-700" />
                 </div>
                 <h3 className="text-lg font-semibold text-ink-900 mb-2">{item.title}</h3>
                 <p className="text-ink-600 text-sm leading-relaxed">{item.description}</p>
@@ -150,7 +145,7 @@ function StatsSection({ block }: { block: StatsBlock }) {
         <div className="flex flex-wrap justify-center gap-12">
           {block.items.map((item, idx) => (
             <div key={idx} className="text-center">
-              <p className="text-4xl md:text-5xl font-bold mb-2" style={{ color: '#0077BE' }}>
+              <p className="text-4xl md:text-5xl font-bold mb-2 text-brand-700">
                 {item.value}
               </p>
               <p className="text-ink-500 text-sm font-medium uppercase tracking-wide">{item.label}</p>
@@ -181,10 +176,7 @@ function SectionBlock_({ block }: { block: SectionBlock }) {
 
 function CtaSection({ block }: { block: CtaBlock }) {
   return (
-    <section
-      className="py-16 px-4 text-white text-center"
-      style={{ background: 'linear-gradient(135deg, #0077BE 0%, #00A8E8 100%)' }}
-    >
+    <section className="py-16 px-4 text-white text-center bg-brand-800">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-3xl font-bold mb-4">{block.title}</h2>
         {block.subtitle && (
@@ -192,8 +184,7 @@ function CtaSection({ block }: { block: CtaBlock }) {
         )}
         <Link
           to={block.button_link}
-          className="inline-block px-8 py-3 bg-white font-semibold rounded-full transition hover:bg-brand-50"
-          style={{ color: '#0077BE' }}
+          className="inline-block px-8 py-3 bg-ink-50 text-brand-800 font-semibold transition hover:bg-white"
         >
           {block.button_label}
         </Link>
@@ -219,10 +210,9 @@ function ContactInfoSection({ block }: { block: ContactInfoBlock }) {
             return (
               <div key={idx} className="flex gap-4 p-6 rounded-xl border border-ink-200 hover:shadow-md transition-shadow">
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: '#EFF8FF' }}
+                  className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0"
                 >
-                  <IconComponent size={22} style={{ color: '#0077BE' }} />
+                  <IconComponent size={22} className="text-brand-700" />
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-ink-400 mb-1">{item.label}</p>
@@ -293,7 +283,7 @@ export const DynamicPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh] gap-3 text-ink-400">
-        <Loader2 size={32} className="animate-spin" style={{ color: '#0077BE' }} />
+        <Loader2 size={32} className="animate-spin text-brand-700" />
         <span className="text-lg">Chargement...</span>
       </div>
     );
@@ -302,13 +292,12 @@ export const DynamicPage: React.FC = () => {
   if (notFound || !page) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-        <p className="text-6xl font-bold mb-4" style={{ color: '#0077BE' }}>404</p>
+        <p className="text-6xl font-bold mb-4 text-brand-700">404</p>
         <h1 className="text-2xl font-semibold text-ink-900 mb-2">Page introuvable</h1>
         <p className="text-ink-600 mb-8">La page que vous recherchez n'existe pas ou a été déplacée.</p>
         <Link
           to="/"
-          className="px-6 py-2.5 text-white font-medium rounded-full transition hover:opacity-90"
-          style={{ backgroundColor: '#0077BE' }}
+          className="px-6 py-2.5 bg-brand-700 text-white font-medium transition hover:bg-brand-800"
         >
           Retour à l'accueil
         </Link>

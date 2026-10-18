@@ -79,7 +79,7 @@ export function OrderTrackingPage() {
 
   return (
     <div className="min-h-screen bg-ink-50 dark:bg-ink-900">
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-600 to-aqua-500 py-14 sm:py-20 text-white text-center px-4">
+      <section className="relative overflow-hidden bg-brand-800 py-14 sm:py-20 text-white text-center px-4">
         <PageHeroMedia photo={TRACKING_HEADER_PHOTO} />
         <div className="relative">
           <PackageSearch className="w-12 h-12 mx-auto mb-4 opacity-90" aria-hidden="true" />

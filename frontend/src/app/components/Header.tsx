@@ -83,8 +83,8 @@ export function Header() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className={`sticky top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-white/95 dark:bg-ink-900/95 backdrop-blur-md shadow-sm border-b border-ink-200/60 dark:border-white/10"
-            : "bg-white/80 dark:bg-ink-900/80 backdrop-blur-md border-b border-transparent"
+            ? "bg-ink-50 dark:bg-ink-900 shadow-sm border-b border-ink-200 dark:border-white/10"
+            : "bg-ink-50 dark:bg-ink-900 border-b border-ink-200/70 dark:border-white/10"
         }`}
       >
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -96,7 +96,7 @@ export function Header() {
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
-              <img src="/logo.webp" alt="RT Water Solution" className="h-12 w-auto drop-shadow-md" />
+              <img src="/logo.webp" alt="RT Water Solution"               className="h-12 w-auto" />
             </motion.button>
 
             {/* Desktop Navigation */}
@@ -211,7 +211,7 @@ export function Header() {
                   onClick={() => navigate('/login', { state: { from: location.pathname } })}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-3 py-1 rounded-lg bg-gradient-to-r from-brand-600 to-aqua-500 text-white text-sm"
+                  className="px-4 py-2 bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold transition-colors"
                 >
                   {tx("Connexion", "Sign in")}
                 </motion.button>
@@ -290,7 +290,7 @@ export function Header() {
               className="fixed top-0 right-0 bottom-0 w-80 bg-white dark:bg-ink-800 shadow-2xl z-50 lg:hidden overflow-y-auto"
             >
               {/* Sidebar Header */}
-              <div className="bg-gradient-to-br from-brand-600 to-aqua-500 p-5">
+              <div className="bg-brand-800 p-5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex flex-col">
@@ -336,7 +336,7 @@ export function Header() {
                     transition={{ delay: index * 0.08 }}
                     onClick={() => handleNavigation(item.path)}
                     className={`w-full text-left px-4 py-3 rounded-lg font-medium text-sm transition-all ${isActive(item.path)
-                        ? "bg-gradient-to-r from-brand-600 to-aqua-500 text-white shadow-md relative"
+                        ? "bg-brand-700 text-white relative"
                         : "text-ink-700 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-700"
                       }`}
                   >

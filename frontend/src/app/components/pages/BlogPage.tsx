@@ -49,7 +49,7 @@ export function BlogPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-ink-950">
       {/* Hero */}
-      <section className="relative overflow-hidden py-20 sm:py-28 bg-gradient-to-br from-brand-600 to-aqua-500">
+      <section className="relative overflow-hidden py-20 sm:py-28 bg-brand-800">
         <PageHeroMedia photo={BLOG_HEADER_PHOTO} />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>

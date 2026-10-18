@@ -102,7 +102,7 @@ export const RegisterPage: React.FC = () => {
   return (
     <div className="min-h-screen flex">
       {/* ── Left brand panel ── */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-brand-800 via-brand-600 to-aqua-500 flex-col items-center justify-center p-12">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-brand-800 flex-col items-center justify-center p-12">
         {bubbles.map((b, i) => <Bubble key={i} {...b} />)}
 
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
