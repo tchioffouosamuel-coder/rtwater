@@ -259,7 +259,7 @@ export function AboutPage() {
                   <motion.div
                     key={index}
                     className="w-2 h-2 bg-ink-300 dark:bg-ink-600 rounded-full transition-all duration-300"
-                    whileHover={{ scale: 1.2, backgroundColor: "#bd6d3d" }}
+                    whileHover={{ scale: 1.2, backgroundColor: "#0077be" }}
                   />
                 ))}
               </div>

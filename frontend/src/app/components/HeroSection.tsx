@@ -38,13 +38,13 @@ export function HeroSection() {
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-16 sm:py-20">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 border-l-2 border-clay-400 pl-3 text-clay-200 text-xs font-semibold uppercase tracking-[0.18em] mb-6">
+          <div className="inline-flex items-center gap-2 border-l-2 border-aqua-400 pl-3 text-aqua-100 text-xs font-semibold uppercase tracking-[0.18em] mb-6">
             {hero.badge}
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-7xl font-semibold text-white leading-[1.08] tracking-tight mb-6 text-balance">
             {hero.title}{" "}
-            <span className="text-clay-300">
+            <span className="text-aqua-200">
               {hero.titleHighlight}
             </span>
           </h1>
@@ -56,7 +56,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleServicesClick}
-              className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-clay-500 hover:bg-clay-600 text-white text-sm font-semibold transition-colors"
+              className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors"
             >
               {hero.servicesButtonLabel}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

@@ -58,7 +58,7 @@ export const LoginPage: React.FC = () => {
     <div className="min-h-screen flex">
       {/* ── Left brand panel (hidden on mobile) ── */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-brand-800 flex-col items-center justify-center p-12">
-        <div className="absolute bottom-0 right-0 h-1 w-2/3 bg-clay-500" />
+        <div className="absolute bottom-0 right-0 h-1 w-2/3 bg-aqua-500" />
 
         <div className="relative z-10 max-w-sm text-white">
           {/* Logo */}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAdminAuth, ROLE_LABELS } from '../../../context/AdminAuthContext';
 import { ChevronDown, LogOut, Menu, X, LayoutDashboard, Package, FileText, FileSpreadsheet, FolderTree, Newspaper, Tag, Users, Wrench, ShoppingCart, Warehouse, CreditCard, Receipt, BarChart3, Settings, Star, FileQuestion } from 'lucide-react';
 
@@ -13,9 +13,24 @@ interface NavItem {
 
 export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout, hasPermission } = useAdminAuth();
   const [isOpen, setIsOpen] = useState(true);
-  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
+  const gestionPaths = [
+    '/admin/products',
+    '/admin/categories',
+    '/admin/services',
+    '/admin/pages',
+    '/admin/blog',
+    '/admin/orders',
+    '/admin/customers',
+    '/admin/reviews',
+    '/admin/quotes',
+  ];
+  const [expandedMenus, setExpandedMenus] = useState<string[]>(() =>
+    gestionPaths.some(path => location.pathname.startsWith(path)) ? ['Gestion'] : []
+  );
+  const isGestionExpanded = expandedMenus.includes('Gestion');
 
   const toggleMenu = (label: string) => {
     setExpandedMenus(prev =>
@@ -145,7 +160,7 @@ export const Sidebar: React.FC = () => {
               <button
                 onClick={() => toggleMenu(item.label)}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  expandedMenus.includes(item.label)
+                  (item.label === 'Gestion' ? isGestionExpanded : expandedMenus.includes(item.label))
                     ? 'bg-ink-200 text-ink-900'
                     : 'text-ink-600 hover:text-ink-900 hover:bg-ink-100'
                 } ${depth > 0 ? 'ml-0' : ''}`}
@@ -155,11 +170,11 @@ export const Sidebar: React.FC = () => {
                 <ChevronDown
                   size={16}
                   className={`flex-shrink-0 transition-transform duration-300 ${
-                    expandedMenus.includes(item.label) ? 'rotate-180' : ''
+                    (item.label === 'Gestion' ? isGestionExpanded : expandedMenus.includes(item.label)) ? 'rotate-180' : ''
                   }`}
                 />
               </button>
-              {expandedMenus.includes(item.label) && (
+              {(item.label === 'Gestion' ? isGestionExpanded : expandedMenus.includes(item.label)) && (
                 <div className="mt-1 space-y-1 pl-2">
                   {renderNavItems(item.submenu, depth + 1)}
                 </div>
@@ -170,7 +185,11 @@ export const Sidebar: React.FC = () => {
               onClick={() => navigate(item.path)}
               className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
                 depth > 0 ? 'pl-12 text-xs' : ''
-              } text-ink-600 hover:text-ink-900 hover:bg-ink-100`}
+              } ${
+                location.pathname === item.path
+                  ? 'bg-brand-100 text-brand-800'
+                  : 'text-ink-600 hover:text-ink-900 hover:bg-ink-100'
+              }`}
             >
               <span className="flex-shrink-0">{item.icon}</span>
               <span>{item.label}</span>
@@ -196,14 +215,6 @@ export const Sidebar: React.FC = () => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
-        {/* Logo */}
-        <div className="px-6 py-8 border-b border-ink-200">
-          <div className="flex items-center gap-3">
-            <img src="/logo.webp" alt="RT Water" className="h-10 w-auto object-contain" />
-            <p className="text-xs text-ink-500">Backoffice</p>
-          </div>
-        </div>
-
         {/* User Info */}
         {user && (
           <div className="px-6 py-4 border-b border-ink-200 bg-white">

@@ -133,22 +133,31 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
       <div className="flex-1 overflow-auto lg:ml-64 flex flex-col">
         {/* Top Bar */}
         <div className="bg-white border-b border-ink-200 sticky top-0 z-20 shadow-sm">
-          <div className="px-6 py-4 flex items-center justify-between">
-            <div className="flex-1">
-              {title && <h1 className="text-2xl font-bold text-ink-900 mb-1">{title}</h1>}
-              {breadcrumbs && breadcrumbs.length > 0 && (
-                <div className="flex items-center gap-2 text-sm">
-                  {breadcrumbs.map((crumb, index) => (
-                    <React.Fragment key={index}>
-                      {crumb.path
-                        ? <a href={crumb.path} className="text-ink-600 hover:text-ink-900 transition">{crumb.label}</a>
-                        : <span className="text-ink-500">{crumb.label}</span>
-                      }
-                      {index < breadcrumbs.length - 1 && (
-                        <ChevronRight size={16} className="text-ink-400" />
-                      )}
-                    </React.Fragment>
-                  ))}
+          <div className="px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+            <div className="flex min-w-0 flex-1 items-center gap-4">
+              <img
+                src="/logo.webp"
+                alt="RT Water Solution"
+                className="h-10 w-auto max-w-[130px] shrink-0 object-contain"
+              />
+              {(title || (breadcrumbs && breadcrumbs.length > 0)) && (
+                <div className="min-w-0 border-l border-ink-200 pl-4">
+                  {title && <h1 className="text-xl sm:text-2xl font-bold text-ink-900 mb-1">{title}</h1>}
+                  {breadcrumbs && breadcrumbs.length > 0 && (
+                    <div className="flex items-center gap-2 text-sm">
+                      {breadcrumbs.map((crumb, index) => (
+                        <React.Fragment key={index}>
+                          {crumb.path
+                            ? <a href={crumb.path} className="text-ink-600 hover:text-ink-900 transition">{crumb.label}</a>
+                            : <span className="text-ink-500">{crumb.label}</span>
+                          }
+                          {index < breadcrumbs.length - 1 && (
+                            <ChevronRight size={16} className="text-ink-400" />
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
