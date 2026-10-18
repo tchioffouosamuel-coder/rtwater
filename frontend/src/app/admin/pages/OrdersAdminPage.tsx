@@ -244,12 +244,23 @@ export const OrdersAdminPage: React.FC = () => {
             const cfg = STATUS_CONFIG[order.status];
             const Icon = cfg.icon;
             return (
-              <article key={order.id} className="space-y-3 p-4">
+              <article
+                key={order.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => setSelectedOrder(order)}
+                onKeyDown={event => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    setSelectedOrder(order);
+                  }
+                }}
+                className="cursor-pointer space-y-3 p-4 transition-colors hover:bg-ink-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="font-semibold text-brand-700">Commande #{order.id}</p>
                     <p className="mt-0.5 truncate text-sm text-ink-700">{order.user?.name ?? '—'}</p>
-                    <p className="truncate text-xs text-ink-400">{order.user?.email}</p>
                   </div>
                   <span className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
                     <Icon size={12} />
@@ -259,18 +270,15 @@ export const OrdersAdminPage: React.FC = () => {
                 <div className="flex items-center justify-between gap-3 border-t border-ink-100 pt-3">
                   <div>
                     <p className="font-bold text-ink-900">{parseFloat(order.total).toLocaleString('fr-FR')} XOF</p>
-                    <p className="text-xs text-ink-500">{order.items?.length ?? 0} article(s) · {formatApiDate(order.created_at)}</p>
+                    <p className="text-xs text-ink-500">{formatApiDate(order.created_at)}</p>
                   </div>
-                  <div className="flex shrink-0 gap-2">
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span className="text-xs font-medium text-brand-600">Détails</span>
                     <button
-                      onClick={() => setSelectedOrder(order)}
-                      className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-brand-50 px-3 text-sm font-semibold text-brand-700"
-                    >
-                      <Eye size={16} />
-                      Détails
-                    </button>
-                    <button
-                      onClick={() => window.print()}
+                      onClick={event => {
+                        event.stopPropagation();
+                        window.print();
+                      }}
                       aria-label={`Imprimer la commande ${order.id}`}
                       className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-ink-200 text-ink-600"
                     >

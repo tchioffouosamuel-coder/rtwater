@@ -3,7 +3,7 @@ import { AdminLayout } from '../layout/AdminLayout';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import productsService from '../../../services/products';
 import stockService from '../../../services/stock';
-import { Plus, AlertCircle, TrendingDown, TrendingUp, ArrowDown, ArrowUp, Search, X, Save, History, Warehouse, Loader2 } from 'lucide-react';
+import { Plus, AlertCircle, TrendingDown, TrendingUp, ArrowDown, ArrowUp, Search, X, Save, History, Warehouse, Loader2, ArrowLeft } from 'lucide-react';
 
 interface ApiProduct {
   id: number;
@@ -36,6 +36,7 @@ export const InventoryPage: React.FC = () => {
   const [historyLoaded, setHistoryLoaded] = useState(false);
 
   const [showMovementModal, setShowMovementModal] = useState(false);
+  const [detailProduct, setDetailProduct] = useState<ApiProduct | null>(null);
   const [movementType, setMovementType] = useState<'in' | 'out' | null>(null);
   const [selectedProductId, setSelectedProductId] = useState<string>('');
   const [quantity, setQuantity] = useState('');
@@ -243,7 +244,41 @@ export const InventoryPage: React.FC = () => {
             <span>Chargement du stock...</span>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          <div className="grid gap-3 p-3 sm:hidden">
+            {filteredProducts.map(product => {
+              const isCritical = product.stock === 0;
+              const isLow = product.stock > 0 && product.stock <= 5;
+
+              return (
+                <button
+                  key={product.id}
+                  type="button"
+                  onClick={() => setDetailProduct(product)}
+                  className="flex w-full items-center justify-between gap-3 rounded-xl border border-ink-200 bg-white p-4 text-left shadow-sm transition hover:border-brand-300 hover:shadow-md"
+                >
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-semibold text-ink-900">{product.name}</span>
+                    <span className="mt-1 block text-xs text-ink-500">
+                      {Number(product.price).toLocaleString('fr-FR')} XAF
+                    </span>
+                  </span>
+                  <span className={`shrink-0 rounded-full px-3 py-1 text-sm font-semibold ${
+                    isCritical ? 'bg-red-100 text-red-700' : isLow ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'
+                  }`}>
+                    {product.stock}
+                  </span>
+                </button>
+              );
+            })}
+            {filteredProducts.length === 0 && (
+              <div className="px-6 py-12 text-center">
+                <Warehouse size={40} className="mx-auto text-ink-300" />
+                <p className="mt-3 text-sm font-medium text-ink-500">Aucun article trouvé</p>
+              </div>
+            )}
+          </div>
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full">
               <thead className="bg-ink-50 border-b border-ink-200">
                 <tr>
@@ -302,8 +337,61 @@ export const InventoryPage: React.FC = () => {
               </div>
             )}
           </div>
+          </>
         )}
       </div>
+
+      {detailProduct && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          <div className="absolute inset-0 bg-ink-900/40" onClick={() => setDetailProduct(null)} aria-hidden />
+          <section role="dialog" aria-modal="true" aria-labelledby="inventory-product-title" className="relative flex h-full w-full max-w-lg flex-col overflow-y-auto bg-white shadow-2xl">
+            <div className="sticky top-0 flex items-center gap-3 border-b border-ink-200 bg-white px-6 py-4">
+              <button onClick={() => setDetailProduct(null)} aria-label="Fermer la fiche article" className="text-ink-400 transition hover:text-ink-700">
+                <ArrowLeft size={20} />
+              </button>
+              <h2 id="inventory-product-title" className="flex-1 text-base font-semibold text-ink-900">{detailProduct.name}</h2>
+              <button onClick={() => setDetailProduct(null)} aria-label="Fermer" className="text-ink-400 transition hover:text-ink-700">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="space-y-5 p-6">
+              {detailProduct.image_url && (
+                <img src={detailProduct.image_url} alt={detailProduct.name} className="h-56 w-full rounded-xl object-cover" />
+              )}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Prix de vente</p>
+                  <p className="mt-1 font-semibold text-ink-900">{Number(detailProduct.price).toLocaleString('fr-FR')} XAF</p>
+                </div>
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Stock disponible</p>
+                  <p className="mt-1 font-semibold text-ink-900">{detailProduct.stock}</p>
+                </div>
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Valeur du stock</p>
+                  <p className="mt-1 font-semibold text-ink-900">
+                    {(detailProduct.stock * (detailProduct.price ?? 0)).toLocaleString('fr-FR')} XAF
+                  </p>
+                </div>
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Catégorie</p>
+                  <p className="mt-1 font-semibold text-ink-900">
+                    {typeof detailProduct.category === 'string'
+                      ? detailProduct.category
+                      : detailProduct.category?.name ?? 'Sans catégorie'}
+                  </p>
+                </div>
+              </div>
+              <div className="rounded-xl border border-ink-200 p-4">
+                <p className="text-xs font-medium uppercase tracking-wide text-ink-500">Disponibilité</p>
+                <p className={`mt-2 text-sm font-semibold ${detailProduct.is_available ? 'text-green-700' : 'text-ink-500'}`}>
+                  {detailProduct.is_available ? 'Disponible à la vente' : 'Indisponible à la vente'}
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
 
       {/* Movement History */}
       {showHistory && (

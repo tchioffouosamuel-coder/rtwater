@@ -13,9 +13,11 @@ import { CookieBanner } from "./components/CookieBanner";
 import { trackPageview } from "../lib/monitoring";
 import { Cart } from "./components/Cart";
 import { CheckoutModal } from "./components/CheckoutModal";
+import { CustomerBottomNav } from "./components/CustomerBottomNav";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { ProtectedRoute } from "./admin/layout/ProtectedRoute";
 import { Toaster } from "./components/ui/sonner";
+import { useUserAuth } from "../context/UserAuthContext";
 
 
 // Pages publiques secondaires chargées à la demande : accueil, boutique et fiche produit restent immédiates
@@ -289,6 +291,7 @@ export default function App() {
 
       {/* Cart Sidebar - Global */}
       <Cart />
+      <CustomerBottomNav />
 
       {/* Toast notifications */}
       <Toaster />
@@ -304,6 +307,7 @@ export default function App() {
 
 function Layout() {
   const { pathname } = useLocation();
+  const { isAuthenticated, isLoading } = useUserAuth();
 
   // Mesure d'audience : une page vue par navigation (sans effet si non configurée)
   useEffect(() => {
@@ -319,14 +323,17 @@ function Layout() {
         Aller au contenu
       </a>
       <Header />
-      <main id="contenu" className="flex-1">
+      <main
+        id="contenu"
+        className={`flex-1 ${isAuthenticated && !isLoading ? 'pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-0' : ''}`}
+      >
         <ErrorBoundary resetKey={pathname}>
           <Suspense fallback={<PageLoadingFallback />}>
             <Outlet />
           </Suspense>
         </ErrorBoundary>
       </main>
-      <Footer />
+      {!isAuthenticated && !isLoading && <Footer />}
       <WhatsAppButton />
       <OfflineBanner />
       <CookieBanner />

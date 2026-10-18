@@ -5,7 +5,7 @@ import * as commerce from '../../../services/commerce';
 import type { Discount, DiscountState, DiscountType, ShippingZone } from '../../../services/commerce';
 import { toast } from 'sonner';
 import {
-  AlertCircle, Edit2, Loader2, Mail, Megaphone, Plus, Tag, Trash2, Truck, X,
+  AlertCircle, ArrowLeft, Edit2, Loader2, Mail, Megaphone, Plus, Tag, Trash2, Truck, X,
 } from 'lucide-react';
 import { fetchSubscribers } from '../../../services/newsletter';
 import { AnnouncementsPanel } from './AnnouncementsPanel';
@@ -492,6 +492,7 @@ const ShippingTab: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<ShippingZone | null>(null);
+  const [selectedZone, setSelectedZone] = useState<ShippingZone | null>(null);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -602,54 +603,131 @@ const ShippingTab: React.FC = () => {
           {zones.map(zone => (
             <article
               key={zone.id}
-              className={`rounded-xl border bg-white p-4 ${zone.is_active ? 'border-ink-200' : 'border-ink-200 opacity-60'}`}
+              role="button"
+              tabIndex={0}
+              onClick={() => setSelectedZone(zone)}
+              onKeyDown={event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  setSelectedZone(zone);
+                }
+              }}
+              className={`cursor-pointer rounded-xl border bg-white p-4 transition hover:border-brand-300 hover:shadow-md ${zone.is_active ? 'border-ink-200' : 'border-ink-200 opacity-60'}`}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <h3 className="text-sm font-semibold text-ink-900">{zone.name}</h3>
-                  {zone.delay && <p className="mt-0.5 text-xs text-ink-400">{zone.delay}</p>}
                 </div>
-                {!zone.is_active && (
-                  <span className="flex-shrink-0 rounded-full bg-ink-100 px-2 py-0.5 text-[11px] font-medium text-ink-500">
-                    Inactive
+                <span className={`flex-shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${zone.is_active ? 'bg-green-100 text-green-700' : 'bg-ink-100 text-ink-500'}`}>
+                    {zone.is_active ? 'Active' : 'Inactive'}
                   </span>
-                )}
               </div>
 
-              {zone.description && (
-                <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-ink-600">{zone.description}</p>
-              )}
-
-              <div className="mt-3 space-y-1">
+              <div className="mt-3">
                 <p className="text-lg font-bold text-ink-900">
                   {zone.fee === 0 ? 'Gratuite' : xaf(zone.fee)}
                 </p>
-                {zone.free_above != null && (
-                  <p className="text-xs text-green-700">Offerte dès {xaf(zone.free_above)}</p>
-                )}
-                {!!zone.orders_count && (
-                  <p className="text-xs text-ink-400">{zone.orders_count} commande(s)</p>
-                )}
               </div>
 
-              <div className="mt-4 flex gap-2 border-t border-ink-100 pt-3">
+              <div className="mt-4 flex items-center justify-between gap-2 border-t border-ink-100 pt-3">
+                <span className="text-[11px] uppercase tracking-wide text-ink-400">Détails</span>
+                <div className="flex gap-2">
                 <button
-                  onClick={() => openForm(zone)}
+                  onClick={event => {
+                    event.stopPropagation();
+                    openForm(zone);
+                  }}
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-brand-600 transition hover:bg-brand-50"
                 >
                   <Edit2 size={14} />
                   Modifier
                 </button>
                 <button
-                  onClick={() => setDeleting(zone)}
+                  type="button"
+                  onClick={event => {
+                    event.stopPropagation();
+                    setDeleting(zone);
+                  }}
                   aria-label={`Supprimer ${zone.name}`}
                   className="rounded-lg p-1.5 text-red-600 transition hover:bg-red-50"
                 >
                   <Trash2 size={14} />
                 </button>
+                </div>
               </div>
             </article>
           ))}
+        </div>
+      )}
+
+      {selectedZone && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          <div className="absolute inset-0 bg-ink-900/40" onClick={() => setSelectedZone(null)} aria-hidden />
+          <section role="dialog" aria-modal="true" aria-labelledby="shipping-zone-sheet-title" className="relative flex h-full w-full max-w-lg flex-col overflow-y-auto bg-white shadow-2xl">
+            <div className="sticky top-0 flex items-center gap-3 border-b border-ink-200 bg-white px-6 py-4">
+              <button onClick={() => setSelectedZone(null)} aria-label="Fermer la fiche zone" className="text-ink-400 transition hover:text-ink-700">
+                <ArrowLeft size={20} />
+              </button>
+              <h2 id="shipping-zone-sheet-title" className="flex-1 text-base font-semibold text-ink-900">{selectedZone.name}</h2>
+              <button onClick={() => setSelectedZone(null)} aria-label="Fermer" className="text-ink-400 transition hover:text-ink-700">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="space-y-5 p-6">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Tarif</p>
+                  <p className="mt-1 font-semibold text-ink-900">{selectedZone.fee === 0 ? 'Gratuite' : xaf(selectedZone.fee)}</p>
+                </div>
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Statut</p>
+                  <p className={`mt-1 font-semibold ${selectedZone.is_active ? 'text-green-700' : 'text-ink-500'}`}>
+                    {selectedZone.is_active ? 'Active' : 'Inactive'}
+                  </p>
+                </div>
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Livraison offerte dès</p>
+                  <p className="mt-1 font-semibold text-ink-900">
+                    {selectedZone.free_above == null ? 'Jamais' : xaf(selectedZone.free_above)}
+                  </p>
+                </div>
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Délai annoncé</p>
+                  <p className="mt-1 font-semibold text-ink-900">{selectedZone.delay || 'Non précisé'}</p>
+                </div>
+              </div>
+              <div className="rounded-xl border border-ink-200 p-4">
+                <p className="text-xs font-medium uppercase tracking-wide text-ink-500">Quartiers couverts</p>
+                <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-ink-700">
+                  {selectedZone.description || 'Aucun quartier précisé.'}
+                </p>
+              </div>
+              {selectedZone.orders_count != null && (
+                <p className="text-sm text-ink-500">{selectedZone.orders_count} commande(s) associée(s)</p>
+              )}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    const zone = selectedZone;
+                    setSelectedZone(null);
+                    openForm(zone);
+                  }}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-brand-200 bg-brand-50 px-4 py-2.5 font-medium text-brand-700 transition hover:bg-brand-100"
+                >
+                  <Edit2 size={16} /> Modifier
+                </button>
+                <button
+                  onClick={() => {
+                    setDeleting(selectedZone);
+                    setSelectedZone(null);
+                  }}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 font-medium text-red-700 transition hover:bg-red-100"
+                >
+                  <Trash2 size={16} /> Supprimer
+                </button>
+              </div>
+            </div>
+          </section>
         </div>
       )}
 

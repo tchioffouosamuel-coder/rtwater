@@ -5,7 +5,7 @@ import * as catalog from '../../../services/catalog';
 import type { Category, Service } from '../../../services/catalog';
 import { toast } from 'sonner';
 import {
-  AlertCircle, Clock, Edit2, ImageIcon, Loader2, Plus, Search, Trash2, Wrench, X,
+  AlertCircle, ArrowLeft, Clock, Edit2, ImageIcon, Loader2, Plus, Search, Trash2, Wrench, X,
 } from 'lucide-react';
 
 /**
@@ -56,6 +56,7 @@ export const ServicesPage: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<Service | null>(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -223,7 +224,19 @@ export const ServicesPage: React.FC = () => {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map(service => (
-            <article key={service.id} className="flex flex-col overflow-hidden rounded-xl border border-ink-200 bg-white">
+            <article
+              key={service.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => setSelectedService(service)}
+              onKeyDown={event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  setSelectedService(service);
+                }
+              }}
+              className="group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-ink-200 bg-white transition hover:border-brand-300 hover:shadow-md"
+            >
               <div className="relative aspect-video bg-ink-100">
                 {service.image_url ? (
                   <img src={service.image_url} alt={service.name} className="h-full w-full object-cover" />
@@ -244,37 +257,112 @@ export const ServicesPage: React.FC = () => {
                 {service.category && (
                   <p className="mt-0.5 text-xs text-ink-400">{service.category.name}</p>
                 )}
-                {service.description && (
-                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-ink-600">{service.description}</p>
-                )}
 
                 <div className="mt-3 flex items-center gap-3 text-xs text-ink-500">
                   <span className="font-semibold text-ink-900">{xaf(service.price)}</span>
-                  <span className="flex items-center gap-1">
-                    <Clock size={12} />
-                    {formatDuration(service.duration_minutes)}
-                  </span>
                 </div>
 
-                <div className="mt-4 flex gap-2 border-t border-ink-100 pt-3">
+                <div className="mt-4 flex items-center justify-between gap-2 border-t border-ink-100 pt-3">
+                  <span className="text-[11px] uppercase tracking-wide text-ink-400">Détails</span>
+                  <div className="flex gap-2">
                   <button
-                    onClick={() => openForm(service)}
+                    onClick={event => {
+                      event.stopPropagation();
+                      openForm(service);
+                    }}
                     className="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-brand-600 transition hover:bg-brand-50"
                   >
                     <Edit2 size={14} />
                     Modifier
                   </button>
                   <button
-                    onClick={() => setDeleting(service)}
+                    type="button"
+                    onClick={event => {
+                      event.stopPropagation();
+                      setDeleting(service);
+                    }}
                     aria-label={`Supprimer ${service.name}`}
                     className="rounded-lg p-1.5 text-red-600 transition hover:bg-red-50"
                   >
                     <Trash2 size={14} />
                   </button>
+                  </div>
                 </div>
               </div>
             </article>
           ))}
+        </div>
+      )}
+
+      {selectedService && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          <div className="absolute inset-0 bg-ink-900/40" onClick={() => setSelectedService(null)} aria-hidden />
+          <section role="dialog" aria-modal="true" aria-labelledby="service-sheet-title" className="relative flex h-full w-full max-w-lg flex-col overflow-y-auto bg-white shadow-2xl">
+            <div className="sticky top-0 flex items-center gap-3 border-b border-ink-200 bg-white px-6 py-4">
+              <button onClick={() => setSelectedService(null)} aria-label="Fermer la fiche prestation" className="text-ink-400 transition hover:text-ink-700">
+                <ArrowLeft size={20} />
+              </button>
+              <h2 id="service-sheet-title" className="flex-1 text-base font-semibold text-ink-900">{selectedService.name}</h2>
+              <button onClick={() => setSelectedService(null)} aria-label="Fermer" className="text-ink-400 transition hover:text-ink-700">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="space-y-5 p-6">
+              {selectedService.image_url && (
+                <img src={selectedService.image_url} alt={selectedService.name} className="h-56 w-full rounded-xl object-cover" />
+              )}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Tarif</p>
+                  <p className="mt-1 font-semibold text-ink-900">{xaf(selectedService.price)}</p>
+                </div>
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Durée</p>
+                  <p className="mt-1 flex items-center gap-1 font-semibold text-ink-900">
+                    <Clock size={14} /> {formatDuration(selectedService.duration_minutes)}
+                  </p>
+                </div>
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Catégorie</p>
+                  <p className="mt-1 font-semibold text-ink-900">{selectedService.category?.name ?? 'Sans catégorie'}</p>
+                </div>
+                <div className="rounded-lg bg-ink-50 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-ink-500">Visibilité</p>
+                  <p className={`mt-1 font-semibold ${selectedService.is_available ? 'text-green-700' : 'text-ink-500'}`}>
+                    {selectedService.is_available ? 'Visible' : 'Masquée'}
+                  </p>
+                </div>
+              </div>
+              <div className="rounded-xl border border-ink-200 p-4">
+                <p className="text-xs font-medium uppercase tracking-wide text-ink-500">Description</p>
+                <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-ink-700">
+                  {selectedService.description || 'Aucune description renseignée.'}
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    const service = selectedService;
+                    setSelectedService(null);
+                    openForm(service);
+                  }}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-brand-200 bg-brand-50 px-4 py-2.5 font-medium text-brand-700 transition hover:bg-brand-100"
+                >
+                  <Edit2 size={16} /> Modifier
+                </button>
+                <button
+                  onClick={() => {
+                    setDeleting(selectedService);
+                    setSelectedService(null);
+                  }}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 font-medium text-red-700 transition hover:bg-red-100"
+                >
+                  <Trash2 size={16} /> Supprimer
+                </button>
+              </div>
+            </div>
+          </section>
         </div>
       )}
 

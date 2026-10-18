@@ -5,7 +5,7 @@ import { useAdminAuth } from '../../../context/AdminAuthContext';
 import * as productsService from '../../../services/products';
 import api from '../../../services/api';
 import { toast } from 'sonner';
-import { Plus, Search, Edit2, Trash2, X, Save, AlertCircle, FileSpreadsheet, Image as ImageIcon } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, X, Save, AlertCircle, FileSpreadsheet, Image as ImageIcon, ArrowLeft } from 'lucide-react';
 
 interface ProductForm {
   name: string;
@@ -50,6 +50,9 @@ export const ProductsPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const [productSheetLoading, setProductSheetLoading] = useState(false);
   const [formData, setFormData] = useState<ProductForm>(EMPTY_FORM);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -134,6 +137,29 @@ export const ProductsPage: React.FC = () => {
       </AdminLayout>
     );
   }
+
+  const handleOpenProductSheet = async (productId: number) => {
+    setSelectedProductId(productId);
+    setSelectedProduct(null);
+    setProductSheetLoading(true);
+
+    try {
+      const res = await productsService.fetchProduct(String(productId));
+      setSelectedProduct(res?.data ?? res ?? null);
+    } catch (error) {
+      console.error('Failed to load product details', error);
+      const fallback = items.find(item => Number(item.id) === Number(productId)) ?? null;
+      setSelectedProduct(fallback);
+    } finally {
+      setProductSheetLoading(false);
+    }
+  };
+
+  const handleCloseProductSheet = () => {
+    setSelectedProductId(null);
+    setSelectedProduct(null);
+    setProductSheetLoading(false);
+  };
 
   const handleOpenModal = (product?: any) => {
     if (product) {
@@ -308,146 +334,168 @@ export const ProductsPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Products Table */}
       <div className="bg-white rounded-xl border border-ink-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          {loading ? (
-            <div className="py-16 text-center text-ink-400 text-sm">Chargement...</div>
-          ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="bg-ink-50 border-b border-ink-200">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-ink-900">Produit</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-ink-900">Prix de vente</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-ink-900">Stock</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-ink-900">Valeur stock</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-ink-900">Statut</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-ink-900">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-ink-200">
+        {loading ? (
+          <div className="py-16 text-center text-ink-400 text-sm">Chargement...</div>
+        ) : (
+          <>
+            {filteredProducts.length === 0 ? (
+              <div className="px-6 py-12 text-center">
+                <p className="text-ink-500 font-medium">Aucun produit trouvé</p>
+              </div>
+            ) : (
+              <div className="grid gap-4 p-4 md:grid-cols-2 xl:grid-cols-3">
                 {paginatedProducts.map((product) => {
                   const isCritical = product.stock === 0;
                   const isLow = product.stock > 0 && product.stock <= 5;
 
                   return (
-                    <tr key={product.id} className={`hover:bg-ink-50 transition-colors ${isCritical ? 'bg-red-50' : isLow ? 'bg-amber-50' : ''}`}>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
+                    <div
+                      key={product.id}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => handleOpenProductSheet(Number(product.id))}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          handleOpenProductSheet(Number(product.id));
+                        }
+                      }}
+                      className={`group cursor-pointer rounded-2xl border bg-ink-50/40 p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:bg-white hover:shadow-md ${isCritical ? 'border-red-200 bg-red-50/40' : isLow ? 'border-amber-200 bg-amber-50/40' : 'border-ink-200'}`}
+                    >
+                      <div className="mb-4 flex items-start justify-between gap-3">
+                        <div className="flex min-w-0 items-center gap-3">
                           {product.image_url ? (
-                            <img src={product.image_url} alt={product.name} className="w-10 h-10 object-cover rounded-lg border border-ink-200" />
+                            <img src={product.image_url} alt={product.name} className="h-12 w-12 rounded-xl border border-ink-200 object-cover" />
                           ) : product.awaiting_image ? (
-                            <span
-                              title={`Photo attendue : ${product.awaiting_image}`}
-                              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-dashed border-amber-300 bg-amber-50 text-amber-600"
-                            >
-                              <ImageIcon size={16} />
-                            </span>
-                          ) : null}
-                          <div>
-                            <p className="text-sm font-medium text-ink-900">{product.name}</p>
-                            {product.awaiting_image && (
-                              <p className="text-xs text-amber-600">
-                                Photo attendue : <code>{product.awaiting_image}</code>
-                              </p>
-                            )}
+                            <div title={`Photo attendue : ${product.awaiting_image}`} className="flex h-12 w-12 items-center justify-center rounded-xl border border-dashed border-amber-300 bg-amber-50 text-amber-600">
+                              <ImageIcon size={18} />
+                            </div>
+                          ) : (
+                            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-ink-200 bg-white text-ink-400">
+                              <ImageIcon size={18} />
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-semibold text-ink-900">{product.name}</p>
                             {product.category && (
-                              <p className="text-xs text-ink-400">{product.category.name ?? product.category}</p>
+                              <p className="truncate text-[11px] text-ink-500">{product.category.name ?? product.category}</p>
                             )}
                           </div>
                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-ink-900 text-right">
-                        {Number(product.price).toLocaleString('fr-FR')} XAF
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold ${
-                          isCritical ? 'bg-red-100 text-red-700' :
-                          isLow      ? 'bg-amber-100 text-amber-700' :
-                                       'bg-green-100 text-green-700'
-                        }`}>
-                          {isCritical && <AlertCircle size={14} />}
-                          {product.stock}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-ink-900 text-right">
-                        {(product.price * product.stock).toLocaleString('fr-FR')} XAF
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                          product.is_available ? 'bg-green-100 text-green-700' : 'bg-ink-100 text-ink-500'
-                        }`}>
+                        <span className={`inline-flex rounded-full px-2 py-1 text-[10px] font-medium ${product.is_available ? 'bg-green-100 text-green-700' : 'bg-ink-100 text-ink-500'}`}>
                           {product.is_available ? 'Disponible' : 'Indisponible'}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex justify-center gap-2">
+                      </div>
+
+                      <div className="space-y-2 text-sm text-ink-700">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-ink-500">Prix</span>
+                          <span className="font-semibold text-ink-900">{Number(product.price).toLocaleString('fr-FR')} XAF</span>
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-ink-500">Stock</span>
+                          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${isCritical ? 'bg-red-100 text-red-700' : isLow ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>
+                            {isCritical && <AlertCircle size={12} />}
+                            {product.stock}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-ink-500">Valeur</span>
+                          <span className="font-medium text-ink-900">{(product.price * product.stock).toLocaleString('fr-FR')} XAF</span>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex items-center justify-between border-t border-ink-200 pt-3">
+                        <span className="text-[11px] uppercase tracking-wide text-ink-400">Détails</span>
+                        <div className="flex gap-2">
                           <button
-                            onClick={() => handleOpenModal(product)}
-                            className="p-2 text-brand-600 hover:bg-brand-50 rounded-lg transition"
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleOpenModal(product);
+                            }}
+                            className="rounded-lg p-2 text-brand-600 transition hover:bg-brand-50"
+                            aria-label={`Modifier ${product.name}`}
                           >
                             <Edit2 size={16} />
                           </button>
                           <button
-                            onClick={() => setDeleteConfirm(product.id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setDeleteConfirm(product.id);
+                            }}
+                            className="rounded-lg p-2 text-red-600 transition hover:bg-red-50"
+                            aria-label={`Supprimer ${product.name}`}
                           >
                             <Trash2 size={16} />
                           </button>
                         </div>
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
-          )}
-        </div>
+              </div>
+            )}
 
-        {/* Empty State */}
-        {!loading && filteredProducts.length === 0 && (
-          <div className="px-6 py-12 text-center">
-            <p className="text-ink-500 font-medium">Aucun produit trouvé</p>
-          </div>
-        )}
-
-        {/* Table Footer */}
-        <div className="px-6 py-4 bg-ink-50 border-t border-ink-200 flex items-center justify-between text-sm text-ink-600">
-          <p>Total : {pagination ? pagination.total : filteredProducts.length} produits</p>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="px-3 py-1 rounded border border-ink-300 hover:bg-ink-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Précédent
-            </button>
-            <div className="flex items-center gap-1">
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                const page = currentPage > 3 ? currentPage - 2 + i : i + 1;
-                return page <= totalPages ? (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`px-3 py-1 rounded ${
-                      currentPage === page ? 'bg-brand-600 text-white' : 'border border-ink-300 hover:bg-ink-100'
-                    } transition`}
-                  >
-                    {page}
-                  </button>
-                ) : null;
-              })}
+            <div className="px-6 py-4 bg-ink-50 border-t border-ink-200 flex items-center justify-between text-sm text-ink-600">
+              <p>Total : {pagination ? pagination.total : filteredProducts.length} produits</p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 rounded border border-ink-300 hover:bg-ink-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Précédent
+                </button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                    const page = currentPage > 3 ? currentPage - 2 + i : i + 1;
+                    return page <= totalPages ? (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-3 py-1 rounded ${
+                          currentPage === page ? 'bg-brand-600 text-white' : 'border border-ink-300 hover:bg-ink-100'
+                        } transition`}
+                      >
+                        {page}
+                      </button>
+                    ) : null;
+                  })}
+                </div>
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages || totalPages === 0}
+                  className="px-3 py-1 rounded border border-ink-300 hover:bg-ink-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Suivant
+                </button>
+              </div>
             </div>
-            <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages || totalPages === 0}
-              className="px-3 py-1 rounded border border-ink-300 hover:bg-ink-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Suivant
-            </button>
-          </div>
-        </div>
+          </>
+        )}
       </div>
+
+      {selectedProductId !== null && (
+        <ProductSheet
+          product={selectedProduct}
+          loading={productSheetLoading}
+          onClose={handleCloseProductSheet}
+          onEdit={() => {
+            const product = selectedProduct ?? items.find(item => Number(item.id) === Number(selectedProductId));
+            if (product) handleOpenModal(product);
+            handleCloseProductSheet();
+          }}
+          onDelete={() => {
+            if (selectedProductId !== null) {
+              setDeleteConfirm(String(selectedProductId));
+              handleCloseProductSheet();
+            }
+          }}
+        />
+      )}
 
       {/* Add/Edit Modal */}
       {showModal && (
@@ -758,3 +806,126 @@ export const ProductsPage: React.FC = () => {
     </AdminLayout>
   );
 };
+
+const ProductSheet: React.FC<{
+  product: any | null;
+  loading: boolean;
+  onClose: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}> = ({ product, loading, onClose, onEdit, onDelete }) => (
+  <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="absolute inset-0 bg-ink-900/40" onClick={onClose} aria-hidden />
+
+    <div className="relative flex h-full w-full max-w-lg flex-col overflow-y-auto bg-white shadow-2xl">
+      <div className="sticky top-0 flex items-center gap-3 border-b border-ink-200 bg-white px-6 py-4">
+        <button onClick={onClose} aria-label="Fermer la fiche produit" className="text-ink-400 transition hover:text-ink-700">
+          <ArrowLeft size={20} />
+        </button>
+        <h2 className="flex-1 text-base font-semibold text-ink-900">
+          {loading ? 'Chargement…' : product?.name || 'Fiche produit'}
+        </h2>
+        <button onClick={onClose} aria-label="Fermer" className="text-ink-400 transition hover:text-ink-700">
+          <X size={20} />
+        </button>
+      </div>
+
+      {loading || !product ? (
+        <div className="py-20 text-center text-sm text-ink-400">
+          Chargement de la fiche…
+        </div>
+      ) : (
+        <div className="space-y-6 p-6">
+          <div className="overflow-hidden rounded-2xl border border-ink-200 bg-ink-50">
+            {product.image_url ? (
+              <img src={product.image_url} alt={product.name} className="h-56 w-full object-cover" />
+            ) : (
+              <div className="flex h-56 items-center justify-center bg-gradient-to-br from-brand-50 to-ink-50 text-ink-300">
+                <ImageIcon size={42} />
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-3 rounded-xl border border-ink-200 p-4">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-xs font-medium uppercase tracking-wide text-ink-500">Statut</span>
+              <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${product.is_available ? 'bg-green-100 text-green-700' : 'bg-ink-100 text-ink-500'}`}>
+                {product.is_available ? 'Disponible' : 'Indisponible'}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-sm text-ink-700">
+              <div className="rounded-lg bg-ink-50 p-3">
+                <p className="text-[11px] uppercase tracking-wide text-ink-500">Prix</p>
+                <p className="mt-1 font-semibold text-ink-900">{Number(product.price ?? 0).toLocaleString('fr-FR')} XAF</p>
+              </div>
+              <div className="rounded-lg bg-ink-50 p-3">
+                <p className="text-[11px] uppercase tracking-wide text-ink-500">Stock</p>
+                <p className="mt-1 font-semibold text-ink-900">{product.stock ?? 0}</p>
+              </div>
+              <div className="rounded-lg bg-ink-50 p-3">
+                <p className="text-[11px] uppercase tracking-wide text-ink-500">Valeur</p>
+                <p className="mt-1 font-semibold text-ink-900">{((product.price ?? 0) * (product.stock ?? 0)).toLocaleString('fr-FR')} XAF</p>
+              </div>
+              <div className="rounded-lg bg-ink-50 p-3">
+                <p className="text-[11px] uppercase tracking-wide text-ink-500">Catégorie</p>
+                <p className="mt-1 font-semibold text-ink-900">{product.category?.name ?? 'Sans catégorie'}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2 rounded-xl border border-ink-200 p-4">
+            <p className="text-xs font-medium uppercase tracking-wide text-ink-500">Description</p>
+            <p className="text-sm leading-relaxed text-ink-700">
+              {product.description || 'Aucune description renseignée pour ce produit.'}
+            </p>
+          </div>
+
+          {product.awaiting_image && (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+              Photo attendue : <span className="font-semibold">{product.awaiting_image}</span>
+            </div>
+          )}
+
+          {product.datasheet && (
+            <div className="rounded-xl border border-ink-200 p-4">
+              <p className="text-xs font-medium uppercase tracking-wide text-ink-500">Fiche technique</p>
+              <div className="mt-3 space-y-2 text-sm text-ink-700">
+                <p><span className="font-medium text-ink-900">Type :</span> {product.datasheet.type || 'Aucun'}</p>
+                {product.datasheet.text && (
+                  <div className="whitespace-pre-line rounded-lg bg-ink-50 p-3 text-xs leading-relaxed">
+                    {product.datasheet.text}
+                  </div>
+                )}
+                {product.datasheet.url && (
+                  <a href={product.datasheet.url} target="_blank" rel="noreferrer" className="inline-block text-brand-600 hover:underline">
+                    Ouvrir la pièce jointe
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onEdit}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-brand-200 bg-brand-50 px-4 py-2.5 font-medium text-brand-700 transition hover:bg-brand-100"
+            >
+              <Edit2 size={16} />
+              Modifier
+            </button>
+            <button
+              type="button"
+              onClick={onDelete}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 font-medium text-red-700 transition hover:bg-red-100"
+            >
+              <Trash2 size={16} />
+              Supprimer
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+);
