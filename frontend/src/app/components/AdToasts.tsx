@@ -3,7 +3,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Sparkles, X } from "lucide-react";
 import { useI18n } from "../../i18n/I18nContext";
 import {
+  alreadySeen,
   loadAnnouncements,
+  markSeen,
   trackAnnouncement,
   type Announcement,
   type AnnouncementVariant,
@@ -18,7 +20,6 @@ import {
  * toutes, une fois par visite, ou à chaque passage.
  */
 
-const SEEN_PREFIX = "rtw.ad.seen.";
 /** Décalage entre deux pubs, pour qu'elles ne se chassent pas l'une l'autre. */
 const STAGGER_MS = 2500;
 
@@ -29,29 +30,6 @@ const VARIANTS: Record<AnnouncementVariant, { accent: string; halo: string; chip
   emerald: { accent: "from-emerald-600 to-teal-400",   halo: "bg-emerald-300/35", chip: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-100" },
   rose:    { accent: "from-rose-600 to-fuchsia-400",   halo: "bg-rose-300/35",    chip: "bg-rose-50 text-rose-700 dark:bg-rose-500/20 dark:text-rose-100" },
 };
-
-/** Le stockage dépend de la fréquence : « once » survit à la fermeture du navigateur. */
-function storageFor(frequency: Announcement["frequency"]): Storage | null {
-  try {
-    if (frequency === "once") return window.localStorage;
-    if (frequency === "session") return window.sessionStorage;
-  } catch {
-    // Stockage bloqué : la pub repassera, ce qui vaut mieux que de ne jamais s'afficher
-  }
-  return null;
-}
-
-function alreadySeen(ad: Announcement): boolean {
-  return storageFor(ad.frequency)?.getItem(SEEN_PREFIX + ad.id) === "1";
-}
-
-function markSeen(ad: Announcement): void {
-  try {
-    storageFor(ad.frequency)?.setItem(SEEN_PREFIX + ad.id, "1");
-  } catch {
-    // ignoré volontairement
-  }
-}
 
 export function AdToasts() {
   const { tx } = useI18n();

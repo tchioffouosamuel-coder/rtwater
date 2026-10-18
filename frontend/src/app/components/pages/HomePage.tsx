@@ -1,5 +1,6 @@
 import { HeroSection } from "../HeroSection";
 import { AnnouncementBanner } from "../AnnouncementBanner";
+import { AnnouncementModal } from "../AnnouncementModal";
 import { NewProductsSection } from "../NewProductsSection";
 import { AdToasts } from "../AdToasts";
 import { ServicesSection } from "../ServicesSection";
@@ -15,14 +16,16 @@ export function HomePage() {
   return (
     <>
       <HeroSection />
-      {/* Bandeau d'annonces : il chevauche le bas du héros, là où le regard arrive */}
-      <AnnouncementBanner />
       <NewProductsSection />
       <ServicesSection />
       <TrustSection />
       <CTASection />
-      {/* Pubs flottantes : montées ici, elles ne suivent pas le visiteur hors de l'accueil */}
+      {/* Annonces : bandeaux collés au bord de l'écran, pubs flottantes et
+          modales. Montées ici, elles ne suivent pas le visiteur hors de
+          l'accueil, et aucune ne décale le contenu de la page. */}
+      <AnnouncementBanner />
       <AdToasts />
+      <AnnouncementModal />
     </>
   );
 }

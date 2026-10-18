@@ -6,16 +6,22 @@ import {
   loadAnnouncements,
   trackAnnouncement,
   type Announcement,
+  type AnnouncementPosition,
   type AnnouncementVariant,
 } from "../../services/announcements";
 
 /**
- * Bandeau d'annonces de l'accueil.
+ * Bandeaux d'annonces, collés en haut ou en bas de la fenêtre.
  *
- * Les annonces défilent une à une plutôt que de s'empiler : un bandeau qui
- * grandit avec le nombre d'annonces repousse la page et finit par être ignoré.
- * Une fermeture est retenue par identifiant, donc une nouvelle annonce
- * réapparaît même si la précédente a été écartée.
+ * Fixés plutôt qu'insérés dans la page : un bandeau posé entre deux sections
+ * repousse le contenu, se lit comme une section de plus et disparaît dès le
+ * premier défilement. Celui du haut se range sous l'en-tête collant, celui du
+ * bas au ras de la fenêtre.
+ *
+ * Les annonces d'un même bord défilent une à une : un bandeau qui grandit avec
+ * le nombre d'annonces finit par manger l'écran. Une fermeture est retenue par
+ * identifiant, donc une nouvelle annonce réapparaît même si la précédente a
+ * été écartée.
  */
 
 const DISMISS_PREFIX = "rtw.banner.dismissed.";
@@ -45,11 +51,39 @@ function rememberDismissal(id: number): void {
   }
 }
 
+/**
+ * Hauteur de l'en-tête collant : le bandeau du haut se glisse dessous plutôt
+ * que de le recouvrir. L'en-tête se compacte au défilement, d'où une mesure
+ * continue et non une constante.
+ */
+function useHeaderHeight(active: boolean): number {
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (!active) return;
+    const header = document.querySelector("header");
+    if (!header) return;
+
+    const measure = () => setHeight(header.getBoundingClientRect().height);
+    measure();
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(header);
+    window.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+    };
+  }, [active]);
+
+  return height;
+}
+
 export function AnnouncementBanner() {
-  const { tx } = useI18n();
   const [items, setItems] = useState<Announcement[]>([]);
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -65,7 +99,38 @@ export function AnnouncementBanner() {
     };
   }, []);
 
-  const current = items.length ? items[index % items.length] : undefined;
+  const dismiss = useCallback((announcement: Announcement) => {
+    rememberDismissal(announcement.id);
+    setItems((list) => list.filter((a) => a.id !== announcement.id));
+  }, []);
+
+  const top = useMemo(() => items.filter((a) => a.position !== "bottom"), [items]);
+  const bottom = useMemo(() => items.filter((a) => a.position === "bottom"), [items]);
+
+  return (
+    <>
+      <BannerRail position="top" items={top} onDismiss={dismiss} />
+      <BannerRail position="bottom" items={bottom} onDismiss={dismiss} />
+    </>
+  );
+}
+
+function BannerRail({
+  position,
+  items,
+  onDismiss,
+}: {
+  position: AnnouncementPosition;
+  items: Announcement[];
+  onDismiss: (announcement: Announcement) => void;
+}) {
+  const { tx } = useI18n();
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const headerHeight = useHeaderHeight(position === "top" && items.length > 0);
+
+  const safeIndex = items.length ? index % items.length : 0;
+  const current = items.length ? items[safeIndex] : undefined;
 
   // Rotation automatique, suspendue au survol et quand il n'y a qu'une annonce
   useEffect(() => {
@@ -80,33 +145,38 @@ export function AnnouncementBanner() {
     if (currentId) trackAnnouncement(currentId, "view");
   }, [currentId]);
 
-  const dismiss = useCallback((announcement: Announcement) => {
-    rememberDismissal(announcement.id);
-    setItems((list) => {
-      const next = list.filter((a) => a.id !== announcement.id);
-      setIndex((i) => (next.length ? i % next.length : 0));
-      return next;
-    });
-  }, []);
-
   const tone = useMemo(() => VARIANTS[current?.variant ?? "brand"], [current?.variant]);
 
   if (!current) return null;
 
+  const atTop = position === "top";
+
   return (
     <section
       aria-label={tx("Annonces", "Announcements")}
-      className="relative z-20 mx-auto -mt-10 max-w-7xl px-4 sm:-mt-14 md:px-6"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      style={atTop ? { top: headerHeight } : undefined}
+      className={`pointer-events-none fixed inset-x-0 z-40 px-3 sm:px-4 ${
+        atTop
+          ? "pt-2 sm:pt-3"
+          // Gouttière à droite : le bouton WhatsApp et le retour en haut vivent
+          // dans ce coin et doivent rester cliquables sous le bandeau.
+          : "bottom-0 pb-[max(0.5rem,env(safe-area-inset-bottom))] pr-20 sm:pb-3 sm:pr-24"
+      }`}
     >
-      <div className={`relative overflow-hidden rounded-2xl ring-1 ${tone.ring} animate-banner-in`}>
+      <motion.div
+        initial={{ opacity: 0, y: atTop ? -24 : 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        className={`pointer-events-auto relative mx-auto max-w-7xl overflow-hidden rounded-2xl shadow-xl shadow-brand-950/25 ring-1 ${tone.ring}`}
+      >
         {/* Fond en verre teinté : le dégradé passe derrière le flou */}
         <div className={`absolute inset-0 bg-gradient-to-r ${tone.gradient}`} />
         <div className="glass-dark absolute inset-0" />
         <div aria-hidden className={`aurora-blob absolute -right-20 -top-24 h-56 w-56 rounded-full ${tone.glow}`} />
 
-        <div className="relative flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5">
+        <div className="relative flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:gap-5 sm:p-4">
           {/* Pictogramme : l'emoji choisi au backoffice, sinon le mégaphone */}
           <div className="glass-pill flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg text-white animate-float">
             {current.icon ? <span aria-hidden>{current.icon}</span> : <Megaphone className="h-5 w-5" />}
@@ -149,9 +219,9 @@ export function AnnouncementBanner() {
                       key={item.id}
                       onClick={() => setIndex(i)}
                       aria-label={tx(`Annonce ${i + 1}`, `Announcement ${i + 1}`)}
-                      aria-current={i === index}
+                      aria-current={i === safeIndex}
                       className={`h-1.5 rounded-full transition-all ${
-                        i === index ? "w-6 bg-white" : "w-1.5 bg-white/45 hover:bg-white/70"
+                        i === safeIndex ? "w-6 bg-white" : "w-1.5 bg-white/45 hover:bg-white/70"
                       }`}
                     />
                   ))}
@@ -172,7 +242,7 @@ export function AnnouncementBanner() {
 
             {current.dismissible && (
               <button
-                onClick={() => dismiss(current)}
+                onClick={() => onDismiss(current)}
                 aria-label={tx("Fermer l'annonce", "Dismiss announcement")}
                 className="rounded-lg p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white"
               >
@@ -185,14 +255,14 @@ export function AnnouncementBanner() {
         {/* Jauge : rend la rotation prévisible plutôt que surprenante */}
         {items.length > 1 && !paused && (
           <motion.div
-            key={`progress-${current.id}-${index}`}
+            key={`progress-${current.id}-${safeIndex}`}
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: ROTATION_MS / 1000, ease: "linear" }}
             className="absolute bottom-0 left-0 h-0.5 w-full origin-left bg-white/70"
           />
         )}
-      </div>
+      </motion.div>
     </section>
   );
 }

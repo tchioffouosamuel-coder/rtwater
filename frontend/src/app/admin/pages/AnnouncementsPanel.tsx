@@ -2,22 +2,31 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner';
 import {
   AlertCircle, BellRing, Edit2, Eye, Image as ImageIcon, Loader2, Megaphone,
-  MousePointerClick, Plus, Trash2, Upload, X,
+  MousePointerClick, Plus, SquareStack, Trash2, Upload, X,
 } from 'lucide-react';
 import {
   createAnnouncement, deleteAnnouncement, fetchAdminAnnouncements, updateAnnouncement,
   uploadAnnouncementImage,
-  type AdminAnnouncement, type AnnouncementPlacement, type AnnouncementState, type AnnouncementVariant,
+  type AdminAnnouncement, type AnnouncementPlacement, type AnnouncementPosition,
+  type AnnouncementState, type AnnouncementVariant,
 } from '../../../services/announcements';
 
 /**
- * Annonces de la page d'accueil : bandeaux défilants et pubs flottantes.
+ * Annonces de la page d'accueil : bandeaux fixés au bord de l'écran, pubs
+ * flottantes et modales. Aucune ne s'insère dans le flux de la page.
  *
- * Les deux partagent un seul écran et un seul formulaire — ils portent le même
- * contenu et ne diffèrent que par l'emplacement. Les champs propres à chaque
- * emplacement (délai d'une pub, fermeture d'un bandeau) n'apparaissent que
- * lorsqu'ils servent, pour que le formulaire ne demande jamais l'inutile.
+ * Les trois partagent un seul écran et un seul formulaire — elles portent le
+ * même contenu et ne diffèrent que par l'emplacement. Les champs propres à
+ * chacun (bord de l'écran d'un bandeau, délai d'une pub ou d'une modale)
+ * n'apparaissent que lorsqu'ils servent, pour que le formulaire ne demande
+ * jamais l'inutile.
  */
+
+const PLACEMENT_META: Record<AnnouncementPlacement, { label: string; hint: string }> = {
+  banner: { label: 'Bandeau fixe',  hint: "Collé en haut ou en bas de l'écran" },
+  toast:  { label: 'Pub flottante', hint: "Petite carte en bas de l'écran" },
+  modal:  { label: 'Modale',        hint: 'Fenêtre au centre, par-dessus la page' },
+};
 
 const STATE_META: Record<AnnouncementState, { label: string; tone: string }> = {
   running:   { label: 'Diffusée',  tone: 'bg-green-100 text-green-700' },
@@ -43,6 +52,7 @@ const FREQUENCY_LABEL: Record<string, string> = {
 interface AnnouncementForm {
   id: number | null;
   placement: AnnouncementPlacement;
+  position: AnnouncementPosition;
   title: string;
   message: string;
   link_url: string;
@@ -64,6 +74,7 @@ interface AnnouncementForm {
 const emptyForm = (placement: AnnouncementPlacement): AnnouncementForm => ({
   id: null,
   placement,
+  position: 'top',
   title: '',
   message: '',
   link_url: '',
@@ -114,6 +125,7 @@ export const AnnouncementsPanel: React.FC = () => {
       ? {
           id: announcement.id,
           placement: announcement.placement,
+          position: announcement.position ?? 'top',
           title: announcement.title,
           message: announcement.message ?? '',
           link_url: announcement.link_url ?? '',
@@ -157,6 +169,7 @@ export const AnnouncementsPanel: React.FC = () => {
     try {
       const payload: Record<string, any> = {
         placement: form.placement,
+        position: form.position,
         title,
         message: form.message.trim() || null,
         link_url: form.link_url.trim() || null,
@@ -213,14 +226,17 @@ export const AnnouncementsPanel: React.FC = () => {
     }
   };
 
-  const isToast = form.placement === 'toast';
+  const isBanner = form.placement === 'banner';
+  // Pub et modale partagent la même mécanique d'apparition : délai, durée, fréquence
+  const isTimed = !isBanner;
 
   return (
     <>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <p className="max-w-2xl text-sm text-ink-500">
-          Les bandeaux défilent en haut de la page d'accueil ; les pubs apparaissent en bas de l'écran
-          après un délai. Une annonce sans date de fin reste diffusée tant qu'elle est active.
+          Une annonce ne s'insère jamais dans la page : c'est un bandeau collé en haut ou en bas de
+          l'écran, une pub flottante, ou une modale au centre. Une annonce sans date de fin reste
+          diffusée tant qu'elle est active.
         </p>
         <div className="flex gap-2">
           <button
@@ -237,11 +253,18 @@ export const AnnouncementsPanel: React.FC = () => {
             <Plus size={18} />
             Pub flottante
           </button>
+          <button
+            onClick={() => openForm(undefined, 'modal')}
+            className="flex items-center gap-2 rounded-lg border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-medium text-brand-700 transition hover:bg-brand-100"
+          >
+            <Plus size={18} />
+            Modale
+          </button>
         </div>
       </div>
 
       <div className="mb-4 flex gap-2">
-        {([['all', 'Toutes'], ['banner', 'Bandeaux'], ['toast', 'Pubs flottantes']] as const).map(([id, label]) => (
+        {([['all', 'Toutes'], ['banner', 'Bandeaux'], ['toast', 'Pubs flottantes'], ['modal', 'Modales']] as const).map(([id, label]) => (
           <button
             key={id}
             onClick={() => setFilter(id as 'all' | AnnouncementPlacement)}
@@ -310,16 +333,23 @@ export const AnnouncementsPanel: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <span className="inline-flex items-center gap-1.5 text-xs font-medium text-ink-700">
-                          {item.placement === 'banner' ? <Megaphone size={14} /> : <BellRing size={14} />}
-                          {item.placement === 'banner' ? 'Bandeau' : 'Pub flottante'}
+                          {item.placement === 'banner' ? <Megaphone size={14} />
+                            : item.placement === 'modal' ? <SquareStack size={14} />
+                            : <BellRing size={14} />}
+                          {PLACEMENT_META[item.placement].label}
                         </span>
+                        {item.placement === 'banner' && (
+                          <span className="mt-0.5 block text-xs text-ink-400">
+                            {item.position === 'bottom' ? "Bas de l'écran" : "Haut de l'écran"}
+                          </span>
+                        )}
                       </td>
                       <td className="px-6 py-4 text-xs text-ink-500">
                         {item.starts_at && <p>Dès le {new Date(item.starts_at).toLocaleDateString('fr-FR')}</p>}
                         {item.ends_at
                           ? <p>Jusqu'au {new Date(item.ends_at).toLocaleDateString('fr-FR')}</p>
                           : <p>Sans date de fin</p>}
-                        {item.placement === 'toast' && (
+                        {item.placement !== 'banner' && (
                           <p>
                             Après {item.delay_seconds}s · {FREQUENCY_LABEL[item.frequency]}
                           </p>
@@ -369,7 +399,7 @@ export const AnnouncementsPanel: React.FC = () => {
 
       {showForm && (
         <PanelModal
-          title={form.id ? "Modifier l'annonce" : isToast ? 'Nouvelle pub flottante' : 'Nouveau bandeau'}
+          title={form.id ? "Modifier l'annonce" : 'Nouvelle annonce : ' + PLACEMENT_META[form.placement].label.toLowerCase()}
           onClose={() => setShowForm(false)}
         >
           <div className="space-y-4">
@@ -385,22 +415,48 @@ export const AnnouncementsPanel: React.FC = () => {
 
             <div>
               <span className="mb-1.5 block text-sm font-medium text-ink-700">Emplacement</span>
-              <div className="grid grid-cols-2 gap-2">
-                {([['banner', 'Bandeau en haut'], ['toast', 'Pub flottante']] as const).map(([id, label]) => (
+              <div className="grid gap-2 sm:grid-cols-3">
+                {(['banner', 'toast', 'modal'] as const).map(id => (
                   <button
                     key={id}
                     onClick={() => setForm(f => ({ ...f, placement: id }))}
-                    className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition ${
+                    className={`rounded-lg border px-3 py-2.5 text-left transition ${
                       form.placement === id
                         ? 'border-brand-500 bg-brand-50 text-brand-700'
                         : 'border-ink-200 text-ink-600 hover:bg-ink-50'
                     }`}
                   >
-                    {label}
+                    <span className="block text-sm font-medium">{PLACEMENT_META[id].label}</span>
+                    <span className="mt-0.5 block text-xs text-ink-400">{PLACEMENT_META[id].hint}</span>
                   </button>
                 ))}
               </div>
             </div>
+
+            {/* Le bord de l'écran ne concerne que le bandeau */}
+            {isBanner && (
+              <div>
+                <span className="mb-1.5 block text-sm font-medium text-ink-700">Position du bandeau</span>
+                <div className="grid grid-cols-2 gap-2">
+                  {([['top', "Haut de l'écran"], ['bottom', "Bas de l'écran"]] as const).map(([id, label]) => (
+                    <button
+                      key={id}
+                      onClick={() => setForm(f => ({ ...f, position: id }))}
+                      className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition ${
+                        form.position === id
+                          ? 'border-brand-500 bg-brand-50 text-brand-700'
+                          : 'border-ink-200 text-ink-600 hover:bg-ink-50'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                <span className="mt-1 block text-xs text-ink-400">
+                  Le bandeau reste visible au défilement ; celui du haut se range sous le menu.
+                </span>
+              </div>
+            )}
 
             <div className="grid gap-4 sm:grid-cols-[1fr_auto]">
               <label className="block">
@@ -511,7 +567,7 @@ export const AnnouncementsPanel: React.FC = () => {
               </div>
             </div>
 
-            {isToast ? (
+            {isTimed ? (
               <div className="grid gap-4 rounded-xl border border-ink-200 bg-ink-50/60 p-4 sm:grid-cols-3">
                 <label className="block">
                   <span className="mb-1.5 block text-sm font-medium text-ink-700">Délai (s)</span>
@@ -529,7 +585,7 @@ export const AnnouncementsPanel: React.FC = () => {
                     onChange={(e) => setForm(f => ({ ...f, duration_seconds: e.target.value }))}
                     className="w-full rounded-lg border border-ink-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500"
                   />
-                  <span className="mt-1 block text-xs text-ink-400">0 = reste jusqu'à fermeture.</span>
+                  <span className="mt-1 block text-xs text-ink-400">0 = reste jusqu'à fermeture par le visiteur.</span>
                 </label>
                 <label className="block">
                   <span className="mb-1.5 block text-sm font-medium text-ink-700">Fréquence</span>
@@ -654,23 +710,60 @@ export const AnnouncementsPanel: React.FC = () => {
 const Preview: React.FC<{ form: AnnouncementForm }> = ({ form }) => {
   const swatch = VARIANT_META.find(v => v.id === form.variant)?.swatch ?? '';
 
+  const banner = (
+    <div className={`flex items-center gap-3 rounded-xl px-4 py-3 text-white ${swatch}`}>
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/20 text-base">
+        {form.icon || '📣'}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-semibold">{form.title || 'Titre de votre annonce'}</p>
+        {form.message && <p className="truncate text-xs text-white/85">{form.message}</p>}
+      </div>
+      {form.link_url && (
+        <span className="shrink-0 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-brand-700">
+          {form.link_label || 'Découvrir'}
+        </span>
+      )}
+    </div>
+  );
+
   return (
     <div className="rounded-xl border border-ink-200 bg-ink-50/60 p-4">
       <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-400">Aperçu</p>
+
       {form.placement === 'banner' ? (
-        <div className={`flex items-center gap-3 rounded-xl px-4 py-3 text-white ${swatch}`}>
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/20 text-base">
-            {form.icon || '📣'}
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold">{form.title || 'Titre de votre annonce'}</p>
-            {form.message && <p className="truncate text-xs text-white/85">{form.message}</p>}
-          </div>
-          {form.link_url && (
-            <span className="shrink-0 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-brand-700">
-              {form.link_label || 'Découvrir'}
-            </span>
+        // Le cadre rappelle la fenêtre : on voit à quel bord le bandeau se colle
+        <div className="flex h-36 flex-col rounded-xl border border-dashed border-ink-300 bg-white p-2">
+          {form.position === 'bottom' ? (
+            <>
+              <div className="flex-1 rounded-lg bg-ink-100/70" aria-hidden />
+              <div className="mt-2">{banner}</div>
+            </>
+          ) : (
+            <>
+              {banner}
+              <div className="mt-2 flex-1 rounded-lg bg-ink-100/70" aria-hidden />
+            </>
           )}
+        </div>
+      ) : form.placement === 'modal' ? (
+        <div className="flex h-44 items-center justify-center rounded-xl border border-dashed border-ink-300 bg-ink-900/20 p-3">
+          <div className="w-full max-w-xs overflow-hidden rounded-2xl bg-white shadow-xl">
+            <div className={`h-1.5 ${swatch}`} />
+            {form.image_preview && <img src={form.image_preview} alt="" className="h-16 w-full object-cover" />}
+            <div className="p-3">
+              <span className={`flex h-9 w-9 items-center justify-center rounded-lg text-white ${swatch}`}>
+                {form.icon || '📣'}
+              </span>
+              <p className="mt-2 text-sm font-semibold text-ink-900">{form.title || 'Titre de votre annonce'}</p>
+              {form.message && <p className="mt-0.5 line-clamp-2 text-xs text-ink-500">{form.message}</p>}
+              {form.link_url && (
+                <span className={`mt-2 inline-block rounded-lg px-3 py-1.5 text-xs font-semibold text-white ${swatch}`}>
+                  {form.link_label || 'Découvrir'}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
       ) : (
         <div className="max-w-xs overflow-hidden rounded-xl border border-ink-200 bg-white shadow-lg">
