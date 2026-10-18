@@ -48,7 +48,7 @@ export function NewsletterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mt-6" noValidate>
-      <label htmlFor="newsletter-email" className="block text-sm text-ink-400 mb-3">
+      <label htmlFor="newsletter-email" className="block text-sm text-ink-300 mb-3">
         {tx("Restez informé de nos nouveautés", "Stay informed about our news")}
       </label>
 
@@ -67,7 +67,7 @@ export function NewsletterForm() {
           placeholder={tx("Votre adresse e-mail", "Your email address")}
           aria-invalid={status === "error"}
           aria-describedby={message ? "newsletter-feedback" : undefined}
-          className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-ink-500 focus:outline-none focus:border-brand-600 transition-colors disabled:opacity-60"
+          className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-ink-300 focus:outline-none focus:border-brand-600 transition-colors disabled:opacity-60"
         />
 
         <motion.button
@@ -99,7 +99,7 @@ export function NewsletterForm() {
         </p>
       )}
 
-      <p className="mt-2 text-[11px] leading-relaxed text-ink-500">
+      <p className="mt-2 text-[11px] leading-relaxed text-ink-300">
         {tx(
           "Vous pouvez vous désinscrire à tout moment. Aucune revente de vos données.",
           "You can unsubscribe at any time. We never sell your data.",

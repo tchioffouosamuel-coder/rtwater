@@ -178,7 +178,7 @@ function BannerRail({
 
         <div className="relative flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:gap-5 sm:p-4">
           {/* Pictogramme : l'emoji choisi au backoffice, sinon le mégaphone */}
-          <div className="glass-pill flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg text-white animate-float">
+          <div className="glass-dark flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg text-white animate-float">
             {current.icon ? <span aria-hidden>{current.icon}</span> : <Megaphone className="h-5 w-5" />}
           </div>
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { AdminLayout } from "../layout/AdminLayout";
 import { useAdminAuth } from "../../../context/AdminAuthContext";
 import { fetchAdminOrders, downloadOrderReceipt } from "../../../services/orders";
+import { formatApiDate } from "../../../lib/date";
 import { toast } from "sonner";
 import {
   Printer, Download, Eye, Search, FileText, TrendingUp,
@@ -262,7 +263,7 @@ export const ReceiptsPage: React.FC = () => {
                       )}
                     </td>
                     <td className="px-5 py-3.5 text-sm text-ink-500">
-                      {new Date(order.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
+                      {formatApiDate(order.created_at, { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
                     <td className="px-5 py-3.5 text-sm font-semibold text-ink-900 text-right">
                       {parseFloat(String(order.total)).toLocaleString("fr-FR")} XAF
@@ -341,7 +342,7 @@ export const ReceiptsPage: React.FC = () => {
                     Commande #{String(selectedOrder.id).padStart(5, "0")}
                   </h2>
                   <p className="text-xs text-ink-400">
-                    {new Date(selectedOrder.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
+                    {formatApiDate(selectedOrder.created_at, { day: "2-digit", month: "long", year: "numeric" })}
                   </p>
                 </div>
               </div>

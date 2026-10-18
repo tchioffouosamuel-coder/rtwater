@@ -5,6 +5,7 @@ import { useTheme } from "../../theme/ThemeContext";
 import { useI18n } from "../../i18n/I18nContext";
 import { useSiteContent } from "../../context/SiteContentContext";
 import { NewsletterForm } from "./NewsletterForm";
+import { PushNotificationToggle } from "./PushNotificationToggle";
 
 const SOCIAL_ICONS: Record<string, React.ElementType> = {
   facebook: Facebook,
@@ -55,12 +56,13 @@ export function Footer() {
             <div className="mb-6">
               <img src="/logo.webp" alt="RT Water Solution" className="h-12 w-auto" />
             </div>
-            <p className="text-ink-400 mb-6 leading-relaxed">
+            <p className="text-ink-300 mb-6 leading-relaxed">
               {footer.tagline}
             </p>
 
             {/* Lettre d'information — formulaire reellement branche sur /api/newsletter */}
             <NewsletterForm />
+            <PushNotificationToggle onDark />
           </motion.div>
 
           {/* Services */}
@@ -84,7 +86,7 @@ export function Footer() {
                 >
                   <button
                     onClick={() => handleNavigation("accueil")}
-                    className="text-ink-400 hover:text-aqua-500 transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-ink-300 hover:text-aqua-300 transition-colors duration-300 flex items-center gap-2 group"
                   >
                     <span className="w-1.5 h-1.5 bg-brand-600 rounded-full group-hover:bg-aqua-500 transition-colors"></span>
                     {service}
@@ -115,7 +117,7 @@ export function Footer() {
                 >
                   <button
                     onClick={() => handleNavigation(link.path)}
-                    className="text-ink-400 hover:text-aqua-500 transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-ink-300 hover:text-aqua-300 transition-colors duration-300 flex items-center gap-2 group"
                   >
                     <span className="w-1.5 h-1.5 bg-brand-600 rounded-full group-hover:bg-aqua-500 transition-colors"></span>
                     {link.label}
@@ -141,7 +143,7 @@ export function Footer() {
                   <MapPin className="w-5 h-5 text-aqua-500" />
                 </div>
                 <div>
-                  <p className="text-ink-400 leading-relaxed">
+                  <p className="text-ink-300 leading-relaxed">
                     {footer.address}
                   </p>
                 </div>
@@ -153,7 +155,7 @@ export function Footer() {
                 <div>
                   <a
                     href={`tel:${footer.phone}`}
-                    className="text-ink-400 hover:text-aqua-500 transition-colors"
+                    className="text-ink-300 hover:text-aqua-300 transition-colors"
                   >
                     {footer.phone}
                   </a>
@@ -166,7 +168,7 @@ export function Footer() {
                 <div>
                   <a
                     href={`mailto:${footer.email}`}
-                    className="text-ink-400 hover:text-aqua-500 transition-colors"
+                    className="text-ink-300 hover:text-aqua-300 transition-colors"
                   >
                     {footer.email}
                   </a>
@@ -176,7 +178,7 @@ export function Footer() {
 
             {/* Social Media */}
             <div className="mt-8">
-              <p className="text-sm text-ink-400 mb-4">{t("footer.followUs")}</p>
+              <p className="text-sm text-ink-300 mb-4">{t("footer.followUs")}</p>
               <div className="flex gap-3">
                 {footer.socialLinks.map((social) => {
                   const Icon = SOCIAL_ICONS[social.platform] ?? Facebook;
@@ -208,19 +210,19 @@ export function Footer() {
           className="border-t border-white/10 dark:border-white/5 pt-8"
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-ink-400 text-sm">
+            <p className="text-ink-300 text-sm">
               © {currentYear} {footer.companyName} {footer.companyTagline}. {t("footer.allRightsReserved")}
             </p>
             <div className="flex gap-6 text-sm">
               <a
                 href="#"
-                className="text-ink-400 hover:text-aqua-500 transition-colors duration-300"
+                className="text-ink-300 hover:text-aqua-300 transition-colors duration-300"
               >
                 {t("footer.privacy")}
               </a>
               <a
                 href="#"
-                className="text-ink-400 hover:text-aqua-500 transition-colors duration-300"
+                className="text-ink-300 hover:text-aqua-300 transition-colors duration-300"
               >
                 {t("footer.terms")}
               </a>

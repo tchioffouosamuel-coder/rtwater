@@ -233,7 +233,7 @@ function NewProductCard({ product, locale }: { product: ShopProduct; locale: str
           <div>
             <p className="text-base font-bold text-brand-700 dark:text-aqua-300">{price}</p>
             {product.discount > 0 && (
-              <p className="text-xs text-ink-400 line-through">
+              <p className="text-xs text-ink-500 dark:text-ink-400 line-through">
                 {Math.round(product.price).toLocaleString(locale)} XAF
               </p>
             )}

@@ -15,7 +15,7 @@ export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout, hasPermission } = useAdminAuth();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const gestionPaths = [
     '/admin/products',
     '/admin/categories',
@@ -31,6 +31,10 @@ export const Sidebar: React.FC = () => {
     gestionPaths.some(path => location.pathname.startsWith(path)) ? ['Gestion'] : []
   );
   const isGestionExpanded = expandedMenus.includes('Gestion');
+
+  React.useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   const toggleMenu = (label: string) => {
     setExpandedMenus(prev =>
@@ -204,20 +208,22 @@ export const Sidebar: React.FC = () => {
       {/* Toggle Button Mobile */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 lg:hidden bg-ink-700 text-white p-2 rounded-lg hover:bg-ink-800 transition"
+        aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+        aria-expanded={isOpen}
+        className="fixed left-3 top-3 z-[60] rounded-xl bg-ink-900 p-3 text-white shadow-lg transition hover:bg-ink-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 lg:hidden"
       >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
+        {isOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-screen w-64 bg-ink-50 border-r border-ink-200 flex flex-col transform transition-transform duration-300 z-40 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0`}
+        className={`fixed left-0 top-0 z-50 flex h-dvh w-72 max-w-[calc(100vw-2rem)] flex-col border-r border-ink-200 bg-ink-50 shadow-2xl transition-transform duration-300 lg:z-40 lg:h-screen lg:w-64 lg:max-w-none lg:shadow-none ${
+          isOpen ? 'visible translate-x-0' : 'invisible -translate-x-full'
+        } lg:visible lg:translate-x-0`}
       >
         {/* User Info */}
         {user && (
-          <div className="px-6 py-4 border-b border-ink-200 bg-white">
+          <div className="border-b border-ink-200 bg-white px-6 py-4 pt-16 lg:pt-4">
             <div className="mb-3">
               <div className="w-10 h-10 bg-gradient-to-br from-brand-400 to-brand-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                 {user.name.charAt(0)}
@@ -244,6 +250,7 @@ export const Sidebar: React.FC = () => {
             onClick={() => {
               logout();
               navigate('/admin/login');
+              setIsOpen(false);
             }}
             className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 hover:text-red-700"
           >
@@ -256,7 +263,7 @@ export const Sidebar: React.FC = () => {
       {/* Overlay Mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-30 lg:hidden"
+          className="fixed inset-0 z-40 bg-ink-950/45 backdrop-blur-[2px] lg:hidden"
           onClick={() => setIsOpen(false)}
         ></div>
       )}

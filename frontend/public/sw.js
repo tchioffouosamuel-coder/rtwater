@@ -7,7 +7,7 @@
  * - API publique (catalogue, catégories, pages, blog) : réseau d'abord, copie locale en secours.
  * - Jamais de cache pour les requêtes authentifiées ni pour les commandes, paiements, profil.
  */
-const VERSION = "rtwater-v1";
+const VERSION = "rtwater-v2";
 const SHELL = `${VERSION}-shell`;
 const ASSETS = `${VERSION}-assets`;
 const IMAGES = `${VERSION}-images`;
@@ -122,3 +122,10 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(networkFirst(request, API, MAX_API));
   }
 });
+
+// A network failure loading Firebase must not disable the offline cache.
+try {
+  importScripts("/firebase-messaging-sw.js");
+} catch (error) {
+  console.warn("Firebase Messaging unavailable; offline mode remains active.");
+}

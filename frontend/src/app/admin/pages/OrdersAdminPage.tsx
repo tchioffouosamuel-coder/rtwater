@@ -1,7 +1,9 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AdminLayout } from '../layout/AdminLayout';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import * as ordersService from '../../../services/orders';
+import { formatApiDate } from '../../../lib/date';
 import { toast } from 'sonner';
 import { Search, Eye, Printer, TrendingUp, Clock, CheckCircle, AlertCircle, Package, Truck, X, ShoppingBag, DollarSign, RefreshCw } from 'lucide-react';
 
@@ -36,6 +38,7 @@ const STATUS_CONFIG: Record<ApiOrderStatus, { label: string; bg: string; text: s
 
 export const OrdersAdminPage: React.FC = () => {
   const { hasPermission } = useAdminAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [orders, setOrders] = useState<ApiOrder[]>([]);
   const [loading, setLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState<ApiOrderStatus | 'all'>('all');
@@ -44,6 +47,7 @@ export const OrdersAdminPage: React.FC = () => {
   const [pagination, setPagination] = useState<{ current_page: number; last_page: number; total: number } | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<ApiOrder | null>(null);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
+  const requestedOrderId = searchParams.get('order');
 
   const loadOrders = useCallback(async () => {
     setLoading(true);
@@ -61,6 +65,23 @@ export const OrdersAdminPage: React.FC = () => {
   }, [currentPage, statusFilter]);
 
   useEffect(() => { loadOrders(); }, [loadOrders]);
+
+  useEffect(() => {
+    if (!requestedOrderId || !/^\d+$/.test(requestedOrderId)) return;
+    let cancelled = false;
+
+    ordersService.fetchOrder(requestedOrderId)
+      .then((res: any) => {
+        if (!cancelled && res?.data) setSelectedOrder(res.data as ApiOrder);
+      })
+      .catch(() => {
+        if (!cancelled) toast('Impossible de charger cette commande', { icon: '⚠️' });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [requestedOrderId]);
 
   const filteredOrders = useMemo(() => {
     if (!searchTerm) return orders;
@@ -201,7 +222,57 @@ export const OrdersAdminPage: React.FC = () => {
 
       {/* Table */}
       <div className="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="divide-y divide-ink-100 sm:hidden">
+          {loading ? (
+            <p className="px-4 py-10 text-center text-sm text-ink-400">Chargement...</p>
+          ) : filteredOrders.length === 0 ? (
+            <div className="px-4 py-10 text-center">
+              <Package size={36} className="mx-auto mb-3 text-ink-300" />
+              <p className="text-sm text-ink-500">Aucune commande</p>
+            </div>
+          ) : filteredOrders.map(order => {
+            const cfg = STATUS_CONFIG[order.status];
+            const Icon = cfg.icon;
+            return (
+              <article key={order.id} className="space-y-3 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-semibold text-brand-700">Commande #{order.id}</p>
+                    <p className="mt-0.5 truncate text-sm text-ink-700">{order.user?.name ?? '—'}</p>
+                    <p className="truncate text-xs text-ink-400">{order.user?.email}</p>
+                  </div>
+                  <span className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
+                    <Icon size={12} />
+                    {cfg.label}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-3 border-t border-ink-100 pt-3">
+                  <div>
+                    <p className="font-bold text-ink-900">{parseFloat(order.total).toLocaleString('fr-FR')} XOF</p>
+                    <p className="text-xs text-ink-500">{order.items?.length ?? 0} article(s) · {formatApiDate(order.created_at)}</p>
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    <button
+                      onClick={() => setSelectedOrder(order)}
+                      className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-brand-50 px-3 text-sm font-semibold text-brand-700"
+                    >
+                      <Eye size={16} />
+                      Détails
+                    </button>
+                    <button
+                      onClick={() => window.print()}
+                      aria-label={`Imprimer la commande ${order.id}`}
+                      className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-ink-200 text-ink-600"
+                    >
+                      <Printer size={16} />
+                    </button>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+        <div className="hidden overflow-x-auto sm:block">
           <table className="w-full">
             <thead>
               <tr className="bg-ink-50 border-b border-ink-200">
@@ -245,7 +316,7 @@ export const OrdersAdminPage: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-5 py-3 text-sm text-ink-500">
-                      {new Date(order.created_at).toLocaleDateString('fr-FR')}
+                      {formatApiDate(order.created_at)}
                     </td>
                     <td className="px-5 py-3 text-center">
                       <div className="flex justify-center gap-1">
@@ -280,11 +351,22 @@ export const OrdersAdminPage: React.FC = () => {
 
       {/* Modal détail commande */}
       {selectedOrder && (
-        <div className="fixed inset-0 backdrop-blur-sm bg-black/20 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 px-6 py-4 border-b border-ink-200 bg-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+          <div className="max-h-[92dvh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white pb-[env(safe-area-inset-bottom)] shadow-xl sm:max-h-[90vh] sm:rounded-xl sm:pb-0">
+            <div className="sticky top-0 flex items-center justify-between border-b border-ink-200 bg-white px-4 py-4 sm:px-6">
               <h3 className="text-lg font-semibold text-ink-900">Commande #{selectedOrder.id}</h3>
-              <button onClick={() => setSelectedOrder(null)} className="p-1 hover:bg-ink-100 rounded-lg">
+              <button
+                onClick={() => {
+                  setSelectedOrder(null);
+                  if (requestedOrderId) {
+                    const nextParams = new URLSearchParams(searchParams);
+                    nextParams.delete('order');
+                    setSearchParams(nextParams, { replace: true });
+                  }
+                }}
+                className="p-1 hover:bg-ink-100 rounded-lg"
+                aria-label="Fermer le détail de la commande"
+              >
                 <X size={20} />
               </button>
             </div>

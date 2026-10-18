@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { PushNotificationToggle } from '../../components/PushNotificationToggle';
 import { AdminLayout } from '../layout/AdminLayout';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import * as settingsService from '../../../services/settings';
@@ -266,6 +267,7 @@ export const SettingsPage: React.FC = () => {
 
             {activeTab === 'notifications' && (
               <Section title="Notifications" hint="Alertes envoyées à l'équipe, en plus des e-mails adressés aux clients.">
+                <PushNotificationToggle />
                 <Field label="Adresse de réception des alertes" error={errors.notification_email} hint="Laisser vide pour utiliser l'e-mail de contact de l'entreprise.">
                   <input
                     type="email" value={settings.notification_email}

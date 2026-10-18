@@ -178,22 +178,38 @@
    --------------------------------------------------------------------------- */
 
 /* Texte en dégradé bleu */
+.gradient-text,
+.gradient-text-animated {
+  --text-gradient-start: #0b5f99;
+  --text-gradient-middle: #086b94;
+  --text-gradient-end: #105778;
+  color: var(--text-gradient-start);
+}
+
+.dark .gradient-text,
+.dark .gradient-text-animated {
+  --text-gradient-start: #35aced;
+  --text-gradient-middle: #22c9ee;
+  --text-gradient-end: #a5eefc;
+}
+
 .gradient-text {
-  background: linear-gradient(135deg, #0077be 0%, #00a8e8 55%, #67e0f9 100%);
+  background: linear-gradient(135deg, var(--text-gradient-start) 0%, var(--text-gradient-middle) 55%, var(--text-gradient-end) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 /* Trame quadrillée */
-.bg-grid {
+/* Utilitaires Tailwind pour que les variantes dark: soient générées. */
+@utility bg-grid {
   background-image:
     linear-gradient(to right, rgba(0, 119, 190, 0.07) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 119, 190, 0.07) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
-.bg-grid-dark {
+@utility bg-grid-dark {
   background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
@@ -201,18 +217,18 @@
 }
 
 /* Trame pointillée */
-.bg-dots {
+@utility bg-dots {
   background-image: radial-gradient(circle, rgba(0, 119, 190, 0.12) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
-.bg-dots-dark {
+@utility bg-dots-dark {
   background-image: radial-gradient(circle, rgba(103, 224, 249, 0.14) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 /* Dégradé maillé */
-.mesh-gradient {
+@utility mesh-gradient {
   background-color: #ffffff;
   background-image:
     radial-gradient(at 20% 20%, rgba(0, 119, 190, 0.08) 0px, transparent 50%),
@@ -220,7 +236,7 @@
     radial-gradient(at 0% 100%, rgba(103, 224, 249, 0.05) 0px, transparent 50%);
 }
 
-.mesh-gradient-dark {
+@utility mesh-gradient-dark {
   background-color: #0c2941;
   background-image:
     radial-gradient(at 20% 20%, rgba(13, 143, 212, 0.22) 0px, transparent 50%),
@@ -271,7 +287,7 @@
 }
 
 .dark .glass-pill {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(12, 41, 65, 0.96);
   border-color: rgba(255, 255, 255, 0.14);
 }
 
@@ -287,7 +303,7 @@
 
 /* Titre en dégradé animé — prolonge `.gradient-text` */
 .gradient-text-animated {
-  background: linear-gradient(110deg, #0077be 0%, #00a8e8 35%, #67e0f9 55%, #0077be 100%);
+  background: linear-gradient(110deg, var(--text-gradient-start) 0%, var(--text-gradient-middle) 35%, var(--text-gradient-end) 55%, var(--text-gradient-start) 100%);
   background-size: 220% 100%;
   -webkit-background-clip: text;
   background-clip: text;

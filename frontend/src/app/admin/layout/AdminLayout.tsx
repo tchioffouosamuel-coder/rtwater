@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import { Sidebar } from '../components/Sidebar';
 import { ChevronRight, Bell, Settings, ShoppingBag, X, ExternalLink } from 'lucide-react';
@@ -46,6 +47,7 @@ interface AdminLayoutProps {
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, breadcrumbs }) => {
   const { isAuthenticated } = useAdminAuth();
+  const navigate = useNavigate();
 
   const [pendingOrders, setPendingOrders] = useState<NotifOrder[]>([]);
   const [newCount, setNewCount]           = useState(0);
@@ -127,24 +129,24 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
   if (!isAuthenticated) return <>{children}</>;
 
   return (
-    <div className="flex h-screen bg-ink-100 text-ink-900">
+    <div className="flex h-dvh min-h-screen overflow-hidden bg-ink-100 text-ink-900">
       <Sidebar />
 
-      <div className="flex-1 overflow-auto lg:ml-64 flex flex-col">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden lg:ml-64">
         {/* Top Bar */}
-        <div className="bg-white border-b border-ink-200 sticky top-0 z-20 shadow-sm">
-          <div className="px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+        <div className="sticky top-0 z-20 border-b border-ink-200 bg-white shadow-sm">
+          <div className="flex items-center justify-between gap-2 px-3 py-3 pl-16 sm:gap-4 sm:px-6 sm:py-3 sm:pl-16 lg:pl-6">
             <div className="flex min-w-0 flex-1 items-center gap-4">
               <img
                 src="/logo.webp"
                 alt="RT Water Solution"
-                className="h-10 w-auto max-w-[130px] shrink-0 object-contain"
+                className="hidden h-10 w-auto max-w-[130px] shrink-0 object-contain sm:block"
               />
               {(title || (breadcrumbs && breadcrumbs.length > 0)) && (
-                <div className="min-w-0 border-l border-ink-200 pl-4">
-                  {title && <h1 className="text-xl sm:text-2xl font-bold text-ink-900 mb-1">{title}</h1>}
+                <div className="min-w-0 sm:border-l sm:border-ink-200 sm:pl-4">
+                  {title && <h1 className="mb-0 truncate text-base font-bold text-ink-900 sm:mb-1 sm:text-2xl">{title}</h1>}
                   {breadcrumbs && breadcrumbs.length > 0 && (
-                    <div className="flex items-center gap-2 text-sm">
+                    <div className="hidden items-center gap-2 text-sm sm:flex">
                       {breadcrumbs.map((crumb, index) => (
                         <React.Fragment key={index}>
                           {crumb.path
@@ -181,7 +183,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
 
                 {/* Notification Panel */}
                 {showPanel && (
-                  <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-ink-200 z-50 overflow-hidden">
+                  <div className="absolute right-0 top-full z-50 mt-2 w-80 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-2xl">
                     {/* Panel header */}
                     <div className="px-4 py-3 border-b border-ink-100 flex items-center justify-between bg-ink-50">
                       <div className="flex items-center gap-2">
@@ -213,9 +215,15 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                           {pendingOrders.map(order => {
                             const isNew = order.id > lastSeenId;
                             return (
-                              <div
+                              <button
                                 key={order.id}
-                                className={`px-4 py-3 hover:bg-ink-50 transition ${isNew ? 'bg-brand-50/60' : ''}`}
+                                type="button"
+                                onClick={() => {
+                                  setShowPanel(false);
+                                  navigate(`/admin/orders?order=${order.id}`);
+                                }}
+                                aria-label={`Ouvrir la commande ${order.id}`}
+                                className={`block w-full px-4 py-3 text-left hover:bg-ink-100 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition ${isNew ? 'bg-brand-50/60' : ''}`}
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <div className="flex-1 min-w-0">
@@ -238,7 +246,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                                     <p className="text-xs text-ink-400 mt-0.5">{order.created_at}</p>
                                   </div>
                                 </div>
-                              </div>
+                              </button>
                             );
                           })}
                         </div>
@@ -269,7 +277,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
                 )}
               </div>
 
-              <button className="p-2 text-ink-600 hover:bg-ink-100 rounded-lg transition">
+              <button
+                onClick={() => navigate('/admin/settings')}
+                aria-label="Ouvrir les paramètres"
+                className="rounded-xl p-2.5 text-ink-600 transition hover:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+              >
                 <Settings size={20} />
               </button>
             </div>
@@ -277,8 +289,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, bread
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto">
-          <div className="p-6">
+        <div className="min-h-0 flex-1 overflow-auto overscroll-contain">
+          <div className="p-3 sm:p-6">
             {children}
           </div>
         </div>

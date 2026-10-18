@@ -11,6 +11,7 @@ import { ShopMemoryProvider } from "./context/ShopMemoryContext";
 import { POSProvider } from "./context/POSContext";
 import { initAnalytics, initErrorReporting } from "./lib/monitoring";
 import { registerServiceWorker } from "./lib/offline";
+import { PushProvider } from "./context/PushContext";
 import App from "./app/App.tsx";
 import "./styles/index.css";
 
@@ -29,7 +30,7 @@ createRoot(document.getElementById("root")!).render(
                 <SiteContentProvider>
                   <ShopMemoryProvider>
                     <POSProvider>
-                      <App />
+                      <PushProvider><App /></PushProvider>
                     </POSProvider>
                   </ShopMemoryProvider>
                 </SiteContentProvider>

@@ -41,7 +41,7 @@ export function CTASection() {
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
         <Reveal className="max-w-2xl mx-auto text-center">
           {/* Pastille */}
-          <div className="glass-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-aqua-200 text-xs font-semibold mb-6">
+          <div className="glass-dark inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-aqua-200 text-xs font-semibold mb-6">
             <span className="relative flex w-2 h-2">
               <span className="absolute inline-flex w-full h-full rounded-full bg-aqua-300 animate-ping opacity-75" />
               <span className="relative inline-flex w-2 h-2 rounded-full bg-aqua-400" />
@@ -69,7 +69,7 @@ export function CTASection() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={handleContactClick}
-              className="sheen glow-aqua group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-500 to-aqua-500 hover:from-brand-400 hover:to-aqua-400 text-white text-sm font-bold shadow-2xl shadow-brand-500/30 transition-all hover:-translate-y-0.5"
+              className="sheen glow-aqua group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-700 to-aqua-700 hover:from-brand-800 hover:to-aqua-800 text-white text-sm font-bold shadow-2xl shadow-brand-500/30 transition-all hover:-translate-y-0.5"
             >
               <Phone className="w-4 h-4" />
               {cta.contactButtonLabel}
@@ -87,7 +87,7 @@ export function CTASection() {
           {/* Gages de confiance */}
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mt-8 text-white/90 text-xs">
             {cta.trustIndicators.map((indicator, index) => (
-              <div key={index} className="glass-pill flex items-center gap-1.5 rounded-full px-3 py-1.5 text-white">
+              <div key={index} className="glass-dark flex items-center gap-1.5 rounded-full px-3 py-1.5 text-white">
                 <Check className="w-4 h-4 text-aqua-300 shrink-0" aria-hidden="true" />
                 <span>{indicator}</span>
               </div>

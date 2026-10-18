@@ -5,6 +5,7 @@ import * as customersService from '../../../services/customers';
 import type {
   Customer, CustomerDetail, CustomerSegment, CustomerSort, CustomerStats,
 } from '../../../services/customers';
+import { formatApiDate } from '../../../lib/date';
 import { toast } from 'sonner';
 import {
   ArrowLeft, Download, Loader2, Mail, MapPin, Phone, Search, ShoppingBag,
@@ -13,8 +14,8 @@ import {
 
 const xaf = (value: number) => `${Math.round(value).toLocaleString('fr-FR')} XAF`;
 
-const formatDate = (iso: string | null) =>
-  iso ? new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+const formatDate = (value: string | null) =>
+  formatApiDate(value, { day: '2-digit', month: 'short', year: 'numeric' });
 
 const SEGMENTS: Array<{ key: CustomerSegment; label: string }> = [
   { key: 'all', label: 'Tous' },
