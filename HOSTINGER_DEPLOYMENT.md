@@ -43,7 +43,7 @@ FRONTEND_URL=https://rt-watersolution.com
 CORS_ALLOWED_ORIGINS=
 ```
 
-Les origines `https://rt-watersolution.com` et `https://www.rt-watersolution.com`
+Les origines `https://rt-watersolution.com` et `  `
 sont explicitement autorisées par `api/config/cors.php`. Après mise à jour de
 ce fichier et de l'environnement, exécuter dans le dossier API du serveur :
 

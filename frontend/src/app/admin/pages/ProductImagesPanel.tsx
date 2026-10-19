@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as imagesService from '../../../services/productImages';
 import type {
-  ImageImportPreview, ImageImportResult, MatchedBy, PendingProduct,
+  ImageImportPreview, ImageImportResult, ImageSummary, MatchedBy, PendingProduct,
 } from '../../../services/productImages';
 import { toast } from 'sonner';
 import {
-  AlertCircle, ArrowLeft, CheckCircle2, Clock, Hash, Image as ImageIcon,
+  AlertCircle, ArrowLeft, CheckCircle2, Clock, Download, Hash, Image as ImageIcon,
   Loader2, RefreshCw, Tag, Trash2, Type, Upload, X,
 } from 'lucide-react';
 
@@ -53,6 +53,10 @@ export const ProductImagesPanel: React.FC = () => {
   const [pendingCount, setPendingCount] = useState<number | null>(null);
   const [loadingPending, setLoadingPending] = useState(true);
   const [showPending, setShowPending] = useState(false);
+  const [imageSummary, setImageSummary] = useState<ImageSummary | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const busy = analyzing || committing || exporting || deleting;
 
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -62,6 +66,7 @@ export const ProductImagesPanel: React.FC = () => {
       .then(res => {
         setPending(res?.data ?? []);
         setPendingCount(res?.summary?.awaiting ?? 0);
+        setImageSummary(res.summary);
       })
       .catch(() => { /* la liste est indicative : pas d'alerte bloquante */ })
       .finally(() => setLoadingPending(false));
@@ -80,6 +85,7 @@ export const ProductImagesPanel: React.FC = () => {
   }, [preview?.token, result]);
 
   const acceptFiles = (files: FileList | File[]) => {
+    if (busy) return;
     const next: File[] = [];
 
     for (const file of Array.from(files)) {
@@ -100,6 +106,7 @@ export const ProductImagesPanel: React.FC = () => {
   };
 
   const handleAnalyze = async () => {
+    if (busy) return;
     if (!archive && loose.length === 0) {
       toast('Déposez une archive ZIP ou des images', { icon: '⚠️' });
       return;
@@ -140,6 +147,48 @@ export const ProductImagesPanel: React.FC = () => {
   const handleCancelPreview = async () => {
     if (preview) await imagesService.discardImages(preview.token).catch(() => {});
     reset();
+  };
+
+  const handleExport = async () => {
+    if (busy) return;
+    setExporting(true);
+    setError(null);
+    try {
+      await imagesService.exportImages();
+      toast('Liste des images exportée', { icon: '✅' });
+    } catch (e: any) {
+      setError(e?.message || "La liste des images n'a pas pu être exportée.");
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    if (busy) return;
+    const count = imageSummary?.with_image;
+    if (!window.confirm(
+      `Supprimer définitivement les photos de ${count == null ? 'tous les produits' : `${count} produit(s)`}, y compris les produits masqués ?\n\n` +
+      "Les produits, leurs stocks, les photos des services et les fiches techniques sont conservés.\n\n" +
+      "L’export CSV sauvegarde uniquement la liste, pas les fichiers image.",
+    )) return;
+
+    setDeleting(true);
+    setError(null);
+    try {
+      const outcome = await imagesService.deleteAllImages();
+      loadPending();
+      if (outcome.products_failed > 0) {
+        setError(`${outcome.products_failed} produit(s) conservent leur photo. Vous pouvez réessayer. ${outcome.errors.slice(0, 3).join(' ')}`);
+      }
+      toast(`Photos retirées de ${outcome.products_updated} produit(s)`, {
+        icon: outcome.products_failed > 0 ? '⚠️' : '✅',
+      });
+    } catch (e: any) {
+      setError(e?.message || "La suppression des images n'a pas abouti.");
+      loadPending();
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const attachable = preview
@@ -394,6 +443,42 @@ export const ProductImagesPanel: React.FC = () => {
     <div className="space-y-6">
       {error && <ErrorBanner message={error} onClose={() => setError(null)} />}
 
+      <div className="rounded-xl border border-ink-200 bg-white p-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h3 className="text-sm font-semibold text-ink-900">Photos des produits</h3>
+            <p className="mt-1 text-sm text-ink-500" aria-live="polite">
+              {loadingPending ? 'Chargement de l’inventaire…' : imageSummary
+                ? `${imageSummary.with_image} produit(s) avec photo · ${imageSummary.without_image} sans photo`
+                : 'Inventaire indisponible. Vous pouvez exporter la liste pour le consulter.'}
+            </p>
+            <p className="mt-2 text-xs text-ink-500">
+              Le CSV contient les références, noms de fichiers, URL et statuts de tous les produits, y compris ceux sans photo.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={handleExport}
+              disabled={busy}
+              className="flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-sm font-medium text-ink-700 transition hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {exporting ? <Loader2 size={17} className="animate-spin" /> : <Download size={17} />}
+              {exporting ? 'Export en cours…' : 'Exporter la liste des images'}
+            </button>
+            <button
+              type="button"
+              onClick={handleDeleteAll}
+              disabled={busy || loadingPending || imageSummary?.with_image === 0}
+              className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-medium text-red-700 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {deleting ? <Loader2 size={17} className="animate-spin" /> : <Trash2 size={17} />}
+              {deleting ? 'Suppression en cours…' : 'Supprimer toutes les images'}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           <div
@@ -408,6 +493,7 @@ export const ProductImagesPanel: React.FC = () => {
             <input
               ref={fileInput}
               type="file"
+              disabled={busy}
               multiple
               accept=".zip,image/*"
               className="hidden"
@@ -443,7 +529,7 @@ export const ProductImagesPanel: React.FC = () => {
 
           <button
             onClick={handleAnalyze}
-            disabled={analyzing || (!archive && loose.length === 0)}
+            disabled={busy || (!archive && loose.length === 0)}
             className="flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-2.5 font-medium text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-ink-300"
           >
             {analyzing ? <Loader2 size={18} className="animate-spin" /> : <ImageIcon size={18} />}
@@ -512,7 +598,7 @@ const PendingList: React.FC<{
       <div className="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-5 py-4">
         <CheckCircle2 size={16} className="flex-shrink-0 text-green-600" />
         <p className="text-sm text-green-800">
-          Aucun produit n'attend d'image. Tout ce que votre fichier Excel a déclaré est en place.
+          Aucun nom de fichier n'est en attente. Les produits sans photo sont comptabilisés dans l'inventaire.
         </p>
       </div>
     );

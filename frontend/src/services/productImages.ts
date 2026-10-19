@@ -1,4 +1,4 @@
-import api from "./api";
+import api, { API_BASE } from "./api";
 
 /** Par quelle clé un fichier a été rattaché à un produit. */
 export type MatchedBy = "filename" | "sku" | "name";
@@ -45,12 +45,60 @@ export interface ImageImportResult {
   errors: string[];
 }
 
+export interface ImageSummary {
+  awaiting: number;
+  without_image: number;
+  with_image: number;
+}
+
+export interface DeleteImagesResult {
+  products_updated: number;
+  files_deleted: number;
+  products_failed: number;
+  errors: string[];
+}
+
 /** Produits qui attendent une image, avec le nom de fichier à préparer. */
 export async function fetchPendingImages() {
   return api.request("/admin/products/images/pending", { method: "GET" }) as Promise<{
     data: PendingProduct[];
-    summary: { awaiting: number; without_image: number };
+    summary: ImageSummary;
   }>;
+}
+
+/** Télécharge l'inventaire CSV avec l'authentification de l'administration. */
+export async function exportImages(): Promise<void> {
+  const token = localStorage.getItem("adminToken") || localStorage.getItem("userToken");
+  const response = await fetch(`${API_BASE}/admin/products/images/export`, {
+    headers: {
+      Accept: "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => null);
+    throw new Error(error?.message || "Export de la liste des images impossible.");
+  }
+
+  const url = URL.createObjectURL(await response.blob());
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "images-produits.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+export async function deleteAllImages(): Promise<DeleteImagesResult> {
+  const response = await api.request("/admin/products/images", {
+    method: "DELETE",
+    body: { confirm: true },
+    silent: true,
+  });
+
+  return response.data as DeleteImagesResult;
 }
 
 /** Étape 1 — dépose les photos et renvoie l'aperçu des rattachements. */
@@ -92,4 +140,4 @@ export async function discardImages(token: string): Promise<void> {
   });
 }
 
-export default { fetchPendingImages, analyzeImages, commitImages, discardImages };
+export default { fetchPendingImages, exportImages, deleteAllImages, analyzeImages, commitImages, discardImages };

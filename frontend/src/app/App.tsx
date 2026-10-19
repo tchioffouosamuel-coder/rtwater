@@ -18,6 +18,7 @@ import { ScrollToTop } from "./components/ScrollToTop";
 import { ProtectedRoute } from "./admin/layout/ProtectedRoute";
 import { Toaster } from "./components/ui/sonner";
 import { useUserAuth } from "../context/UserAuthContext";
+import { useIsInstalledApp } from "../lib/pwa";
 
 
 // Pages publiques secondaires chargées à la demande : accueil, boutique et fiche produit restent immédiates
@@ -76,6 +77,10 @@ const PageLoadingFallback = () => (
 
 export default function App() {
   const { theme } = useTheme();
+
+  // L'application installée (PWA) est réservée au back-office : la vitrine et la
+  // boutique n'y sont pas servies, toute autre URL retombe sur l'administration.
+  const installedApp = useIsInstalledApp();
 
   return (
     <div className={theme === "dark" ? "dark" : ""}>
@@ -263,7 +268,10 @@ export default function App() {
         />
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
 
-        {/* Pages publiques avec Header et Footer */}
+        {/* Pages publiques avec Header et Footer — absentes de l'application installée */}
+        {installedApp ? (
+          <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+        ) : (
         <Route element={<Layout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -287,20 +295,21 @@ export default function App() {
           {/* Page 404 avec le menu et le pied de page */}
           <Route path="*" element={<NotFoundPage />} />
         </Route>
+        )}
       </Routes>
 
-      {/* Cart Sidebar - Global */}
-      <Cart />
-      <CustomerBottomNav />
+      {/* Panier, caisse et navigation client : vitrine uniquement */}
+      {!installedApp && (
+        <>
+          <Cart />
+          <CustomerBottomNav />
+          <CheckoutModal />
+          <ScrollToTop />
+        </>
+      )}
 
       {/* Toast notifications */}
       <Toaster />
-
-      {/* Checkout Modal - Global */}
-      <CheckoutModal />
-
-      {/* Scroll to Top Button */}
-      <ScrollToTop />
     </div>
   );
 }

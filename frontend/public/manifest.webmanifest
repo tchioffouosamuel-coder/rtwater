@@ -1,9 +1,9 @@
 {
-  "name": "RT Water Solution",
-  "short_name": "RT Water",
-  "description": "Traitement de l'eau à Yaoundé : boutique, devis et suivi de commande.",
+  "name": "RT Water Solution — Administration",
+  "short_name": "RT Water Admin",
+  "description": "Back-office RT Water : commandes, stock, caisse et catalogue.",
   "lang": "fr",
-  "start_url": "/",
+  "start_url": "/admin",
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
